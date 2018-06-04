@@ -12,7 +12,7 @@ class FileExtractorObject {
     *              if `files` is empty, the html was not changed by the
     *              FileExtractor parsing
     * @param files: fileInfo[], containing multiple files of type
-    *               {relativeInputPath: ..., relativeOutputPath: ...}
+    *               {inputPath: ..., relativeOutputPath: ...}
     */
     constructor(html, files) {
         if(html) this.html = html;

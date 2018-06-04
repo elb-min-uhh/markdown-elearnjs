@@ -24,7 +24,7 @@ var processSourceReplacement = function(wholeMatch, tag, before, wrapBefore, wra
 
         var file = {};
 
-        file.relativeInputPath = val;
+        file.inputPath = val;
 
         // replace val
         switch(tag.toLowerCase()) {
@@ -36,7 +36,7 @@ var processSourceReplacement = function(wholeMatch, tag, before, wrapBefore, wra
 
         file.relativeOutputPath = val;
 
-        if(file.relativeInputPath !== file.relativeOutputPath)
+        if(file.inputPath !== file.relativeOutputPath)
             files.push(file);
 
         switch(tag.toLowerCase()) {
@@ -104,7 +104,9 @@ class FileExtractor {
         var promises = [];
 
         for(var file of files) {
-            var inputPath = path.resolve(`${inputRoot}/${file.relativeInputPath}`).replace(/\\/g, "/");
+            var inputPath = path.isAbsolute(file.inputPath) ?
+                                path.resolve(file.inputPath).replace(/\\/g, "/")
+                                : path.resolve(`${inputRoot}/${file.inputPath}`).replace(/\\/g, "/");
             var outputPath = path.resolve(`${outputRoot}/${file.relativeOutputPath}`).replace(/\\/g, "/");
 
             var promise = copyFile(inputPath, outputPath, true);
