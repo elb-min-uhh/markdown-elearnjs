@@ -1,0 +1,376 @@
+<!DOCTYPE html><html><head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" type="text/css" href="assets/css/elearn.css">
+
+        <script type="text/javascript" src="assets/js/min.js"></script> <!-- von UHH verwendetes JQuery -->
+        <script type="text/javascript" src="assets/js/elearn.js"></script> <!-- eLearn.js -->
+
+        <link rel="stylesheet" type="text/css" href="assets/css/quiz.css">
+                <script type="text/javascript" src="assets/js/quiz.js"></script>
+                <link rel="stylesheet" type="text/css" href="assets/css/elearnvideo.css">
+                <script type="text/javascript" src="assets/js/elearnvideo.js"></script>
+                <link rel="stylesheet" type="text/css" href="assets/css/clickimage.css">
+                <script type="text/javascript" src="assets/js/clickimage.js"></script>
+                <link rel="stylesheet" type="text/css" href="assets/css/timeslider.css">
+                <script type="text/javascript" src="assets/js/moment.js"></script>
+                <script type="text/javascript" src="assets/js/timeslider.js"></script>
+        <script>
+                                eLearnJS.setLanguage("en");
+                                try { eLearnVideoJS.setLanguage("en") } catch(e){ console.log(e) };
+                                try { quizJS.setLanguage("en") } catch(e){ console.log(e) };
+                            </script>
+        <title>elearn.js Template</title><meta name="author" content="Name Autor"/><meta name="description" content="Hier Beschreibung einfügen"/><meta name="keywords" content="Key, Words"/><script>
+                window.onload = function() {
+                    eLearnJS.setNavigationTitle('Template Überschrift');
+                }
+            </script>
+            <script type="text/x-mathjax-config">
+                MathJax.Hub.Config({
+                    extensions: ["tex2jax.js"],
+                    jax: ["input/TeX", "output/HTML-CSS"],
+                    tex2jax: {
+                        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                        processEscapes: true
+                    },
+                    "HTML-CSS": { availableFonts: ["TeX"] }
+                });
+            </script>
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+</head>
+<body>
+    <div id="wrap">
+        <!-- Page Info -->
+        <div class="lb-wrap" id="info">
+            <div class="lightbox">
+                <div class="info-wrapper">
+                    <h4 id="elearnjstemplate">elearn.js Template</h4>
+<p>Universität Hamburg</p>
+<p><small>
+    Das <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">elearn.js Template</span>
+    von <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Universität Hamburg</span>
+    ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+    Creative Commons Namensnennung</a> - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz
+</small></p>
+                </div>
+            </div>
+        </div>
+        <div class="page">
+            <!--
+This template is written for the `atom-elearnjs` package. You do not need
+anything else but the files linked in here to convert this .md to HTML or PDF.
+-->
+<section name="Template elearn.js" class="hide-in-overview"><h1 id="templateelearnjs">Template elearn.js</h1>
+<p><strong>Name des Autors</strong><br />
+Institution des Autors<br />
+cc by-sa | 2015</p>
+<p><img src="assets/img/illu-concept.png" alt="Titelbild" /></p></section>
+<section name="Inhaltsverzeichnis" class="hide-in-overview"><h2 id="inhaltsverzeichnis">Inhaltsverzeichnis</h2>
+<!-- Zusatz class="kachel" ändert die Darstellung -->
+<!-- Zusatz class="hide-read" verhindert die Anzeige gelesener Sections -->
+<div id="content-overview" class="kachel">
+    <!--
+        Hier wird automatisch ein Inhaltsverzeichnis
+        eingefügt, wenn das div#content-overview vorhanden
+        ist.
+    -->
+</div></section>
+<section name="Überschrift 2. Ordnung" desc="Beispielbeschreibung für einen kleinen <em>Textblock</em>. <br /> Sollte nicht zu lang sein."><h2 id="berschrift2ordnung">Überschrift 2. Ordnung</h2>
+<blockquote>
+  <p>Dies ist nur eine Template-Datei. Eine Erklärung und Dokumentation finden Sie im <a href="www.uni-hamburg.de">Whitepaper „Digitale Skripte“</a>.</p>
+</blockquote>
+<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+<h3 id="berschriftdritterordung">Überschrift dritter Ordung</h3>
+<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   </p>
+<h4 id="undhieristdievierteordnung">Und hier ist die vierte Ordnung</h4>
+<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+<h5 id="wennmannocheinefnfteebenebraucht">Wenn man noch eine fünfte Ebene braucht</h5>
+<p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p></section>
+<section name="Sprache" class="sub"><h3 id="sprache">Sprache</h3>
+<p>Die Sprache des <em>elearn.js</em> lässt sich anpassen.
+Hierzu kann man beliebigen Elementen das Attribut <code>lang</code> ergänzen, was
+hauptsächlich für das <em>quiz.js</em> interessant sein könnte. Möglich ist aber auch
+<code>&lt;html lang="de"&gt;</code> zu verwenden, um so die Sprache für das gesamte Dokument
+einzustellen. Dies muss jedoch vor dem Laden der Seite bereits geschehen sein.
+Ansonsten lässt sich die Sprache mit <code>eLearnJS.setLanguage("de")</code> auf Deutsch
+und mit <code>eLearnJS.setLanguage("en")</code> interaktiv auf Englisch stellen.</p>
+<p>Beispiel:</p>
+<p><button onclick="eLearnJS.setLanguage('de')">Deutsch/German</button>
+<button onclick="eLearnJS.setLanguage('en')">Englisch/English</button></p></section>
+<section name="Bilder" class="sub"><h3 id="bilder">Bilder</h3>
+<p>Bilder können als einzelne Abbildungen oder als Galerien eingebunden werden.Für die Galerien wird das elearn.js benötigt. es bietet verschiedene Varianten. Das erste Beispiel zeigt eine Slideshow mit Vorschau und Loop-Funktion.</p>
+<div class="slider preview-nav loop">
+<ul class="img-gallery" id="x" style="list-style:none;">
+<li><img src="assets/img/md-illu_1.png" alt="md-produktion" /><p>Markdown ist kinderleicht zu erlernen.</p></li>
+<li><img src="assets/img/md-illu_2.png" alt="Components" /><p>Zusammenspiel der Komponenten bei der Produktion von digitalen Skripten mit Markdown.</p></li>
+<li><img src="assets/img/md-illu_3.png" alt="Future" /><p>Die Zukunft von Markdown als Autorensprache.</p></li>
+<li><img src="assets/img/md-illu_4.png" alt="Media" /><p>Markdown kann viele verschiedene Medientypen in Html einfügen.</p></li>
+<li><img src="assets/img/md-illu_5.png" alt="Hello" /><p>Versuche auch mal, ein Markdown-Dokument zu erstellen. Ist gar nicht schwer!</p></li>
+</ul>
+</div>
+<p>Die Galerie kann mit oder ohne Vorschaubilder sowie mit oder ohne Loop genutzt werden. Hierzu existieren verschiedene Klassen, die dem Slider zugeordnet werden können. Das sieht folgendermaßen aus:</p>
+<ul>
+<li><code>&lt;div class="slider"&gt;</code> ist ohne Vorschau und ohne Loop</li>
+<li><code>&lt;div class="slider preview-nav"&gt;</code> ist mit Vorschaubildern und ohne Loop</li>
+<li><code>&lt;div class="slider preview-nav loop"&gt;</code> ist mit Vorschaubildern und mit Loop</li>
+</ul>
+<p>Die Höhe der Gaalerie kann vorgegeben werden, damit der Content unter der Galerie nicht springt. Dies geht in Abhängigkeit des größten Bildes oder einer vorgegebenen maximalen Höhe. Dies wird durch die Klasse des umschließenden <code>ul</code>-Elements definiert.</p>
+<ul>
+<li><code>&lt;ul class="img-gallery"&gt;</code> ist eine Galerie mit unterschiedlicher Bilderhöhe.</li>
+<li><code>&lt;ul class="img-gallery fixed-size"&gt;</code> ist eine Galerie mit der Höhe des größten Bildes.</li>
+<li><code>&lt;ul class="img-gallery fixed-size" style="max-height: 400px"&gt;</code> ist eine Galerie mit der Höhe von 400px.</li>
+</ul></section>
+<section name="Medieneinbindung" class="sub"><h3 id="medieneinbindung">Medieneinbindung</h3>
+<p>Hier sollen vor allem Video und Audio-Einbindung demonstriert werden. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
+<h4 id="videosalsasset">Videos als Asset</h4>
+<p>Hier wird ein Video eingebunden, welches sich direkt im Asset-Ordner des Skrips befindet.
+Diese Lösung ist nur für relativ kurze Videos empfehlenswert (max. fünf Minuten).
+Zusätzlich enthält das Video Anmerkungen, die unter dem Video angezeigt werden.
+Diese sind durch die Erweiterung
+<a href="https://github.com/elb-min-uhh/elearnvideo.js">elearnvideo.js</a> möglich.</p>
+<video class="allow_user_notes" preload="auto" controls="controls" style="max-width:100%">
+    <source src="assets/img/beispiel-video.mp4" type="video/mp4">
+    <source src="assets/img/beispiel-video.webm" type="video/webm">
+           Dein Browser unterstützt kein HTML5-Video. Um dir das Video dennoch ansehen zu können,
+           folge einfach diesem <a href="images/beispiel-video.mp4">Link</a>.
+</video>
+<div class="video_notes timestamps">
+    <h5>Untertitel:</h5>
+    <div class="video_note" timefrom="0m14s">
+        Das war 's eigentlich auch schon damit.
+    </div>
+    <div class="video_note hinted stopping" timefrom="0m3s" timeto="0m14s">
+        Hallo! Hier nur ein kurzes Beispielvideo, um zu zeigen,
+        wie man mit einem HTML-Video-Tag ein Video in ein Markdown
+        Dokument einbinden kann.
+    </div>
+</div>
+<h4 id="videosvoneinemstreamingserver">Videos von einem Streaming Server</h4>
+<p>Hier ist ein Video von einem Streaming-Server als iFrame eingebunden.</p>
+<video controls>
+    <source
+        src='https://fms1.rrz.uni-hamburg.de/abo/00.000_MichaelHeinecke_2016-09-06_17-56.mp4'
+        type='video/mp4'>
+    Your browser does not support the video tag.
+</video>
+<h4 id="audiofiles">Audio-Files</h4>
+<p>Da Audio-Dateien als mp3s in der Regel nicht so groß sind, dass ein Streaming-Server benötigt wird, können diese aus dem Assets-Ordner progressiv als Download eingebunden worden. Hier ein Beispiel:</p>
+<audio preload="auto" controls="controls">
+    <source src="assets/img/beispiel-audio.mp3" type="audio/mpeg">
+           Dein Browser unterstützt kein HTML5-Audio. Um dir das Audio-File dennoch anhören zu können,
+           folge einfach diesem <a href="img/template-media/beispiel-audio.mp3">Link</a>.
+</audio></section>
+<section name="Mathematische Formeln" class="sub"><h3 id="mathematischeformeln">Mathematische Formeln</h3>
+<p>Mathematische Formeln finden in vielen Texten Verwendung, können aber nicht
+immer vernünftig dargestellt werden.</p>
+<h4 id="formeldarstellungviamathjax">Formeldarstellung via MathJax</h4>
+<p>MathJax kann genutzt werden, um mathematische Formeln darzustellen.
+Hierzu wird die LaTeX Syntax verwendet. Es existieren Blockformeln wie diese</p>
+<p>$$
+M = \begin{bmatrix}
+       \frac{5}{6} &amp; \frac{1}{6} &amp; 0           \\[0.3em]
+       \frac{5}{6} &amp; 0           &amp; \frac{1}{6} \\[0.3em]
+       0           &amp; \frac{5}{6} &amp; \frac{1}{6}
+     \end{bmatrix}
+$$</p>
+<p>und auch Inline-Formeln wie $P\left(A=2\middle|\frac{A^2}{B}&gt;4\right)$,
+welche in einem Fließtext angezeigt werden können.
+Um im Text dennoch ein \$ verwenden zu können, muss dieses escaped werden.
+Hierzu schreibt man <code>\\$</code> anstatt des einfachen <code>$</code> Symbols, für jedes einzelne
+anzuzeigende Zeichen, um durch das <code>\\</code> in der Ausgabe ein <code>\</code> zu erzeugen,
+welches MathJax wiederum als <em>escape</em> für das darauffolgende <code>$</code> sieht.</p></section>
+<section name="Textblöcke" class="sub"><h3 id="textblcke">Textblöcke</h3>
+<h4 id="informationenpermouseoverklick">Informationen per Mouseover/Klick</h4>
+<p>Bei solchen Blöcken werden zusätzliche</p>
+<div class="hover-info">
+    Informationen
+    <div>Zusätzliche Informationen sind in den meisten Fällen
+    Texte. Es könnten theoretisch aber auch Bilder eingefügt
+    werden.
+    </div>
+</div>
+<p>angezeigt, wenn man mit der Maus hinüber geht oder bei Touch-Geräten
+darauf klickt. Dazu wird in einem <strong>div.hover-info</strong>
+zunächst der markierte Bereich angegeben. In einem zusätzlichen
+<strong>div</strong> direkt dahinter können darauf hin die weiterführenden
+Informationen angezeigt werden.</p>
+<h4 id="ausklappbarebereiche">Ausklappbare Bereiche</h4>
+<p>Der folgende Block ist mit einem Knopf aus- und einklappbar.</p>
+<div class="hideable" show="Zeige Übersetzung" hide="Verberge Übersetzung">
+    Hier steht ein Beispieltext.
+</div>
+<p>Das entscheidende hierbei sind die Attribute.<br />
+Dabei wird dem ganzen ein <strong>name</strong> gegeben, der in
+dem Knopf immer eingesetzt wird. Zustäzlich werden
+die Wörter für <strong>show</strong> und <strong>hide</strong> angegeben.
+So kann man hier auch bspw. andere Sprachen verwenden.
+Es ist auch möglich das Feld <strong>name</strong> wegzulassen
+und nur <strong>show</strong> und <strong>hide</strong> zu verwenden.</p>
+<h4 id="multiboxes">Multiboxes</h4>
+<p>Der folgende Block besteht aus mehreren Boxen, zwischen denen man wählen kann.</p>
+<div class="tabbed-box">
+    <div class="tab" name="Deutsch">
+        Dieser Block wird unter dem deutschen Tab angezeigt.
+    </div>
+    <div class="tab" name="English">
+        This block will be visible when english is selected.
+    </div>
+</div>
+<p>Hier wird ein umschließendes <strong>div.tabbed-box</strong> erstellt.
+Innerhalb dieses Blocks können dann beliebig viele
+<strong>div.tab</strong> erstellt werden, die jeweils einen <strong>name</strong>
+haben unter dem der Tab ausgewählt werden kann.
+Innerhalb eines jeden <strong>div.tab</strong> kann dann alles
+beliebig verändert werden.</p></section>
+<section name="Quizfragen" class="sub"><h3 id="quizfragen">Quizfragen</h3>
+<p>Auf dieser Seite sind einige Quiz-Fragen Beispielhaft dargestellt.
+Diese Quizfragen benötigen das <a href="https://github.com/elb-min-uhh/quiz.js">quiz.js</a>.</p>
+<div class="question">
+<h4>Auf welcher Technologie basieren die digitalen Skripte? </h4> <!-- Fragentext -->
+<div class="answers">
+<label>Lösung: <input type="text" name="q"/></label>
+</div>
+<div class="feedback correct">
+Deine Antwort ist richtig.
+</div>
+<div class="feedback incorrect">
+Leider nein, schaue dir doch nochmal die Dokumentation an.
+</div>
+<a class="ans">4c4ad5fca2e7a3f74dbb1ced00381aa4</a>
+<a class="ans">2182a74bab7188d959e795d9301e87ff</a>
+<a class="ans">590fc197fe73db0aa2ec03687a372eea</a>
+<a class="ans">686155af75a60a0f6e9d80c1f7edd3e9</a>
+<a class="ans">c7a628cba22e28eb17b5f5c6ae2a266a</a>
+</div>
+<div class="question">
+<h4>Welche Unterordner werden in der Dateistruktur von digitalen Skripten erwartet?</h4>
+<div class="answers">
+<label><input type="checkbox" name="q" value="Frage2-1"/>assets</label>
+<label><input type="checkbox" name="q" value="Frage2-2"/>movies</label>
+<label><input type="checkbox" name="q" value="Frage2-3"/>img</label>
+<label><input type="checkbox" name="q" value="Frage2-4"/>css</label>
+<label><input type="checkbox" name="q" value="Frage2-5"/>lang</label>
+</div>
+<div class="feedback correct">
+Genau, diese Ordner werden auf jeden Fall benötigt. Sogar noch ein paar mehr.
+</div>
+<div class="feedback incorrect">
+In deiner Antwort ist mindestens ein Ordner, der nicht unbedingt benötigt wird.
+</div>
+<a class="ans">b5ceb729a1b347aa357790e1588c88b3</a>
+<a class="ans">1fd302a9c89fc92eead418857a7e5a07</a>
+<a class="ans">4fc364339b2127eb81c13ab986a27085</a>
+</div>
+<p>Es existieren auch noch andere Fragetypen, diese sind in der Dokumentation vom quiz.js beschrieben.</p></section>
+<section name="Interaktive Grafik" class="sub"><h3 id="interaktivegrafik">Interaktive Grafik</h3>
+<p>Mit der Erweiterung
+<a href="https://github.com/elb-min-uhh/clickimage.js">clickImage.js</a> ist es möglich,
+interaktive Grafiken zu erstellen. Hier ein Beispiel:</p>
+<div class="clickimage">
+    <div class="imagebox invert">
+        <img src="assets/img/schiff.jpg" alt="Schiff" onload="clickimagePins(this,[[10,10,'right'],[50,60,'left'],[42,25],[80,80,'top']])">
+    </div>
+    <div class="pininfo">
+        <div>
+            <h3><span class="highlight">Aufgabe 1</span> Wie lauten die Bestandteile des Kopfes?</h3>
+            <p class="task">
+            Wie jedes Insekt hat auch eine Biene insgesamt 6 Beine. Die Biene
+            benutzt ihre Beine nicht nur zum Laufen, sondern auch zur Körperpflege
+            und beim Transport der Pollen zum Stock. Jedes Bein ist in fünf Glieder
+            unterteilt. Vom Körper aus betrachtet nennt man sie Hüfte (Coxa),
+            Schenkelring (Trochanter), Schenkel (Femur), Schiene (Tibia) und Fuß
+            (Tarsus). Der Fuß ist widerum in 4 kleinere Glieder unterteilt. Das
+            letzte Fußglied trägt eine Kralle und Haftlappen, mit denen sich
+            Bienen auch auf sehr glatten Oberflächen, wie zum Beispiel Glas
+            festhalten können.</p>
+            <p class="hint">Hinweis<br>Wie jedes Insekt hat auch eine Biene
+            insgesamt 6 Beine. Die Biene benutzt ihre Beine nicht nur zum
+            Laufen, sondern auch zur Körperpflege und beim Transport der Pollen
+            zum Stock.</p>
+            <ul class="links">
+                <li>
+                <a href="https://de.wikipedia.org/wiki/The_Bird_and_the_Bee">https://de.wikipedia.org/wiki/The_Bird_and_the_Bee</a>
+                <br>Dies ist eine Link-Beschreibung, die weitere Informationen zu der zugehörigen URL liefert
+                </li>
+                <li>
+                <a href="https://de.wikipedia.org/wiki/The_Bird_and_the_Bee">https://de.wikipedia.org/wiki/The_Bird_and_the_Bee</a>
+                <br>Dies ist eine Link-Beschreibung, die weitere Informationen zu der zugehörigen URL liefert
+                </li>
+            </ul>
+        </div>
+        <div>
+            <h3><span class="highlight">Aufgabe 2</span> Wie lauten die Bestandteile des Rumpfes?</h3>
+            <p>
+            Wie jedes Insekt hat auch eine Biene insgesamt 6 Beine. Die
+            Biene benutzt ihre Beine nicht nur zum Laufen, sondern auch zur
+            Körperpflege und beim Transport der Pollen zum Stock. Jedes Bein ist
+            in fünf Glieder unterteilt. Vom Körper aus betrachtet nennt man sie
+            Hüfte (Coxa), Schenkelring (Trochanter), Schenkel (Femur), Schiene
+            (Tibia) und Fuß (Tarsus). Der Fuß ist widerum in 4 kleinere Glieder
+            unterteilt. Das letzte Fußglied trägt eine Kralle und Haftlappen,
+            mit denen sich Bienen auch auf sehr glatten Oberflächen, wie zum
+            Beispiel Glas festhalten können.
+            </p>
+        </div>
+        <div class="inline">
+            <h3>Der Mast</h3>
+            <p>Als Schiffsmast bezeichnet man einen ganz oder annähernd vertikal
+            auf Schiffen aufgestellten Mast aus Holz, Metall oder anderen festen
+            Materialien.</p>
+        </div>
+        <div>
+            <h3><span class="highlight">Aufgabe 3</span> Wie lauten die Bestandteile des Rumpfes?</h3>
+            <p>
+            Wie jedes Insekt hat auch eine Biene insgesamt 6 Beine. Die
+            Biene benutzt ihre Beine nicht nur zum Laufen, sondern auch zur
+            Körperpflege und beim Transport der Pollen zum Stock. Jedes Bein ist
+            in fünf Glieder unterteilt. Vom Körper aus betrachtet nennt man sie
+            Hüfte (Coxa), Schenkelring (Trochanter), Schenkel (Femur), Schiene
+            (Tibia) und Fuß (Tarsus). Der Fuß ist widerum in 4 kleinere Glieder
+            unterteilt. Das letzte Fußglied trägt eine Kralle und Haftlappen,
+            mit denen sich Bienen auch auf sehr glatten Oberflächen, wie zum
+            Beispiel Glas festhalten können.
+            </p>
+        </div>
+    </div>
+</div></section>
+<section name="TimeSlider" class="sub"><h3 id="timeslider">TimeSlider</h3>
+<p>Die Erweiterung <a href="https://github.com/elb-min-uhh/timeslider.js">timeSlider.js</a>
+erlaubt es, Zeitleisten zu erstellen, um sich so interaktiv über zeitlich
+aufgelistete Informationen zu arbeiten.</p>
+<div class="timeslider" data-interval="year" data-mode="date" data-zoom="1" lang="de">
+    <div>
+        <h3><span>2014</span> Das Jahr 2014</h3>
+        <p>
+        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+        nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+        sed diam voluptua.
+        </p>
+        <p>
+        At vero eos et accusam et justo duo dolores et ea rebum.
+        </p>
+    </div>
+    <div>
+        <h3><span>2016 - 2018</span> Weitere Jahre</h3>
+        <p>
+        At vero eos et accusamus et iusto odio dignissimos ducimus qui
+        blanditiis praesentium voluptatum deleniti atque corrupti quos dolores
+        et quas molestias excepturi sint occaecati cupiditate non provident,
+        similique sunt in culpa qui officia deserunt mollitia animi, id est
+        laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
+        distinctio.
+        </p>
+    </div>
+</div></section>
+<section name="Literatur" class="sub"><h3 id="literatur">Literatur</h3>
+<p>Adapt learning community. (o. J.). Abgerufen 11. September 2015, von <a href="https://community.adaptlearning.org">https://community.adaptlearning.org</a></p>
+<p>H5P – Create, share and reuse interactive HTML5 content in your browser. (o. J.). Abgerufen 11. September 2015, von <a href="https://h5p.org">https://h5p.org</a></p>
+<p>The Ultimate List of HTML5 eLearning Authoring Tools. (o. J.). Abgerufen von <a href="http://elearningindustry.com/the-ultimate-list-of-html5-elearning-authoring-tools">http://elearningindustry.com/the-ultimate-list-of-html5-elearning-authoring-tools</a></p>
+<p>Wenz, C. (2014). JavaScript: das umfassende Handbuch  (11. Aufl). Bonn: Galileo Press.</p>
+<p>Zillgens, C. (2013). Responsive Webdesign: reaktionsfähige Websites gestalten und umsetzen. München: Hanser.</p></section>
+        </div>
+    </div>
+</body>
+</html>

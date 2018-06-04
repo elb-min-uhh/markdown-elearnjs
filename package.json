@@ -1,0 +1,27 @@
+{
+  "name": "markdown-elearnjs",
+  "version": "1.0.0",
+  "description": "Simple markdown conversion to elearn.js based HTML and PDF.",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "Markdown",
+    "elearnjs",
+    "elearn.js",
+    "html",
+    "pdf",
+    "digital",
+    "paper"
+  ],
+  "author": "Arne Westphal",
+  "repository": "https://github.com/elb-min-uhh/markdown-elearnjs",
+  "license": "MIT",
+  "dependencies": {
+    "html-pdf": "^2.2.0",
+    "ncp": "^2.0.0",
+    "path": "^0.12.7",
+    "showdown": "^1.8.6"
+  }
+}
