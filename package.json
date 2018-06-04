@@ -1,6 +1,6 @@
 {
   "name": "markdown-elearnjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple markdown conversion to elearn.js based HTML and PDF.",
   "main": "src/main.js",
   "scripts": {
