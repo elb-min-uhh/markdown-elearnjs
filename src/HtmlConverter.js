@@ -65,7 +65,7 @@ class HtmlConverter {
     * @param val: obj - the value to set the option to.
     */
     setOption(opt, val) {
-        this.pdfBodyConverter.setOption(opt, val);
+        this.bodyConverter.setOption(opt, val);
     }
 
     /**
@@ -74,7 +74,7 @@ class HtmlConverter {
     */
     setOptions(options) {
         for(var key in options) {
-            this.pdfBodyConverter.setOption(key, options[key]);
+            this.bodyConverter.setOption(key, options[key]);
         }
     }
 
