@@ -1,3 +1,14 @@
+## 1.0.3
+* Fixes:
+    * Allow absolute file paths to be exported correctly
+    * automatic extension detection only if `includeXY` is undefined (not if false)
+    * fix an unhandled error in FileManager
+## 1.0.2
+* Fixes:
+    * Fixed an undefined variable
+# 1.0.1
+* Features:
+    * Allow changeable converter options
 ## 1.0.0
 * First version:
     * Convert to HTML string
