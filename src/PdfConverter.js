@@ -72,6 +72,26 @@ class PdfConverter {
     }
 
     /**
+    * Update one of the conversion options.
+    *
+    * @param opt: string - option key. Same possible as in the constructor.
+    * @param val: obj - the value to set the option to.
+    */
+    setOption(opt, val) {
+        this.pdfBodyConverter.setOption(opt, val);
+    }
+
+    /**
+    * Update multiple conversion options.
+    * @param options: Object - same as in the constructor
+    */
+    setOptions(options) {
+        for(var key in options) {
+            this.pdfBodyConverter.setOption(key, options[key]);
+        }
+    }
+
+    /**
     * Converts given markdown to a HTML string for a HTML to PDF conversion.
     * Certain options will specify the output.
     *
