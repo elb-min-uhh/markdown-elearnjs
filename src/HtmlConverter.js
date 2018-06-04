@@ -131,13 +131,13 @@ class HtmlConverter {
             FileManager.getHtmlTemplate().then((data) => {
                 if(!options.language) options.language = "en";
                 if(options.automaticExtensionDetection) {
-                    if(!options.includeQuiz)
+                    if(options.includeQuiz == undefined)
                         options.includeQuiz = ExtensionManager.scanForQuiz(html);
-                    if(!options.includeElearnVideo)
+                    if(options.includeElearnVideo == undefined)
                         options.includeElearnVideo = ExtensionManager.scanForVideo(html);
-                    if(!options.includeClickImage)
+                    if(options.includeClickImage == undefined)
                         options.includeClickImage = ExtensionManager.scanForClickImage(html);
-                    if(!options.includeTimeSlider)
+                    if(options.includeTimeSlider == undefined)
                         options.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
                 }
                 res(self.getHTMLFileContent(data, html, meta, imprint, options));
