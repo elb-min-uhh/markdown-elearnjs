@@ -1,3 +1,6 @@
+## 1.0.4
+* Fixes:
+    * Fix extraction of encoded URIs
 ## 1.0.3
 * Fixes:
     * Allow absolute file paths to be exported correctly

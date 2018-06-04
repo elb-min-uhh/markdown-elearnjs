@@ -55,6 +55,9 @@ var processSourceReplacement = function(wholeMatch, tag, before, wrapBefore, wra
 */
 function copyFile(source, target, ignoreNotExistent) {
     var promise = new Promise((resolve, reject) => {
+        source = decodeURI(source);
+        target = decodeURI(target);
+
         // do not overwrite with itself [will create a 0B file]
         if(path.resolve(source) === path.resolve(target)) {
             resolve();
