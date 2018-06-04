@@ -9,7 +9,7 @@ class FileManager {
         var ret = new Promise((resolve, reject) => {
             FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template.html`, (data) => {
                 resolve(data);
-            });
+            }, err => reject(err));
         });
 
         return ret;
@@ -19,7 +19,7 @@ class FileManager {
         var ret = new Promise((resolve, reject) => {
             FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template_pdf.html`, (data) => {
                 resolve(data);
-            });
+            }, err => reject(err));
         });
 
         return ret;
@@ -30,7 +30,7 @@ class FileManager {
     */
     static readFile(filePath, callback, error) {
         fs.readFile(filePath, 'utf8', (err, data) => {
-            if(err) return error(err);
+            if(err) error(err);
             if(callback) callback(data);
         });
     }
