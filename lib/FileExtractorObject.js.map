@@ -1,0 +1,1 @@
+{"version":3,"file":"FileExtractorObject.js","sourceRoot":"","sources":["../src/FileExtractorObject.ts"],"names":[],"mappings":"AAAA,YAAY,CAAC;;AAIb;;;;EAIE;AACF;IAII;;;;;;;MAOE;IACF,6BAAY,IAAa,EAAE,KAAwB;QAC/C,IAAG,IAAI;YAAE,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;QAC1B,IAAG,KAAK;YAAE,IAAI,CAAC,KAAK,GAAG,KAAK,CAAC;IACjC,CAAC;IACL,0BAAC;AAAD,CAAC,AAhBD,IAgBC;AAED,qBAAe,mBAAmB,CAAC"}

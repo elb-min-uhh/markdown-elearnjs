@@ -1,0 +1,1 @@
+{"version":3,"file":"FileMoveObject.js","sourceRoot":"","sources":["../src/FileMoveObject.ts"],"names":[],"mappings":"AAAA,YAAY,CAAC;;AAEb;IAII,wBAAY,SAAkB,EAAE,kBAA2B;QACvD,IAAG,SAAS,KAAK,SAAS;YAAE,IAAI,CAAC,SAAS,GAAG,SAAS,CAAC;QACvD,IAAG,kBAAkB,KAAK,SAAS;YAAE,IAAI,CAAC,kBAAkB,GAAG,kBAAkB,CAAC;IACtF,CAAC;IACL,qBAAC;AAAD,CAAC,AARD,IAQC;AAED,qBAAe,cAAc,CAAC"}

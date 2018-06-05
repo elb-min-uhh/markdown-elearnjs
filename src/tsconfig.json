@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "outDir": "../lib/",
+        "sourceMap": true,
+        "lib": [
+            "es5",
+            "es2015",
+            "es6",
+            "es2016",
+            "dom",
+            "scripthost"],
+         // types option has been previously configured
+         "types": [
+            // add node as an option
+            "node"
+         ],
+         // typeRoots option has been previously configured
+         "typeRoots": [
+            // add path to @types
+            "node_modules/@types"
+         ]
+    }
+}

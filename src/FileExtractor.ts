@@ -1,10 +1,11 @@
 "use strict";
 
-const path = require('path');
-const fs = require('fs');
+import * as fs from 'fs';
+import * as path from 'path';
 
-const FileExtractorObject = require('./FileExtractorObject.js');
-const PromiseCounter = require('./util/PromiseCounter.js');
+import FileExtractorObject from './FileExtractorObject';
+import PromiseCounter from './util/PromiseCounter';
+import FileMoveObject from './FileMoveObject';
 
 // Capturing groups: 1, 2 for attributes before src, 3: wrapping char ["'], 4: src value
 var imageSrcRegExp = /<(img)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)src[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
@@ -15,14 +16,16 @@ var videoSourceSrcRegExp = /<(source)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=
 var notHttpRegExp = /^(?!https?).*/g;
 var isRelativePath = /\.[\/]/;
 
-var processSourceReplacement = function(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files) {
+var processSourceReplacement = function(wholeMatch: string, tag: string, before: string, wrapBefore: string,
+    wrap: string, val: string, after: string, closingSlash: string, files: FileMoveObject[])
+{
     var ret = wholeMatch;
 
     // update and extract if local file
     if(val.match(notHttpRegExp)) {
         var fileName = path.basename(val);
 
-        var file = {};
+        var file: FileMoveObject = new FileMoveObject();
 
         file.inputPath = val;
 
@@ -52,9 +55,11 @@ var processSourceReplacement = function(wholeMatch, tag, before, wrapBefore, wra
 
 /**
 * Copy a file, creates nonexistent directories
+*
+* @return Promise<void>: resolves when done.
 */
-function copyFile(source, target, ignoreNotExistent) {
-    var promise = new Promise((resolve, reject) => {
+function copyFile(source: string, target: string, ignoreNotExistent?: boolean) {
+    var promise = new Promise<void>((resolve, reject) => {
         source = decodeURI(source);
         target = decodeURI(target);
 
@@ -75,7 +80,7 @@ function copyFile(source, target, ignoreNotExistent) {
             return;
         }
 
-        var ensureDirectoryExistence = function (filePath) {
+        var ensureDirectoryExistence = function (filePath: string) {
             var dirname = path.dirname(filePath);
             if (fs.existsSync(dirname)) {
                 return true;
@@ -87,14 +92,14 @@ function copyFile(source, target, ignoreNotExistent) {
 
         var cbCalled = false;
         var rd = fs.createReadStream(source);
-        rd.on("error", function (err) {
+        rd.on("error", function (err: any) {
             reject(err);
         });
         var wr = fs.createWriteStream(target);
-        wr.on("error", function (err) {
+        wr.on("error", function (err: any) {
             reject(err);
         });
-        wr.on("close", function (ex) {
+        wr.on("close", function (ex: any) {
             resolve();
         });
         rd.pipe(wr);
@@ -103,8 +108,8 @@ function copyFile(source, target, ignoreNotExistent) {
 };
 
 class FileExtractor {
-    static extractAll(files, inputRoot, outputRoot, timeout) {
-        var promises = [];
+    static extractAll(files: FileMoveObject[], inputRoot: string, outputRoot: string, timeout?: number) {
+        var promises : Promise<void>[] = [];
 
         for(var file of files) {
             var inputPath = path.isAbsolute(file.inputPath) ?
@@ -121,8 +126,8 @@ class FileExtractor {
         });
     }
 
-    static replaceAllLinks(html) {
-        var files = [];
+    static replaceAllLinks(html: string) {
+        var files : FileMoveObject[] = [];
         var fileExtractorObject;
 
         // process images
@@ -148,32 +153,32 @@ class FileExtractor {
         return new FileExtractorObject(html, files);
     }
 
-    static replaceImages(html) {
-        var files = []; // will be filled by processSourceReplacement
+    static replaceImages(html: string) {
+        var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(imageSrcRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
         });
         return new FileExtractorObject(html, files);
     }
 
-    static replaceScripts(html) {
-        var files = []; // will be filled by processSourceReplacement
+    static replaceScripts(html: string) {
+        var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(scriptSrcRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
         });
         return new FileExtractorObject(html, files);
     }
 
-    static replaceStyleSheets(html) {
-        var files = []; // will be filled by processSourceReplacement
+    static replaceStyleSheets(html: string) {
+        var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(linkHrefRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
         });
         return new FileExtractorObject(html, files);
     }
 
-    static replaceVideoSource(html) {
-        var files = []; // will be filled by processSourceReplacement
+    static replaceVideoSource(html: string) {
+        var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(videoSourceSrcRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
         });
@@ -181,4 +186,4 @@ class FileExtractor {
     }
 }
 
-module.exports = FileExtractor;
+export default FileExtractor;

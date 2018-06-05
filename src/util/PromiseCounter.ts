@@ -6,13 +6,27 @@
 */
 class PromiseCounter {
 
+    // counter and timeout
+    count: number;
+    expected: number;
+    timeout: NodeJS.Timer;
+
+    // listener
+    listenerAdded : boolean;
+    resolve : () => any;
+    reject : (err: any) => any;
+
+    // finish statess
+    done: boolean;
+    error: Error;
+
     /**
     * constructor
     *
     * @param promises: Promise[] list of promises to wait for
     * @param timeout (optional): integer, timeout in ms
     */
-    constructor(promises, timeout) {
+    constructor(promises: Promise<any>[], timeout?: number) {
         const self = this;
 
         if(!promises || promises.length == undefined) {
@@ -23,7 +37,7 @@ class PromiseCounter {
         self.expected = promises.length;
 
         // add timeout if given
-        if(timeout && timeout === parseInt(timeout, 10)) {
+        if(timeout != null) {
             self.timeout = setTimeout(() => {
                 self.onError(`Timeout in PromiseCounter after ${timeout} ms.`);
             }, timeout);
@@ -42,7 +56,7 @@ class PromiseCounter {
     /**
     * adds a Promise-Like callback
     */
-    then(resolve, reject) {
+    then(resolve: () => any, reject: (err: any) => any) {
         this.listenerAdded = true;
         this.resolve = resolve;
         this.reject = reject;
@@ -55,8 +69,8 @@ class PromiseCounter {
         this.checkDone();
     }
 
-    onError(err) {
-        if(!err) this.error = "Undefined error in PromiseCounter.";
+    onError(err: any) {
+        if(!err) this.error = new Error("Undefined error in PromiseCounter.");
         else this.error = err;
         this.checkDone();
     }
@@ -74,4 +88,4 @@ class PromiseCounter {
     }
 }
 
-module.exports = PromiseCounter;
+export default PromiseCounter;

@@ -1,8 +1,8 @@
 "use strict";
 
-const path = require('path');
-var ncp = require('ncp').ncp;
-ncp.limit = 16;
+import * as path from 'path';
+import { ncp } from 'ncp';
+import InclusionObject from './objects/InclusionObject';
 
 const divClassRegExp = /<div[ \t]((?:(?!class[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\2|(?!\2).)*\2[ \t]*)*)class[ \t]*=[ \t]*(["'])((?:\\\3|(?!\3).)*)\3((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
 const videoRegExp = /<video[ \t>]/g;
@@ -17,35 +17,41 @@ const assetsPath = '../assets';
 class ExtensionManager {
 
     // Scan
-    static scanForQuiz(html) {
+    static scanForQuiz(html: string) {
         var include = false;
-        html.replace(divClassRegExp, (wholeMatch, before, wrapBefore, wrap, classVal, after, closingSlash) => {
+        html.replace(divClassRegExp,
+                (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
+                    classVal: string, after: string, closingSlash: string) => {
             if(classVal.match(/(?:^|\s)question(?:$|\s)/g)) include = true;
-            return false;
+            return "";
         });
         return include;
     }
 
-    static scanForVideo(html) {
+    static scanForVideo(html: string) {
         var include = false;
         if(html.match(videoRegExp)) include = true;
         return include;
     }
 
-    static scanForClickImage(html) {
+    static scanForClickImage(html: string) {
         var include = false;
-        html.replace(divClassRegExp, (wholeMatch, before, wrapBefore, wrap, classVal, after, closingSlash) => {
+        html.replace(divClassRegExp,
+            (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
+                classVal: string, after: string, closingSlash: string) => {
             if(classVal.match(/(?:^|\s)clickimage(?:$|\s)/g)) include = true;
-            return false;
+            return "";
         });
         return include;
     }
 
-    static scanForTimeSlider(html) {
+    static scanForTimeSlider(html: string) {
         var include = false;
-        html.replace(divClassRegExp, (wholeMatch, before, wrapBefore, wrap, classVal, after, closingSlash) => {
+        html.replace(divClassRegExp,
+            (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
+                classVal: string, after: string, closingSlash: string) => {
             if(classVal.match(/(?:^|\s)timeslider(?:$|\s)/g)) include = true;
-            return false;
+            return "";
         });
         return include;
     }
@@ -70,14 +76,14 @@ class ExtensionManager {
 
     // Asset Strings for a HTML Export
 
-    static getHTMLAssetStrings(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider) {
+    static getHTMLAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
         return `${includeQuiz ? ExtensionManager.getQuizHTMLAssetString() : ""}
                 ${includeElearnVideo ? ExtensionManager.getElearnVideoHTMLAssetString() : ""}
                 ${includeClickImage ? ExtensionManager.getClickImageHTMLAssetString() : ""}
                 ${includeTimeSlider ? ExtensionManager.getTimeSliderHTMLAssetString() : ""}`;
     }
 
-    static getHTMLAssetString(name) {
+    static getHTMLAssetString(name: string) {
         return `<link rel="stylesheet" type="text/css" href="assets/css/${name}.css">
                 <script type="text/javascript" src="assets/js/${name}.js"></script>`;
     }
@@ -102,7 +108,7 @@ class ExtensionManager {
 
     // Asset Strings for a PDF Export
 
-    static getPDFAssetStrings(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider) {
+    static getPDFAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
         return `${includeQuiz ? ExtensionManager.getQuizPDFAssetString() : ""}
                 ${includeElearnVideo ? ExtensionManager.getElearnVideoPDFAssetString() : ""}
                 ${includeClickImage ? ExtensionManager.getClickImagePDFAssetString() : ""}
@@ -148,25 +154,9 @@ class ExtensionManager {
     /**
     * Writes the elearn.js assets to the given path.
     * @param dirPath: string - the path to write the `assets` folder to.
-    * @param options: Object with following optional keys:
-    *   - includeQuiz: bool - will include the import of the quiz.js in the head.
-    *       The script has to be located under `./assets`
-    *       Only if not `bodyOnly`
-    *       Default: auto detection
-    *   - includeElearnVideo: bool - will include the import of the
-    *       elearnvideo.js in the head. The script has to be located under `./assets`
-    *       Only if not `bodyOnly`
-    *       Default: auto detection
-    *   - includeClickImage: bool - will include the import of the clickimage.js
-    *       in the head. The script has to be located under `./assets`
-    *       Only if not `bodyOnly`
-    *       Default: auto detection
-    *   - includeTimeSlider: bool - will include the import of the timeslider.js
-    *       in the head. The script has to be located under `./assets`
-    *       Only if not `bodyOnly`
-    *       Default: auto detection
+    * @param {InclusionObject} opts optional options
     */
-    static exportAssets(dirPath, opts) {
+    static exportAssets(dirPath: string, opts: InclusionObject) {
         var outPath = path.resolve(dirPath + "/assets/");
         var folders = [path.resolve(`${__dirname}/${assetsPath}/elearnjs/assets/`)];
 
@@ -184,14 +174,14 @@ class ExtensionManager {
     /**
     * Copies/writes a list of folders by their absolute paths to the outPath
     */
-    static writeFolders(folders, outPath, callback, error) {
+    static writeFolders(folders: string[], outPath: string, callback: () => any, error?: (err: any) => any) {
         if(!folders || !folders.length) {
             if(callback) callback();
             return;
         }
         // get first folder + remove from array
         var inPath = folders.shift();
-        ncp(inPath, outPath, function(err) {
+        ncp(inPath!, outPath, function(err: any) {
             if(err) {
                 if(error) error(err);
                 return;
@@ -202,4 +192,4 @@ class ExtensionManager {
     }
 }
 
-module.exports = ExtensionManager;
+export default ExtensionManager;

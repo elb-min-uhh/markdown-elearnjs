@@ -2,7 +2,7 @@
   "name": "markdown-elearnjs",
   "version": "1.0.4",
   "description": "Simple markdown conversion to elearn.js based HTML and PDF.",
-  "main": "src/main.js",
+  "main": "lib/main.js",
   "scripts": {
     "test": "node test/test.js"
   },
@@ -23,5 +23,11 @@
     "ncp": "^2.0.0",
     "path": "^0.12.7",
     "showdown": "^1.8.6"
+  },
+  "devDependencies": {
+    "@types/html-pdf": "^2.1.2",
+    "@types/ncp": "^2.0.1",
+    "@types/showdown": "^1.7.4",
+    "@types/node": "^10.3.1"
   }
 }

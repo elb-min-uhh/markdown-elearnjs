@@ -1,25 +1,25 @@
 "use strict";
 
-const fs = require('fs');
+import * as fs from 'fs';
 
 const assetsPath = '../assets';
 
 class FileManager {
     static getHtmlTemplate() {
-        var ret = new Promise((resolve, reject) => {
+        var ret = new Promise<string>((resolve, reject) => {
             FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template.html`, (data) => {
                 resolve(data);
-            }, err => reject(err));
+            }, (err: any) => reject(err));
         });
 
         return ret;
     }
 
     static getPdfTemplate() {
-        var ret = new Promise((resolve, reject) => {
+        var ret = new Promise<string>((resolve, reject) => {
             FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template_pdf.html`, (data) => {
                 resolve(data);
-            }, err => reject(err));
+            }, (err: any) => reject(err));
         });
 
         return ret;
@@ -28,12 +28,12 @@ class FileManager {
     /**
     * Reads in a given file.
     */
-    static readFile(filePath, callback, error) {
+    static readFile(filePath: string, callback: (data: string) => any, error?: (err: any) => any) {
         fs.readFile(filePath, 'utf8', (err, data) => {
-            if(err) error(err);
+            if(err && error != null) error(err);
             if(callback) callback(data);
         });
     }
 }
 
-module.exports = FileManager;
+export default FileManager;
