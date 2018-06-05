@@ -2,7 +2,7 @@
 
 class ConverterSettingsObject {
     // general index signature
-    [key:string] : any;
+    [key: string]: any;
 
     newSectionOnHeading: boolean = true;
     headingDepth: number = 3;
@@ -26,13 +26,12 @@ class ConverterSettingsObject {
      * @param subsubSectionLevel : int - level from which on sections are subsubsections.
      *      Default: 4 (H4) (will not be created with everything as default)
      */
-    constructor(
-        newSectionOnHeading?: boolean,
+    constructor(newSectionOnHeading?: boolean,
         headingDepth?: number,
         useSubSections?: boolean,
         subSectionLevel?: number,
-        subsubSectionLevel?: number)
-    {
+        subsubSectionLevel?: number) {
+
         if(newSectionOnHeading !== undefined) this.newSectionOnHeading = newSectionOnHeading;
         if(headingDepth !== undefined) this.headingDepth = headingDepth;
         if(useSubSections !== undefined) this.useSubSections = useSubSections;

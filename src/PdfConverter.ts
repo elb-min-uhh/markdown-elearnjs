@@ -14,7 +14,7 @@ const elearnExtension = require('./ShowdownElearnJS.js');
 
 const assetsPath = '../assets';
 
-const defaults: {[key: string] : any} = {
+const defaults: { [key: string]: any } = {
     'newSectionOnHeading': true,
     'headingDepth': 3,
     'useSubSections': true,
@@ -31,7 +31,7 @@ const defaults: {[key: string] : any} = {
 
 class PdfConverter {
 
-    pdfBodyConverter : Showdown.Converter;
+    pdfBodyConverter: Showdown.Converter;
 
     /**
     * Creates an HtmlConverter with specific options.
@@ -145,7 +145,7 @@ class PdfConverter {
                     if(err) rej(err);
                     res(result);
                 });
-            }, (err) => {throw err});
+            }, (err) => { throw err });
         });
 
         return ret;
@@ -173,7 +173,7 @@ class PdfConverter {
                     if(err) rej(err);
                     res(stream);
                 });
-            }, (err) => {throw err});
+            }, (err) => { throw err });
         });
 
         return ret;
@@ -201,7 +201,7 @@ class PdfConverter {
                     if(err) rej(err);
                     res(buffer);
                 });
-            }, (err) => {throw err});
+            }, (err) => { throw err });
         });
 
         return ret;
@@ -219,7 +219,7 @@ class PdfConverter {
     getPDFFileContent(data: string, html: string, meta: string, opts?: InclusionObject) {
         const self = this;
 
-        var options : InclusionObject = opts || new InclusionObject();
+        var options: InclusionObject = opts || new InclusionObject();
 
         var zoom = `<style>html {zoom: ${self.pdfBodyConverter.getOption('contentZoom')}}</style>`;
         // header and footer
@@ -233,7 +233,7 @@ class PdfConverter {
             customStyle = `<link rel="stylesheet" type="text/css" href="${customStyleFile}">`;
         }
 
-        return data.replace(/\$\$meta\$\$/, () => {return meta})
+        return data.replace(/\$\$meta\$\$/, () => { return meta })
             .replace(/\$\$extensions\$\$/, () => {
                 return ExtensionManager.getPDFAssetStrings(
                     options.includeQuiz,
@@ -241,12 +241,12 @@ class PdfConverter {
                     options.includeClickImage,
                     options.includeTimeSlider);
             })
-            .replace(/\$\$zoom\$\$/, () => {return zoom})
-            .replace(/\$\$custom_style\$\$/, () => {return customStyle})
-            .replace(/\$\$header\$\$/, () => {return header})
-            .replace(/\$\$footer\$\$/, () => {return footer})
-            .replace(/\$\$body\$\$/, () => {return html})
-            .replace(/\$\$assetspath\$\$/g, () => {return "file:///" + path.resolve(`${__dirname}/${assetsPath}/elearnjs/`).replace(/\\/g, "/")});
+            .replace(/\$\$zoom\$\$/, () => { return zoom })
+            .replace(/\$\$custom_style\$\$/, () => { return customStyle })
+            .replace(/\$\$header\$\$/, () => { return header })
+            .replace(/\$\$footer\$\$/, () => { return footer })
+            .replace(/\$\$body\$\$/, () => { return html })
+            .replace(/\$\$assetspath\$\$/g, () => { return "file:///" + path.resolve(`${__dirname}/${assetsPath}/elearnjs/`).replace(/\\/g, "/") });
     }
 
     /**
@@ -255,7 +255,7 @@ class PdfConverter {
     *                 included assets.
     * @param renderDelay (optional) delay of rendering by the package in ms.
     */
-    getPdfOutputOptions(rootPath: string, renderDelay?: number) : HtmlPdf.CreateOptions {
+    getPdfOutputOptions(rootPath: string, renderDelay?: number): HtmlPdf.CreateOptions {
         const self = this;
 
         if(!renderDelay) renderDelay = 0;

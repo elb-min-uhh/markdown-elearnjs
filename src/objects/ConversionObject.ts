@@ -35,15 +35,14 @@ class ConversionObject extends InclusionObject {
      *      Only if not `bodyOnly`
      *      Default: false
      */
-    constructor(
-        bodyOnly?: boolean,
+    constructor(bodyOnly?: boolean,
         language?: string,
         automaticExtensionDetection?: boolean,
         includeQuiz?: boolean,
         includeElearnVideo?: boolean,
         includeClickImage?: boolean,
-        includeTimeSlider?: boolean)
-    {
+        includeTimeSlider?: boolean) {
+
         super(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider, language);
         if(bodyOnly !== undefined) this.bodyOnly = bodyOnly;
         if(automaticExtensionDetection !== undefined) this.automaticExtensionDetection = automaticExtensionDetection;

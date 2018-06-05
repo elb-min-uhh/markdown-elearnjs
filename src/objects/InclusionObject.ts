@@ -2,7 +2,7 @@
 
 class InclusionObject {
     // general index signature
-    [key:string] : any;
+    [key: string]: any;
 
     includeQuiz?: boolean;
     includeElearnVideo?: boolean;
@@ -34,13 +34,12 @@ class InclusionObject {
      *      if not `bodyOnly`.
      *      Default: "en"
      */
-    constructor(
-        includeQuiz?: boolean,
+    constructor(includeQuiz?: boolean,
         includeElearnVideo?: boolean,
         includeClickImage?: boolean,
         includeTimeSlider?: boolean,
-        language?: string)
-    {
+        language?: string) {
+
         if(includeQuiz !== undefined) this.includeQuiz = includeQuiz;
         if(includeElearnVideo !== undefined) this.includeElearnVideo = includeElearnVideo;
         if(includeClickImage !== undefined) this.includeClickImage = includeClickImage;

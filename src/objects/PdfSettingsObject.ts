@@ -37,8 +37,7 @@ class PdfSettingsObject extends ConverterSettingsObject {
      * @param footerHeight : string - CSS declaration of the footer's height
      * @param customStyleFile : string - absolute path to a styling css file
      */
-    constructor(
-        newSectionOnHeading?: boolean,
+    constructor(newSectionOnHeading?: boolean,
         headingDepth?: number,
         useSubSections?: boolean,
         subSectionLevel?: number,
@@ -49,8 +48,8 @@ class PdfSettingsObject extends ConverterSettingsObject {
         headerHeight?: string,
         customFooter?: string,
         footerHeight?: string,
-        customStyleFile?: string)
-    {
+        customStyleFile?: string) {
+
         super(newSectionOnHeading, headingDepth, useSubSections, subSectionLevel, subsubSectionLevel);
         if(newPageOnSection !== undefined) this.newPageOnSection = newPageOnSection;
         if(contentZoom !== undefined) this.contentZoom = contentZoom;
