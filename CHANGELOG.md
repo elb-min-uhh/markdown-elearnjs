@@ -1,3 +1,5 @@
+## 1.1.0
+* Converted project source from JavaScript code to TypeScript
 ## 1.0.4
 * Fixes:
     * Fix extraction of encoded URIs
