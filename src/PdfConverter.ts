@@ -224,7 +224,9 @@ class PdfConverter {
         var zoom = `<style>html {zoom: ${self.pdfBodyConverter.getOption('contentZoom')}}</style>`;
         // header and footer
         var header = self.pdfBodyConverter.getOption('customHeader');
+        if(!header) header = self.getDefaultHeader();
         var footer = self.pdfBodyConverter.getOption('customFooter');
+        if(!footer) footer = self.getDefaultFooter();
 
         var customStyleFile = self.pdfBodyConverter.getOption('customStyleFile');
         var customStyle = "";
@@ -280,6 +282,16 @@ class PdfConverter {
         };
 
         return opts;
+    }
+
+    getDefaultHeader() {
+        return ``;
+    }
+
+    getDefaultFooter() {
+        return `<div id="pageFooter" style="font-family: Arial, Verdana, sans-serif; color: #666; position: absolute; height: 100%; width: 100%;">
+            <span style="position: absolute; bottom: 0; right: 0">{{page}}</span>
+        </div>`;
     }
 }
 

@@ -89,5 +89,7 @@ declare class PdfConverter {
     * @param renderDelay (optional) delay of rendering by the package in ms.
     */
     getPdfOutputOptions(rootPath: string, renderDelay?: number): HtmlPdf.CreateOptions;
+    getDefaultHeader(): string;
+    getDefaultFooter(): string;
 }
 export default PdfConverter;

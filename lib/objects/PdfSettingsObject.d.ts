@@ -2,9 +2,9 @@ import ConverterSettingsObject from "./ConverterSettingsObject";
 declare class PdfSettingsObject extends ConverterSettingsObject {
     newPageOnSection: boolean;
     contentZoom: number;
-    customHeader: string;
+    customHeader?: string;
+    customFooter?: string;
     headerHeight: string;
-    customFooter: string;
     footerHeight: string;
     customStyleFile?: string;
     /**
@@ -25,11 +25,11 @@ declare class PdfSettingsObject extends ConverterSettingsObject {
      * @param newPageOnSection : bool - will add page breaks before every section
      * @param contentZoom : float - zoom factor for the page rendering
      * @param customHeader : string - HTML of a custom page header
-     * @param headerHeight : string - CSS declaration of the header's height
      * @param customFooter : string - HTML of a custom page footer
+     * @param headerHeight : string - CSS declaration of the header's height
      * @param footerHeight : string - CSS declaration of the footer's height
      * @param customStyleFile : string - absolute path to a styling css file
      */
-    constructor(newSectionOnHeading?: boolean, headingDepth?: number, useSubSections?: boolean, subSectionLevel?: number, subsubSectionLevel?: number, newPageOnSection?: boolean, contentZoom?: number, customHeader?: string, headerHeight?: string, customFooter?: string, footerHeight?: string, customStyleFile?: string);
+    constructor(newSectionOnHeading?: boolean, headingDepth?: number, useSubSections?: boolean, subSectionLevel?: number, subsubSectionLevel?: number, newPageOnSection?: boolean, contentZoom?: number, customHeader?: string, customFooter?: string, headerHeight?: string, footerHeight?: string, customStyleFile?: string);
 }
 export default PdfSettingsObject;
