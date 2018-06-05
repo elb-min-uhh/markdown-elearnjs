@@ -8,7 +8,7 @@ class InclusionObject {
     includeElearnVideo?: boolean;
     includeClickImage?: boolean;
     includeTimeSlider?: boolean;
-    language?: string;
+    language: string = "en";
 
     /**
      * An Object containing options for the general conversions

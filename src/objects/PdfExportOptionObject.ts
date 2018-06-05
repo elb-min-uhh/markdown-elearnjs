@@ -3,7 +3,7 @@
 import ConversionObject from "./ConversionObject";
 
 class PdfExportOptionObject extends ConversionObject {
-    renderDelay?: number;
+    renderDelay: number = 0;
 
     /**
      * An Object containing options for the general conversions

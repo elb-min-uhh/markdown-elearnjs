@@ -25,9 +25,7 @@ var processSourceReplacement = function(wholeMatch: string, tag: string, before:
     if(val.match(notHttpRegExp)) {
         var fileName = path.basename(val);
 
-        var file: FileMoveObject = new FileMoveObject();
-
-        file.inputPath = val;
+        var inputPath = val;
 
         // replace val
         switch(tag.toLowerCase()) {
@@ -37,10 +35,11 @@ var processSourceReplacement = function(wholeMatch: string, tag: string, before:
             case "link": val = `assets/css/${fileName}`; break;
         }
 
-        file.relativeOutputPath = val;
+        var outputPath = val;
 
-        if(file.inputPath !== file.relativeOutputPath)
-            files.push(file);
+        if(inputPath !== outputPath) {
+            files.push(new FileMoveObject(inputPath, outputPath));
+        }
 
         switch(tag.toLowerCase()) {
             case "img":
@@ -133,23 +132,23 @@ class FileExtractor {
 
         // process images
         fileExtractorObject = FileExtractor.replaceImages(html);
-        if(fileExtractorObject.html) html = fileExtractorObject.html;
-        if(fileExtractorObject.files) files = files.concat(fileExtractorObject.files);
+        html = fileExtractorObject.html;
+        files = files.concat(fileExtractorObject.files);
 
         // process images
         fileExtractorObject = FileExtractor.replaceScripts(html);
-        if(fileExtractorObject.html) html = fileExtractorObject.html;
-        if(fileExtractorObject.files) files = files.concat(fileExtractorObject.files);
+        html = fileExtractorObject.html;
+        files = files.concat(fileExtractorObject.files);
 
         // process images
         fileExtractorObject = FileExtractor.replaceStyleSheets(html);
-        if(fileExtractorObject.html) html = fileExtractorObject.html;
-        if(fileExtractorObject.files) files = files.concat(fileExtractorObject.files);
+        html = fileExtractorObject.html;
+        files = files.concat(fileExtractorObject.files);
 
         // process images
         fileExtractorObject = FileExtractor.replaceVideoSource(html);
-        if(fileExtractorObject.html)  html = fileExtractorObject.html;
-        if(fileExtractorObject.files) files = files.concat(fileExtractorObject.files);
+         html = fileExtractorObject.html;
+        files = files.concat(fileExtractorObject.files);
 
         return new FileExtractorObject(html, files);
     }

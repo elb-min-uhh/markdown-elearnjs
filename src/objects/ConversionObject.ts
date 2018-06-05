@@ -3,11 +3,8 @@
 import InclusionObject from "./InclusionObject";
 
 class ConversionObject extends InclusionObject {
-    // general index signature
-    [key:string] : any;
-
-    bodyOnly?: boolean;
-    automaticExtensionDetection?: boolean;
+    bodyOnly: boolean = false;
+    automaticExtensionDetection: boolean = false;
 
     /**
      * An Object containing options for the general conversions

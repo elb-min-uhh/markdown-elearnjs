@@ -88,29 +88,28 @@ class PdfConverter {
     *
     * @return {Promise<string>} - will resolve with the output html, when done.
     */
-    toPdfHtml(markdown: string, options: ConversionObject) {
+    toPdfHtml(markdown: string, options?: ConversionObject) {
         const self = this;
-        if(!options) options = {};
+        var opts = options || new ConversionObject();
 
         var ret = new Promise<string>((res, rej) => {
             var html = self.pdfBodyConverter.makeHtml(markdown);// conversion
 
-            if(options.bodyOnly) res(html);
+            if(opts.bodyOnly) res(html);
 
             // create meta and imprint
             var meta = elearnExtension.parseMetaData(markdown);
 
             FileManager.getPdfTemplate().then((data) => {
-                if(!options.language) options.language = "en";
-                if(options.automaticExtensionDetection) {
-                    if(options.includeQuiz == undefined)
-                        options.includeQuiz = ExtensionManager.scanForQuiz(html);
-                    if(options.includeElearnVideo == undefined)
-                        options.includeElearnVideo = ExtensionManager.scanForVideo(html);
-                    if(options.includeClickImage == undefined)
-                        options.includeClickImage = ExtensionManager.scanForClickImage(html);
-                    if(options.includeTimeSlider == undefined)
-                        options.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
+                if(opts.automaticExtensionDetection) {
+                    if(opts.includeQuiz == undefined)
+                        opts.includeQuiz = ExtensionManager.scanForQuiz(html);
+                    if(opts.includeElearnVideo == undefined)
+                        opts.includeElearnVideo = ExtensionManager.scanForVideo(html);
+                    if(opts.includeClickImage == undefined)
+                        opts.includeClickImage = ExtensionManager.scanForClickImage(html);
+                    if(opts.includeTimeSlider == undefined)
+                        opts.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
                 }
                 res(self.getPDFFileContent(data, html, meta, options));
             }, (err) => { throw err; });
@@ -225,13 +224,11 @@ class PdfConverter {
         var zoom = `<style>html {zoom: ${self.pdfBodyConverter.getOption('contentZoom')}}</style>`;
         // header and footer
         var header = self.pdfBodyConverter.getOption('customHeader');
-        if(!header) header = self.getDefaultHeader();
         var footer = self.pdfBodyConverter.getOption('customFooter');
-        if(!footer) footer = self.getDefaultFooter();
 
         var customStyleFile = self.pdfBodyConverter.getOption('customStyleFile');
         var customStyle = "";
-        if(customStyleFile && fs.existsSync(path.resolve(customStyleFile))) {
+        if(customStyleFile && customStyleFile.length > 0 && fs.existsSync(path.resolve(customStyleFile))) {
             customStyleFile = "file:///" + path.resolve(customStyleFile).replace(/\\/g, "/");
             customStyle = `<link rel="stylesheet" type="text/css" href="${customStyleFile}">`;
         }
@@ -283,22 +280,6 @@ class PdfConverter {
         };
 
         return opts;
-    }
-
-    /**
-    * The default PDF Header HTML elements
-    */
-    getDefaultHeader() {
-        return ``;
-    }
-
-    /**
-    * The default PDF Footer HTML elements
-    */
-    getDefaultFooter() {
-        return `<div id="pageFooter" style="font-family: Arial, Verdana, sans-serif; color: #666; position: absolute; height: 100%; width: 100%;">
-                    <span style="position: absolute; bottom: 0; right: 0">{{page}}</span>
-                </div>`; // {{pages}} := maximale Anzahl
     }
 }
 

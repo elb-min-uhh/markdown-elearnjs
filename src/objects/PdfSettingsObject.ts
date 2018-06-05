@@ -3,12 +3,15 @@
 import ConverterSettingsObject from "./ConverterSettingsObject";
 
 class PdfSettingsObject extends ConverterSettingsObject {
-    newPageOnSection?: boolean;
-    contentZoom?: number;
-    customHeader?: string;
-    headerHeight?: string;
-    customFooter?: string;
-    footerHeight?: string;
+    newPageOnSection: boolean = true;
+    contentZoom: number = 1;
+    customHeader: string = "";
+    headerHeight: string = "0";
+    customFooter: string =
+        `<div id="pageFooter" style="font-family: Arial, Verdana, sans-serif; color: #666; position: absolute; height: 100%; width: 100%;">
+            <span style="position: absolute; bottom: 0; right: 0">{{page}}</span>
+        </div>`;
+    footerHeight: string = "17mm";
     customStyleFile?: string;
 
     /**
@@ -46,14 +49,16 @@ class PdfSettingsObject extends ConverterSettingsObject {
         headerHeight?: string,
         customFooter?: string,
         footerHeight?: string,
-        customStyleFile?: string,)
+        customStyleFile?: string)
     {
         super(newSectionOnHeading, headingDepth, useSubSections, subSectionLevel, subsubSectionLevel);
-        if(newSectionOnHeading !== undefined) this.newSectionOnHeading = newSectionOnHeading;
-        if(headingDepth !== undefined) this.headingDepth = headingDepth;
-        if(useSubSections !== undefined) this.useSubSections = useSubSections;
-        if(subSectionLevel !== undefined) this.subSectionLevel = subSectionLevel;
-        if(subsubSectionLevel !== undefined) this.subsubSectionLevel = subsubSectionLevel;
+        if(newPageOnSection !== undefined) this.newPageOnSection = newPageOnSection;
+        if(contentZoom !== undefined) this.contentZoom = contentZoom;
+        if(customHeader !== undefined) this.customHeader = customHeader;
+        if(headerHeight !== undefined) this.headerHeight = headerHeight;
+        if(customFooter !== undefined) this.customFooter = customFooter;
+        if(footerHeight !== undefined) this.footerHeight = footerHeight;
+        if(customStyleFile !== undefined) this.customStyleFile = customStyleFile;
     }
 }
 

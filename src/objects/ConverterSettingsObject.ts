@@ -4,11 +4,11 @@ class ConverterSettingsObject {
     // general index signature
     [key:string] : any;
 
-    newSectionOnHeading?: boolean;
-    headingDepth?: number;
-    useSubSections?: boolean;
-    subSectionLevel?: number;
-    subsubSectionLevel?: number;
+    newSectionOnHeading: boolean = true;
+    headingDepth: number = 3;
+    useSubSections: boolean = true;
+    subSectionLevel: number = 3;
+    subsubSectionLevel: number = 4;
 
     /**
      * An Object containing options for the general Converters
