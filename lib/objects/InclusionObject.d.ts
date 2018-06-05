@@ -4,7 +4,7 @@ declare class InclusionObject {
     includeElearnVideo?: boolean;
     includeClickImage?: boolean;
     includeTimeSlider?: boolean;
-    language?: string;
+    language: string;
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.

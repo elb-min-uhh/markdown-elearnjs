@@ -1,10 +1,10 @@
 declare class ConverterSettingsObject {
     [key: string]: any;
-    newSectionOnHeading?: boolean;
-    headingDepth?: number;
-    useSubSections?: boolean;
-    subSectionLevel?: number;
-    subsubSectionLevel?: number;
+    newSectionOnHeading: boolean;
+    headingDepth: number;
+    useSubSections: boolean;
+    subSectionLevel: number;
+    subsubSectionLevel: number;
     /**
      * An Object containing options for the general Converters
      *

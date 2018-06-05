@@ -1,6 +1,6 @@
 import ConversionObject from "./ConversionObject";
 declare class PdfExportOptionObject extends ConversionObject {
-    renderDelay?: number;
+    renderDelay: number;
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.

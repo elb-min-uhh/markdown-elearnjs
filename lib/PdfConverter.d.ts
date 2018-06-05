@@ -32,7 +32,7 @@ declare class PdfConverter {
     *
     * @return {Promise<string>} - will resolve with the output html, when done.
     */
-    toPdfHtml(markdown: string, options: ConversionObject): Promise<string>;
+    toPdfHtml(markdown: string, options?: ConversionObject): Promise<string>;
     /**
     * Converts given markdown to a PDF File.
     * Certain options will specify the output.
@@ -89,13 +89,5 @@ declare class PdfConverter {
     * @param renderDelay (optional) delay of rendering by the package in ms.
     */
     getPdfOutputOptions(rootPath: string, renderDelay?: number): HtmlPdf.CreateOptions;
-    /**
-    * The default PDF Header HTML elements
-    */
-    getDefaultHeader(): string;
-    /**
-    * The default PDF Footer HTML elements
-    */
-    getDefaultFooter(): string;
 }
 export default PdfConverter;

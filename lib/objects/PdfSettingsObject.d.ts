@@ -1,11 +1,11 @@
 import ConverterSettingsObject from "./ConverterSettingsObject";
 declare class PdfSettingsObject extends ConverterSettingsObject {
-    newPageOnSection?: boolean;
-    contentZoom?: number;
-    customHeader?: string;
-    headerHeight?: string;
-    customFooter?: string;
-    footerHeight?: string;
+    newPageOnSection: boolean;
+    contentZoom: number;
+    customHeader: string;
+    headerHeight: string;
+    customFooter: string;
+    footerHeight: string;
     customStyleFile?: string;
     /**
      * An Object containing options for the PdfConverter

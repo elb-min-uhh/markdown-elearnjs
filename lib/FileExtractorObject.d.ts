@@ -5,8 +5,8 @@ import FileMoveObject from "./FileMoveObject";
 * and found files.
 */
 declare class FileExtractorObject {
-    html?: string;
-    files?: FileMoveObject[];
+    html: string;
+    files: FileMoveObject[];
     /**
     * @param html: string of html after fileExtraction,
     *              all `files` are changed in the html.
@@ -15,6 +15,6 @@ declare class FileExtractorObject {
     * @param files: FileMoveObject[], containing multiple files of type
     *               {inputPath: ..., relativeOutputPath: ...}
     */
-    constructor(html?: string, files?: FileMoveObject[]);
+    constructor(html: string, files: FileMoveObject[]);
 }
 export default FileExtractorObject;

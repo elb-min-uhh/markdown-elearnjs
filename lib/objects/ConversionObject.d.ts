@@ -1,8 +1,7 @@
 import InclusionObject from "./InclusionObject";
 declare class ConversionObject extends InclusionObject {
-    [key: string]: any;
-    bodyOnly?: boolean;
-    automaticExtensionDetection?: boolean;
+    bodyOnly: boolean;
+    automaticExtensionDetection: boolean;
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
