@@ -1,11 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+import FileMoveObject from "./FileMoveObject";
 /**
 * Used to return information about file extraction process.
 * Contains changed HTML (replaced relative links)
 * and found files.
 */
-class FileExtractorObject {
+declare class FileExtractorObject {
+    html?: string;
+    files?: FileMoveObject[];
     /**
     * @param html: string of html after fileExtraction,
     *              all `files` are changed in the html.
@@ -14,11 +15,6 @@ class FileExtractorObject {
     * @param files: FileMoveObject[], containing multiple files of type
     *               {inputPath: ..., relativeOutputPath: ...}
     */
-    constructor(html, files) {
-        if (html)
-            this.html = html;
-        if (files)
-            this.files = files;
-    }
+    constructor(html?: string, files?: FileMoveObject[]);
 }
-exports.default = FileExtractorObject;
+export default FileExtractorObject;

@@ -1,10 +1,8 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const InclusionObject_1 = __importDefault(require("./InclusionObject"));
-class ConversionObject extends InclusionObject_1.default {
+import InclusionObject from "./InclusionObject";
+declare class ConversionObject extends InclusionObject {
+    [key: string]: any;
+    bodyOnly?: boolean;
+    automaticExtensionDetection?: boolean;
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
@@ -34,12 +32,6 @@ class ConversionObject extends InclusionObject_1.default {
      *      Only if not `bodyOnly`
      *      Default: false
      */
-    constructor(bodyOnly, language, automaticExtensionDetection, includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider) {
-        super(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider, language);
-        if (bodyOnly !== undefined)
-            this.bodyOnly = bodyOnly;
-        if (automaticExtensionDetection !== undefined)
-            this.automaticExtensionDetection = automaticExtensionDetection;
-    }
+    constructor(bodyOnly?: boolean, language?: string, automaticExtensionDetection?: boolean, includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean);
 }
-exports.default = ConversionObject;
+export default ConversionObject;

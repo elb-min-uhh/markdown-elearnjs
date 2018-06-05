@@ -7,18 +7,18 @@
 class PromiseCounter {
 
     // counter and timeout
-    count: number;
-    expected: number;
-    timeout: NodeJS.Timer;
+    count!: number;
+    expected!: number;
+    timeout?: NodeJS.Timer;
 
     // listener
-    listenerAdded : boolean;
-    resolve : () => any;
-    reject : (err: any) => any;
+    listenerAdded: boolean = false;
+    resolve?: () => any;
+    reject?: (err: any) => any;
 
     // finish statess
-    done: boolean;
-    error: Error;
+    done: boolean = false;
+    error?: any;
 
     /**
     * constructor
@@ -79,11 +79,11 @@ class PromiseCounter {
         if(this.done || !this.listenerAdded) return; // only finalize once
         if(this.error) {
             this.done = true;
-            this.reject(this.error);
+            if(this.reject) this.reject(this.error);
         }
         else if(this.count === this.expected) {
             this.done = true;
-            this.resolve();
+            if(this.resolve) this.resolve();
         }
     }
 }

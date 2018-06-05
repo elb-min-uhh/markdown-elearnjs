@@ -1,6 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class InclusionObject {
+declare class InclusionObject {
+    [key: string]: any;
+    includeQuiz?: boolean;
+    includeElearnVideo?: boolean;
+    includeClickImage?: boolean;
+    includeTimeSlider?: boolean;
+    language?: string;
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
@@ -25,17 +29,6 @@ class InclusionObject {
      *      if not `bodyOnly`.
      *      Default: "en"
      */
-    constructor(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider, language) {
-        if (includeQuiz !== undefined)
-            this.includeQuiz = includeQuiz;
-        if (includeElearnVideo !== undefined)
-            this.includeElearnVideo = includeElearnVideo;
-        if (includeClickImage !== undefined)
-            this.includeClickImage = includeClickImage;
-        if (includeTimeSlider !== undefined)
-            this.includeTimeSlider = includeTimeSlider;
-        if (language !== undefined)
-            this.language = language;
-    }
+    constructor(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean, language?: string);
 }
-exports.default = InclusionObject;
+export default InclusionObject;

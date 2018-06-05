@@ -1,6 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class ConverterSettingsObject {
+declare class ConverterSettingsObject {
+    [key: string]: any;
+    newSectionOnHeading?: boolean;
+    headingDepth?: number;
+    useSubSections?: boolean;
+    subSectionLevel?: number;
+    subsubSectionLevel?: number;
     /**
      * An Object containing options for the general Converters
      *
@@ -17,17 +21,6 @@ class ConverterSettingsObject {
      * @param subsubSectionLevel : int - level from which on sections are subsubsections.
      *      Default: 4 (H4) (will not be created with everything as default)
      */
-    constructor(newSectionOnHeading, headingDepth, useSubSections, subSectionLevel, subsubSectionLevel) {
-        if (newSectionOnHeading !== undefined)
-            this.newSectionOnHeading = newSectionOnHeading;
-        if (headingDepth !== undefined)
-            this.headingDepth = headingDepth;
-        if (useSubSections !== undefined)
-            this.useSubSections = useSubSections;
-        if (subSectionLevel !== undefined)
-            this.subSectionLevel = subSectionLevel;
-        if (subsubSectionLevel !== undefined)
-            this.subsubSectionLevel = subsubSectionLevel;
-    }
+    constructor(newSectionOnHeading?: boolean, headingDepth?: number, useSubSections?: boolean, subSectionLevel?: number, subsubSectionLevel?: number);
 }
-exports.default = ConverterSettingsObject;
+export default ConverterSettingsObject;

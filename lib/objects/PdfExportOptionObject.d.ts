@@ -1,10 +1,6 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const InclusionObject_1 = __importDefault(require("./InclusionObject"));
-class ConversionObject extends InclusionObject_1.default {
+import ConversionObject from "./ConversionObject";
+declare class PdfExportOptionObject extends ConversionObject {
+    renderDelay?: number;
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
@@ -33,13 +29,8 @@ class ConversionObject extends InclusionObject_1.default {
      *       in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
+     * @param {number} renderDelay delay of rendering the html to pdf in ms
      */
-    constructor(bodyOnly, language, automaticExtensionDetection, includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider) {
-        super(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider, language);
-        if (bodyOnly !== undefined)
-            this.bodyOnly = bodyOnly;
-        if (automaticExtensionDetection !== undefined)
-            this.automaticExtensionDetection = automaticExtensionDetection;
-    }
+    constructor(bodyOnly?: boolean, language?: string, automaticExtensionDetection?: boolean, includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean, renderDelay?: number);
 }
-exports.default = ConversionObject;
+export default PdfExportOptionObject;

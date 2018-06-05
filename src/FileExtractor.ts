@@ -112,6 +112,7 @@ class FileExtractor {
         var promises : Promise<void>[] = [];
 
         for(var file of files) {
+            if(!file.inputPath || !file.relativeOutputPath) continue;
             var inputPath = path.isAbsolute(file.inputPath) ?
                                 path.resolve(file.inputPath).replace(/\\/g, "/")
                                 : path.resolve(`${inputRoot}/${file.inputPath}`).replace(/\\/g, "/");
@@ -132,23 +133,23 @@ class FileExtractor {
 
         // process images
         fileExtractorObject = FileExtractor.replaceImages(html);
-        html = fileExtractorObject.html;
-        files = files.concat(fileExtractorObject.files);
+        if(fileExtractorObject.html) html = fileExtractorObject.html;
+        if(fileExtractorObject.files) files = files.concat(fileExtractorObject.files);
 
         // process images
         fileExtractorObject = FileExtractor.replaceScripts(html);
-        html = fileExtractorObject.html;
-        files = files.concat(fileExtractorObject.files);
+        if(fileExtractorObject.html) html = fileExtractorObject.html;
+        if(fileExtractorObject.files) files = files.concat(fileExtractorObject.files);
 
         // process images
         fileExtractorObject = FileExtractor.replaceStyleSheets(html);
-        html = fileExtractorObject.html;
-        files = files.concat(fileExtractorObject.files);
+        if(fileExtractorObject.html) html = fileExtractorObject.html;
+        if(fileExtractorObject.files) files = files.concat(fileExtractorObject.files);
 
         // process images
         fileExtractorObject = FileExtractor.replaceVideoSource(html);
-        html = fileExtractorObject.html;
-        files = files.concat(fileExtractorObject.files);
+        if(fileExtractorObject.html)  html = fileExtractorObject.html;
+        if(fileExtractorObject.files) files = files.concat(fileExtractorObject.files);
 
         return new FileExtractorObject(html, files);
     }
