@@ -108,15 +108,16 @@ MarkdownElearnJS.FileExtractor.extractAll(
 ```
 
 The tool will search for all file paths in `img`, `script`, `link` and `source`
-Html elements. Those paths will be replaced by relative paths to the asset
+Html elements. Those paths will be replaced with relative paths to the assets
 folder and the updated html can be found as displayed above.
 
 Also all these files are stored in the `fileExtractorObject.files` array,
 which can be used in the `extractAll` function.
 
-The `inputRoot` should lead to the Markdown file, so the relative links in there
-can be combined with the `inputRoot` to an absolute path.
-The `outputRoot` leads to the parent directory of the `assets` folder.
+The `inputRoot` should lead to the Markdown file's parent directory,
+so the relative links in there can be combined with the `inputRoot` to an
+absolute path.
+The `outputRoot` leads to the parent directory of the output `assets` folder.
 The timeout (in ms) will cancel the extraction process after some time, if
 something went wrong.
 
