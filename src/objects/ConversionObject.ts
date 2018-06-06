@@ -3,11 +3,8 @@
 import InclusionObject from "./InclusionObject";
 
 class ConversionObject extends InclusionObject {
-    // general index signature
-    [key:string] : any;
-
-    bodyOnly?: boolean;
-    automaticExtensionDetection?: boolean;
+    bodyOnly: boolean = false;
+    automaticExtensionDetection: boolean = false;
 
     /**
      * An Object containing options for the general conversions
@@ -38,15 +35,14 @@ class ConversionObject extends InclusionObject {
      *      Only if not `bodyOnly`
      *      Default: false
      */
-    constructor(
-        bodyOnly?: boolean,
+    constructor(bodyOnly?: boolean,
         language?: string,
         automaticExtensionDetection?: boolean,
         includeQuiz?: boolean,
         includeElearnVideo?: boolean,
         includeClickImage?: boolean,
-        includeTimeSlider?: boolean)
-    {
+        includeTimeSlider?: boolean) {
+
         super(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider, language);
         if(bodyOnly !== undefined) this.bodyOnly = bodyOnly;
         if(automaticExtensionDetection !== undefined) this.automaticExtensionDetection = automaticExtensionDetection;

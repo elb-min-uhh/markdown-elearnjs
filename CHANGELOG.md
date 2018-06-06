@@ -1,3 +1,6 @@
+## 1.1.1
+* More strict TypeScript preferences
+* Added `declaration` files (.d.ts)
 ## 1.1.0
 * Converted project source from JavaScript code to TypeScript
 ## 1.0.4

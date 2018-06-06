@@ -14,7 +14,7 @@ const elearnExtension = require('./ShowdownElearnJS.js');
 
 const assetsPath = '../assets';
 
-const defaults: {[key: string] : any} = {
+const defaults: { [key: string]: any } = {
     'newSectionOnHeading': true,
     'headingDepth': 3,
     'useSubSections': true,
@@ -31,7 +31,7 @@ const defaults: {[key: string] : any} = {
 
 class PdfConverter {
 
-    pdfBodyConverter : Showdown.Converter;
+    pdfBodyConverter: Showdown.Converter;
 
     /**
     * Creates an HtmlConverter with specific options.
@@ -88,29 +88,28 @@ class PdfConverter {
     *
     * @return {Promise<string>} - will resolve with the output html, when done.
     */
-    toPdfHtml(markdown: string, options: ConversionObject) {
+    toPdfHtml(markdown: string, options?: ConversionObject) {
         const self = this;
-        if(!options) options = {};
+        var opts = options || new ConversionObject();
 
         var ret = new Promise<string>((res, rej) => {
             var html = self.pdfBodyConverter.makeHtml(markdown);// conversion
 
-            if(options.bodyOnly) res(html);
+            if(opts.bodyOnly) res(html);
 
             // create meta and imprint
             var meta = elearnExtension.parseMetaData(markdown);
 
             FileManager.getPdfTemplate().then((data) => {
-                if(!options.language) options.language = "en";
-                if(options.automaticExtensionDetection) {
-                    if(options.includeQuiz == undefined)
-                        options.includeQuiz = ExtensionManager.scanForQuiz(html);
-                    if(options.includeElearnVideo == undefined)
-                        options.includeElearnVideo = ExtensionManager.scanForVideo(html);
-                    if(options.includeClickImage == undefined)
-                        options.includeClickImage = ExtensionManager.scanForClickImage(html);
-                    if(options.includeTimeSlider == undefined)
-                        options.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
+                if(opts.automaticExtensionDetection) {
+                    if(opts.includeQuiz == undefined)
+                        opts.includeQuiz = ExtensionManager.scanForQuiz(html);
+                    if(opts.includeElearnVideo == undefined)
+                        opts.includeElearnVideo = ExtensionManager.scanForVideo(html);
+                    if(opts.includeClickImage == undefined)
+                        opts.includeClickImage = ExtensionManager.scanForClickImage(html);
+                    if(opts.includeTimeSlider == undefined)
+                        opts.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
                 }
                 res(self.getPDFFileContent(data, html, meta, options));
             }, (err) => { throw err; });
@@ -146,7 +145,7 @@ class PdfConverter {
                     if(err) rej(err);
                     res(result);
                 });
-            }, (err) => {throw err});
+            }, (err) => { throw err });
         });
 
         return ret;
@@ -174,7 +173,7 @@ class PdfConverter {
                     if(err) rej(err);
                     res(stream);
                 });
-            }, (err) => {throw err});
+            }, (err) => { throw err });
         });
 
         return ret;
@@ -202,7 +201,7 @@ class PdfConverter {
                     if(err) rej(err);
                     res(buffer);
                 });
-            }, (err) => {throw err});
+            }, (err) => { throw err });
         });
 
         return ret;
@@ -220,7 +219,7 @@ class PdfConverter {
     getPDFFileContent(data: string, html: string, meta: string, opts?: InclusionObject) {
         const self = this;
 
-        var options : InclusionObject = opts || new InclusionObject();
+        var options: InclusionObject = opts || new InclusionObject();
 
         var zoom = `<style>html {zoom: ${self.pdfBodyConverter.getOption('contentZoom')}}</style>`;
         // header and footer
@@ -231,12 +230,12 @@ class PdfConverter {
 
         var customStyleFile = self.pdfBodyConverter.getOption('customStyleFile');
         var customStyle = "";
-        if(customStyleFile && fs.existsSync(path.resolve(customStyleFile))) {
+        if(customStyleFile && customStyleFile.length > 0 && fs.existsSync(path.resolve(customStyleFile))) {
             customStyleFile = "file:///" + path.resolve(customStyleFile).replace(/\\/g, "/");
             customStyle = `<link rel="stylesheet" type="text/css" href="${customStyleFile}">`;
         }
 
-        return data.replace(/\$\$meta\$\$/, () => {return meta})
+        return data.replace(/\$\$meta\$\$/, () => { return meta })
             .replace(/\$\$extensions\$\$/, () => {
                 return ExtensionManager.getPDFAssetStrings(
                     options.includeQuiz,
@@ -244,12 +243,12 @@ class PdfConverter {
                     options.includeClickImage,
                     options.includeTimeSlider);
             })
-            .replace(/\$\$zoom\$\$/, () => {return zoom})
-            .replace(/\$\$custom_style\$\$/, () => {return customStyle})
-            .replace(/\$\$header\$\$/, () => {return header})
-            .replace(/\$\$footer\$\$/, () => {return footer})
-            .replace(/\$\$body\$\$/, () => {return html})
-            .replace(/\$\$assetspath\$\$/g, () => {return "file:///" + path.resolve(`${__dirname}/${assetsPath}/elearnjs/`).replace(/\\/g, "/")});
+            .replace(/\$\$zoom\$\$/, () => { return zoom })
+            .replace(/\$\$custom_style\$\$/, () => { return customStyle })
+            .replace(/\$\$header\$\$/, () => { return header })
+            .replace(/\$\$footer\$\$/, () => { return footer })
+            .replace(/\$\$body\$\$/, () => { return html })
+            .replace(/\$\$assetspath\$\$/g, () => { return "file:///" + path.resolve(`${__dirname}/${assetsPath}/elearnjs/`).replace(/\\/g, "/") });
     }
 
     /**
@@ -258,7 +257,7 @@ class PdfConverter {
     *                 included assets.
     * @param renderDelay (optional) delay of rendering by the package in ms.
     */
-    getPdfOutputOptions(rootPath: string, renderDelay?: number) : HtmlPdf.CreateOptions {
+    getPdfOutputOptions(rootPath: string, renderDelay?: number): HtmlPdf.CreateOptions {
         const self = this;
 
         if(!renderDelay) renderDelay = 0;
@@ -285,20 +284,14 @@ class PdfConverter {
         return opts;
     }
 
-    /**
-    * The default PDF Header HTML elements
-    */
     getDefaultHeader() {
         return ``;
     }
 
-    /**
-    * The default PDF Footer HTML elements
-    */
     getDefaultFooter() {
         return `<div id="pageFooter" style="font-family: Arial, Verdana, sans-serif; color: #666; position: absolute; height: 100%; width: 100%;">
-                    <span style="position: absolute; bottom: 0; right: 0">{{page}}</span>
-                </div>`; // {{pages}} := maximale Anzahl
+            <span style="position: absolute; bottom: 0; right: 0">{{page}}</span>
+        </div>`;
     }
 }
 

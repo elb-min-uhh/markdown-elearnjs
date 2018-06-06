@@ -3,7 +3,7 @@
 import ConversionObject from "./ConversionObject";
 
 class PdfExportOptionObject extends ConversionObject {
-    renderDelay: number;
+    renderDelay: number = 0;
 
     /**
      * An Object containing options for the general conversions
@@ -35,16 +35,15 @@ class PdfExportOptionObject extends ConversionObject {
      *      Default: false
      * @param {number} renderDelay delay of rendering the html to pdf in ms
      */
-    constructor(
-        bodyOnly?: boolean,
+    constructor(bodyOnly?: boolean,
         language?: string,
         automaticExtensionDetection?: boolean,
         includeQuiz?: boolean,
         includeElearnVideo?: boolean,
         includeClickImage?: boolean,
         includeTimeSlider?: boolean,
-        renderDelay?: number)
-    {
+        renderDelay?: number) {
+
         super(bodyOnly, language, automaticExtensionDetection, includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider);
         if(renderDelay !== undefined) this.renderDelay = renderDelay;
     }

@@ -1,16 +1,12 @@
-"use strinct"
-
 import ConverterSettingsObject from "./ConverterSettingsObject";
-
-class PdfSettingsObject extends ConverterSettingsObject {
-    newPageOnSection: boolean = true;
-    contentZoom: number = 1;
+declare class PdfSettingsObject extends ConverterSettingsObject {
+    newPageOnSection: boolean;
+    contentZoom: number;
     customHeader?: string;
     customFooter?: string;
-    headerHeight: string = "0";
-    footerHeight: string = "17mm";
+    headerHeight: string;
+    footerHeight: string;
     customStyleFile?: string;
-
     /**
      * An Object containing options for the PdfConverter
      *
@@ -34,28 +30,6 @@ class PdfSettingsObject extends ConverterSettingsObject {
      * @param footerHeight : string - CSS declaration of the footer's height
      * @param customStyleFile : string - absolute path to a styling css file
      */
-    constructor(newSectionOnHeading?: boolean,
-        headingDepth?: number,
-        useSubSections?: boolean,
-        subSectionLevel?: number,
-        subsubSectionLevel?: number,
-        newPageOnSection?: boolean,
-        contentZoom?: number,
-        customHeader?: string,
-        customFooter?: string,
-        headerHeight?: string,
-        footerHeight?: string,
-        customStyleFile?: string) {
-
-        super(newSectionOnHeading, headingDepth, useSubSections, subSectionLevel, subsubSectionLevel);
-        if(newPageOnSection !== undefined) this.newPageOnSection = newPageOnSection;
-        if(contentZoom !== undefined) this.contentZoom = contentZoom;
-        if(customHeader !== undefined) this.customHeader = customHeader;
-        if(customFooter !== undefined) this.customFooter = customFooter;
-        if(headerHeight !== undefined) this.headerHeight = headerHeight;
-        if(footerHeight !== undefined) this.footerHeight = footerHeight;
-        if(customStyleFile !== undefined) this.customStyleFile = customStyleFile;
-    }
+    constructor(newSectionOnHeading?: boolean, headingDepth?: number, useSubSections?: boolean, subSectionLevel?: number, subsubSectionLevel?: number, newPageOnSection?: boolean, contentZoom?: number, customHeader?: string, customFooter?: string, headerHeight?: string, footerHeight?: string, customStyleFile?: string);
 }
-
 export default PdfSettingsObject;

@@ -8,7 +8,7 @@ import ConversionObject from "./objects/ConversionObject.js";
 import InclusionObject from "./objects/InclusionObject.js";
 const elearnExtension = require('./ShowdownElearnJS.js');
 
-const defaults: {[key: string] : any} = {
+const defaults: { [key: string]: any } = {
     'newSectionOnHeading': true,
     'headingDepth': 3,
     'useSubSections': true,
@@ -18,8 +18,8 @@ const defaults: {[key: string] : any} = {
 
 class HtmlConverter {
 
-    bodyConverter : Showdown.Converter;
-    imprintConverter : Showdown.Converter;
+    bodyConverter: Showdown.Converter;
+    imprintConverter: Showdown.Converter;
 
     /**
     * Creates an HtmlConverter with specific options.
@@ -84,7 +84,7 @@ class HtmlConverter {
     */
     toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
-        var opts : ConversionObject = options || new ConversionObject();
+        var opts: ConversionObject = options || new ConversionObject();
 
         var ret = new Promise((res, rej) => {
             var html = self.bodyConverter.makeHtml(markdown);// conversion
@@ -132,7 +132,7 @@ class HtmlConverter {
     */
     getHTMLFileContent(data: string, html: string, meta: string, imprint: string, opts?: InclusionObject) {
         var options: InclusionObject = opts || new InclusionObject();
-        return data.replace(/\$\$meta\$\$/, () => {return meta})
+        return data.replace(/\$\$meta\$\$/, () => { return meta })
             .replace(/\$\$extensions\$\$/, () => {
                 return ExtensionManager.getHTMLAssetStrings(
                     options.includeQuiz,
@@ -140,8 +140,8 @@ class HtmlConverter {
                     options.includeClickImage,
                     options.includeTimeSlider);
             })
-            .replace(/\$\$imprint\$\$/, () => {return imprint})
-            .replace(/\$\$body\$\$/, () => {return html})
+            .replace(/\$\$imprint\$\$/, () => { return imprint })
+            .replace(/\$\$body\$\$/, () => { return html })
             .replace(/\$\$language\$\$/, () => {
                 if(options.language && options.language !== "de") {
                     return `<script>

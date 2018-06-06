@@ -20,11 +20,11 @@ class ExtensionManager {
     static scanForQuiz(html: string) {
         var include = false;
         html.replace(divClassRegExp,
-                (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
-                    classVal: string, after: string, closingSlash: string) => {
-            if(classVal.match(/(?:^|\s)question(?:$|\s)/g)) include = true;
-            return "";
-        });
+            (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
+                classVal: string, after: string, closingSlash: string) => {
+                if(classVal.match(/(?:^|\s)question(?:$|\s)/g)) include = true;
+                return "";
+            });
         return include;
     }
 
@@ -39,9 +39,9 @@ class ExtensionManager {
         html.replace(divClassRegExp,
             (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
                 classVal: string, after: string, closingSlash: string) => {
-            if(classVal.match(/(?:^|\s)clickimage(?:$|\s)/g)) include = true;
-            return "";
-        });
+                if(classVal.match(/(?:^|\s)clickimage(?:$|\s)/g)) include = true;
+                return "";
+            });
         return include;
     }
 
@@ -50,9 +50,9 @@ class ExtensionManager {
         html.replace(divClassRegExp,
             (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
                 classVal: string, after: string, closingSlash: string) => {
-            if(classVal.match(/(?:^|\s)timeslider(?:$|\s)/g)) include = true;
-            return "";
-        });
+                if(classVal.match(/(?:^|\s)timeslider(?:$|\s)/g)) include = true;
+                return "";
+            });
         return include;
     }
 

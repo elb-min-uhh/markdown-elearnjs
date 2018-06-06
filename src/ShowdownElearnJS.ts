@@ -37,7 +37,7 @@ var removeMarkdownSyntax = (text: string, converter: Showdown.Converter) => {
 };
 
 var descrIndex = 0;
-var descriptions: {[key: number]: string} = {};
+var descriptions: { [key: number]: string } = {};
 
 
 const addSectionOnHeading = {
@@ -57,7 +57,7 @@ const addSectionOnHeading = {
                     content = content.trim();
                     var ret = `${type}<!--no-section-->${content}`;
                     if(type.length <= headingDepth
-                            && content.indexOf(`<!--no-section-->`) < 0) {
+                        && content.indexOf(`<!--no-section-->`) < 0) {
 
                         var hideInOverview = content.indexOf(`<!--hide-in-overview-->`) >= 0 ? '<!--hide-in-overview-->' : '';
                         content = content.replace(hideInOverviewRegExp, "");
@@ -68,7 +68,7 @@ const addSectionOnHeading = {
 
                         // default section
                         if(!useSubSections
-                                || type.length < subSection) {
+                            || type.length < subSection) {
                             ret = `|||${escapeSectionName(content)}|||${hideInOverview}${description}\n` + ret;
                         }
                         else if(type.length < subSubSection) {
@@ -136,12 +136,11 @@ const insertSectionDescription = {
     type: 'output',
     filter: (text: string, converter: Showdown.Converter) => {
         text = text.replace(secDescriptionReplacementRegExp,
-            (wholeMatch, index) =>
-        {
-            var desc = descriptions && descriptions[index] ? `desc="${descriptions[index]}"` : '';
-            delete descriptions[index];
-            return desc;
-        });
+            (wholeMatch, index) => {
+                var desc = descriptions && descriptions[index] ? `desc="${descriptions[index]}"` : '';
+                delete descriptions[index];
+                return desc;
+            });
         return text;
     }
 };
@@ -151,9 +150,9 @@ const removeMetaBlock = {
     filter: (text: string, converter: Showdown.Converter) => {
         var match = text.match(metaBlockRegExp);
         if(match && match.length) {
-             text = text.replace(/\r/g, "").replace(metaBlockRegExp, function () {
-                 return "";
-             });
+            text = text.replace(/\r/g, "").replace(metaBlockRegExp, function() {
+                return "";
+            });
         }
         return text;
     }
@@ -164,7 +163,7 @@ const parseImprint = {
     filter: (text: string, converter: Showdown.Converter) => {
         text = text.replace(/\r/g, "");
         var imprint = text;
-        text.replace(imprintRegExp, function (wholeMatch, delim1, codeblock1, delim2, codeblock2) {
+        text.replace(imprintRegExp, function(wholeMatch, delim1, codeblock1, delim2, codeblock2) {
             var code = delim1 ? codeblock1 : (delim2 ? codeblock2 : undefined);
             if(!code) return "";
 
@@ -186,7 +185,7 @@ const parseImprint = {
 const removeImprintBlock = {
     type: 'lang',
     filter: (text: string, converter: Showdown.Converter) => {
-        text = text.replace(/\r/g, "").replace(imprintRegExp, function (wholeMatch, delim, content) {
+        text = text.replace(/\r/g, "").replace(imprintRegExp, function(wholeMatch, delim, content) {
             return "";
         });
         return text;
@@ -233,7 +232,7 @@ const cleanEmptyParagraphs = {
             var regBefore = new RegExp(`<p><${element}`, "g");
             var regAfter = new RegExp(`</${element}></p>`, "g");
             text = text.replace(regBefore, `<${element}`)
-                        .replace(regAfter, `</${element}>`);
+                .replace(regAfter, `</${element}>`);
         }
 
         return text;
@@ -246,11 +245,10 @@ const cleanMarkdownAttribute = {
         // check for HTML elements containing a markdown attribute
         var markdownAttributeRegExp = /<(\S+)((?:[ \t]+(?!markdown[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3)*)([ \t]+markdown[ \t]*=[ \t]*(["'])(?:\\\5|(?!\5).)*\5)([^>]*)>/gi;
         return text.replace(markdownAttributeRegExp,
-            (wholeMatch, tag, before, wrapBefore, attr, wrap, after, closingSlash) =>
-        {
-            // remove the attribute
-            return wholeMatch.replace(attr, "");
-        });
+            (wholeMatch, tag, before, wrapBefore, attr, wrap, after, closingSlash) => {
+                // remove the attribute
+                return wholeMatch.replace(attr, "");
+            });
     }
 };
 
@@ -298,7 +296,7 @@ var parseSection = (converter: Showdown.Converter, wholeMatch: string, wrap: str
 
     // check for sub or subsubsection
     var sub = '';
-    for(var i=3; i<size; i++) sub += 'sub';
+    for(var i = 3; i < size; i++) sub += 'sub';
     // check for hide in overview
     var hide = '';
     if(addition.indexOf(`<!--hide-in-overview-->`) >= 0) hide = "hide-in-overview";
@@ -343,7 +341,7 @@ var parseMetaData = (text: string) => {
 var createMeta = (tag: string, value: string, valueSurrounding: string) => {
     // unescape
     if(valueSurrounding) {
-        var regex = new RegExp("\\\\"+valueSurrounding, "g");
+        var regex = new RegExp("\\\\" + valueSurrounding, "g");
         value = value.replace(regex, valueSurrounding);
     }
     if(tag.toLowerCase() === "title") {

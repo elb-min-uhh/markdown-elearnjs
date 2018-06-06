@@ -8,7 +8,7 @@ import FileMoveObject from "./FileMoveObject";
 * and found files.
 */
 class FileExtractorObject {
-    html : string;
+    html: string;
     files: FileMoveObject[];
 
     /**
@@ -19,9 +19,9 @@ class FileExtractorObject {
     * @param files: FileMoveObject[], containing multiple files of type
     *               {inputPath: ..., relativeOutputPath: ...}
     */
-    constructor(html?: string, files?: FileMoveObject[]) {
-        if(html) this.html = html;
-        if(files) this.files = files;
+    constructor(html: string, files: FileMoveObject[]) {
+        this.html = html;
+        this.files = files;
     }
 }
 
