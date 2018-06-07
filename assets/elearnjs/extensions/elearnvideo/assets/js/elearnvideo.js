@@ -1,5 +1,5 @@
 /*
-* video.js v0.4.2 - 18/05/15
+* video.js v0.4.3 - 18/06/07
 * JavaScript Videoplayer - by Arne Westphal
 * eLearning Buero MIN-Fakultaet - Universitaet Hamburg
 */
@@ -7,7 +7,7 @@
 var eLearnVideoJS = eLearnVideoJS || {};
 
 eLearnVideoJS.localization = {
-    "de" : {
+    "de": {
         "play": "Abspielen",
         "pause": "Pausieren",
         "mute": "Stummschalten",
@@ -46,7 +46,7 @@ eLearnVideoJS.localization = {
         "placeholder.writenote": "Schreibe eine Notiz... (diese sind lokal gespeichert und nicht öffentlich)",
 
     },
-    "en" : {
+    "en": {
         "play": "Play",
         "pause": "Pause",
         "mute": "Mute",
@@ -104,8 +104,8 @@ $(document).ready(function() {
 eLearnVideoJS.video_hover_timers = {};
 eLearnVideoJS.video_volumes = {};
 eLearnVideoJS.video_timetypes = {
-    TIMELEFT : 0,
-    DURATION : 1
+    TIMELEFT: 0,
+    DURATION: 1
 };
 eLearnVideoJS.FILETYPE_JSON = 'json';
 eLearnVideoJS.FILETYPE_CSV = 'csv';
@@ -123,7 +123,7 @@ eLearnVideoJS.user_notes = {};
 eLearnVideoJS.initiateVideoPlayers = function() {
     eLearnVideoJS.loadLocalVideoNotesStorage();
 
-    $('video').not('.ignore_elearnvideo').each(function(i,e) {
+    $('video').not('.ignore_elearnvideo').each(function(i, e) {
         this.controls = false;
 
         $(this).wrap('<div class="video-container">');
@@ -133,12 +133,12 @@ eLearnVideoJS.initiateVideoPlayers = function() {
 
         div.append("<div class='mobile-overlay'><div class='icon playpause paused'></div></div>");
         div.append("<div class='loading-overlay'><div class='loading-con'>"
-                      + "<div class='loading-animation'>"
-                        + "<div class='background'></div>"
-                        + "<div class='inner'><div class='light'></div></div>"
-                        + "<div class='inner skip'><div class='light'></div></div>"
-                      + "</div>"
-                    + "</div></div>");
+            + "<div class='loading-animation'>"
+            + "<div class='background'></div>"
+            + "<div class='inner'><div class='light'></div></div>"
+            + "<div class='inner skip'><div class='light'></div></div>"
+            + "</div>"
+            + "</div></div>");
         if(this.autoplay) {
             this.play();
         }
@@ -146,26 +146,26 @@ eLearnVideoJS.initiateVideoPlayers = function() {
             div.append("<div class='play-overlay'><div class='icon play'></div></div>");
         }
         div.append("<div class='controls'>"
-                      + "<div class='bottom-row'>"
-                        + "<div class='icon playpause playing'></div>"
-                        + "<div class='volume'>"
-                            + "<div class='icon high' lang-code-title='mute'></div>"
-                            + "<div class='volume-con'>"
-                                + "<div class='volume-wrap'>"
-                                    + "<div class='volume-bar'></div>"
-                                    + "<div class='volume-control'></div>"
-                                + "</div>"
-                            + "</div>"
-                        + "</div>"
-                        + "<div class='text playtime' lang-code-title='time'></div>"
-                        + "<div class='video-progress-con'>"
-                            + "<div class='video-progress'><div class='video-progress-loaded'></div><div class='video-progress-bar'></div></div>"
-                            + "<div class='video-progress-pointer'></div>"
-                        + "</div>"
-                        + "<div class='text timeleft'></div>"
-                        + "<div class='icon fullscreen' lang-code-title='fullscreen'></div>"
-                      + "</div>"
-                    + "</div>");
+            + "<div class='bottom-row'>"
+            + "<div class='icon playpause playing'></div>"
+            + "<div class='volume'>"
+            + "<div class='icon high' lang-code-title='mute'></div>"
+            + "<div class='volume-con'>"
+            + "<div class='volume-wrap'>"
+            + "<div class='volume-bar'></div>"
+            + "<div class='volume-control'></div>"
+            + "</div>"
+            + "</div>"
+            + "</div>"
+            + "<div class='text playtime' lang-code-title='time'></div>"
+            + "<div class='video-progress-con'>"
+            + "<div class='video-progress'><div class='video-progress-loaded'></div><div class='video-progress-bar'></div></div>"
+            + "<div class='video-progress-pointer'></div>"
+            + "</div>"
+            + "<div class='text timeleft'></div>"
+            + "<div class='icon fullscreen' lang-code-title='fullscreen'></div>"
+            + "</div>"
+            + "</div>");
 
         eLearnVideoJS.addVideoPlayerListener(div);
         eLearnVideoJS.videoCheckForBrowserSpecifics(div);
@@ -195,7 +195,7 @@ eLearnVideoJS.initListeners = function() {
             }
 
             var observer = new IntersectionObserver(function(entries, observer) {
-                for(var i=0; i<entries.length; i++) {
+                for(var i = 0; i < entries.length; i++) {
                     var entry = entries[i];
                     eLearnVideoJS.resizeVideoPlayer($(entry.target));
                 }
@@ -256,10 +256,10 @@ eLearnVideoJS.addVideoPlayerListener = function(div) {
         + 'select submit textinput unload wheel '
         + 'orientationchange pointerdown pointermove pointerup '
         + 'touchstart touchmove touchend ', function(e) {
-        if(div.is('.full')) {
-            e.stopPropagation();
-        }
-    });
+            if(div.is('.full')) {
+                e.stopPropagation();
+            }
+        });
 };
 
 /**
@@ -335,10 +335,10 @@ eLearnVideoJS.videoAddUserInteractionListeners = function(div) {
             // touch
             if(event.type === "touchend") {
                 // keine clicks durch 2. mouse event auf eingeblendete Elemente
-                setTimeout(function() {eLearnVideoJS.videoToggleHover(div)}, 50);
+                setTimeout(function() { eLearnVideoJS.videoToggleHover(div) }, 50);
                 eLearnVideoJS.touchend_block = true;
                 clearTimeout(eLearnVideoJS.touchend_timer);
-                eLearnVideoJS.touchend_timer = setTimeout(function() {eLearnVideoJS.touchend_block = false;}, 100);
+                eLearnVideoJS.touchend_timer = setTimeout(function() { eLearnVideoJS.touchend_block = false; }, 100);
             }
             // no touch
             else if(!eLearnVideoJS.touchend_block) {
@@ -470,20 +470,20 @@ eLearnVideoJS.setLanguage = function(langCode) {
     langCode = langCode.toLowerCase();
     if(eLearnVideoJS.localization[langCode] !== undefined) {
         eLearnVideoJS.selectedLocale = langCode;
-        $('[lang-code],[lang-code-title],[lang-code-tab],[lang-code-placeholder]').each(function(i,e) {
+        $('[lang-code],[lang-code-title],[lang-code-tab],[lang-code-placeholder]').each(function(i, e) {
             eLearnVideoJS.localizeElement($(e));
         });
 
         // additional updates
         eLearnVideoJS.resizeAllVideoPlayers();
         eLearnVideoJS.videoUpdateTimeleftDuration();
-        $('.elearnjs-video').each(function(i,e) {
+        $('.elearnjs-video').each(function(i, e) {
             eLearnVideoJS.videoUpdatePlayPauseButton($(e));
             eLearnVideoJS.updateVideoUserNoteTime($(e));
         })
     }
     else {
-        throw "Unsupported language selected. Supported language codes are: "  + Object.keys(eLearnVideoJS.localization).toString();
+        throw "Unsupported language selected. Supported language codes are: " + Object.keys(eLearnVideoJS.localization).toString();
     }
 };
 eLearnVideoJS.selectLanguage = eLearnVideoJS.setLanguage;
@@ -539,7 +539,7 @@ eLearnVideoJS.localizeElement = function(el, force) {
 * Will not localize the element itself.
 */
 eLearnVideoJS.localizeChildren = function(el, force) {
-    el.find('[lang-code],[lang-code-title],[lang-code-tab]').each(function(i,e) {
+    el.find('[lang-code],[lang-code-title],[lang-code-tab]').each(function(i, e) {
         eLearnVideoJS.localizeElement($(e), force);
     });
 };
@@ -547,7 +547,7 @@ eLearnVideoJS.localizeChildren = function(el, force) {
 eLearnVideoJS.getLocalizationFor = function(code) {
     var loc = eLearnVideoJS.selectedLocale;
     if($('html').attr('lang')
-            && eLearnVideoJS.localization[$('html').attr('lang').toLowerCase()] !== undefined) {
+        && eLearnVideoJS.localization[$('html').attr('lang').toLowerCase()] !== undefined) {
         loc = $('html').attr('lang').toLowerCase();
     }
     return eLearnVideoJS.localization[loc][code];
@@ -562,7 +562,7 @@ eLearnVideoJS.getLocalizationFor = function(code) {
 eLearnVideoJS.videoCheckForBrowserSpecifics = function(div) {
     var device = "";
     var ua = navigator.userAgent.toLowerCase();
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+    if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
         device = "ios";
     }
 
@@ -614,7 +614,7 @@ eLearnVideoJS.videoHover = function(div) {
     var idx = $('.elearnjs-video').index(div);
     if(eLearnVideoJS.video_hover_timers[idx] != undefined) clearTimeout(eLearnVideoJS.video_hover_timers[idx]);
     if(!(vid.paused && div.is('.mobile'))) {
-        eLearnVideoJS.video_hover_timers[idx] = setTimeout(function(){
+        eLearnVideoJS.video_hover_timers[idx] = setTimeout(function() {
             if(eLearnVideoJS.videoProgressMouseDown || eLearnVideoJS.videoVolumeMouseDown) {
                 eLearnVideoJS.videoHover(div);
             }
@@ -644,8 +644,8 @@ eLearnVideoJS.videoHoverEnd = function(div) {
 */
 eLearnVideoJS.checkVideoFullscreen = function() {
     var isFullScreen = document.fullScreen ||
-                   document.mozFullScreen ||
-                   document.webkitIsFullScreen;
+        document.mozFullScreen ||
+        document.webkitIsFullScreen;
 
     if(!isFullScreen) {
         $('.elearnjs-video').removeClass("full");
@@ -677,7 +677,7 @@ eLearnVideoJS.videoOnClick = function(div) {
             }
         }, dblclick_time);
     }
-    else if(eLearnVideoJS.videoFullscreenPending[idx] === true){
+    else if(eLearnVideoJS.videoFullscreenPending[idx] === true) {
         // reset
         eLearnVideoJS.videoFullscreenPending[idx] = false;
         eLearnVideoJS.videoToggleFullscreen(div);
@@ -755,7 +755,7 @@ eLearnVideoJS.videoUpdateTimeleftDuration = function() {
     }
     timeleft_field.attr("title", title);
 
-    $('.elearnjs-video').each(function(i,e) {
+    $('.elearnjs-video').each(function(i, e) {
         eLearnVideoJS.updateVideoTime($(e));
     });
 };
@@ -768,27 +768,27 @@ eLearnVideoJS.videoToggleFullscreen = function(div) {
     // to fullscreen
     if(!div.is(".full")) {
         var elem = div[0];
-        if (elem.requestFullscreen) {
+        if(elem.requestFullscreen) {
             elem.requestFullscreen();
-        } else if (elem.msRequestFullscreen) {
+        } else if(elem.msRequestFullscreen) {
             elem.msRequestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
+        } else if(elem.mozRequestFullScreen) {
             elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) {
+        } else if(elem.webkitRequestFullscreen) {
             elem.webkitRequestFullscreen();
-        } else if (elem.webkitEnterFullscreen) {
+        } else if(elem.webkitEnterFullscreen) {
             elem.webkitEnterFullscreen();
         } else {
             elem = div.find('video')[0];
-            if (elem.requestFullscreen) {
+            if(elem.requestFullscreen) {
                 elem.requestFullscreen();
-            } else if (elem.msRequestFullscreen) {
+            } else if(elem.msRequestFullscreen) {
                 elem.msRequestFullscreen();
-            } else if (elem.mozRequestFullScreen) {
+            } else if(elem.mozRequestFullScreen) {
                 elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) {
+            } else if(elem.webkitRequestFullscreen) {
                 elem.webkitRequestFullscreen();
-            } else if (elem.webkitEnterFullscreen) {
+            } else if(elem.webkitEnterFullscreen) {
                 elem.webkitEnterFullscreen();
             } else {
                 alert('No Fullscreen Support.')
@@ -799,13 +799,13 @@ eLearnVideoJS.videoToggleFullscreen = function(div) {
         div.addClass("full");
     }
     else {
-        if (document.exitFullscreen) {
+        if(document.exitFullscreen) {
             document.exitFullscreen();
-        } else if (document.msExitFullscreen) {
+        } else if(document.msExitFullscreen) {
             document.msExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
+        } else if(document.mozCancelFullScreen) {
             document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
+        } else if(document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
         }
         div.removeClass("full");
@@ -831,7 +831,7 @@ eLearnVideoJS.videoVolumeClick = function(div, e) {
     if(e.type === "touchend") {
         eLearnVideoJS.touchend_block = true;
         clearTimeout(eLearnVideoJS.touchend_timer);
-        eLearnVideoJS.touchend_timer = setTimeout(function() {eLearnVideoJS.touchend_block = false;}, 100);
+        eLearnVideoJS.touchend_timer = setTimeout(function() { eLearnVideoJS.touchend_block = false; }, 100);
     }
 
     if(e.type === "touchend" || !eLearnVideoJS.touchend_block) {
@@ -843,7 +843,7 @@ eLearnVideoJS.videoVolumeClick = function(div, e) {
                 eLearnVideoJS.video_volumes[idx] = vid.volume;
                 vid.volume = 0;
             }
-            else if(eLearnVideoJS.video_volumes[idx] != undefined && eLearnVideoJS.video_volumes[idx] > 0){
+            else if(eLearnVideoJS.video_volumes[idx] != undefined && eLearnVideoJS.video_volumes[idx] > 0) {
                 vid.volume = eLearnVideoJS.video_volumes[idx];
             }
             // should never happen
@@ -923,15 +923,15 @@ eLearnVideoJS.videoProgressVolumeMouseMove = function(div, e) {
             pos = e.originalEvent.pageY - volume.find('.volume-wrap').offset().top;
         }
         else if(e.type.toLowerCase() === "touchmove"
-                || e.type.toLowerCase() === "touchstart"){
+            || e.type.toLowerCase() === "touchstart") {
             pos = e.originalEvent.touches[0].pageY - volume.find('.volume-wrap').offset().top;
         }
 
-        var perc = pos/volume.find('.volume-wrap').height();
+        var perc = pos / volume.find('.volume-wrap').height();
         if(perc < 0) perc = 0;
         if(perc > 1) perc = 1;
 
-        vid.volume = 1-perc;
+        vid.volume = 1 - perc;
     }
 };
 
@@ -970,7 +970,7 @@ eLearnVideoJS.updateVideoVolume = function(div) {
     var vid = div.find('video')[0];
     var btn = div.find('.volume').find('.icon');
     var volume = div.find('.volume');
-    volume.find('.volume-control').css('top', (1-vid.volume)*100 + "%");
+    volume.find('.volume-control').css('top', (1 - vid.volume) * 100 + "%");
 
     btn.removeClass("mute");
     btn.removeClass("low");
@@ -980,7 +980,7 @@ eLearnVideoJS.updateVideoVolume = function(div) {
     if(vid.volume == 0) {
         btn.addClass("mute");
     }
-    else if(vid.volume < 0.33){
+    else if(vid.volume < 0.33) {
         btn.addClass("low");
     }
     else if(vid.volume < 0.66) {
@@ -1113,7 +1113,7 @@ eLearnVideoJS.videoProgressMouseMove = function(div, e) {
             pos = e.originalEvent.pageX - div.find('.video-progress').offset().left;
         }
         else if(e.type.toLowerCase() === "touchmove"
-                || e.type.toLowerCase() === "touchstart"){
+            || e.type.toLowerCase() === "touchstart") {
             pos = e.originalEvent.touches[0].pageX - div.find('.video-progress').offset().left;
         }
 
@@ -1121,12 +1121,12 @@ eLearnVideoJS.videoProgressMouseMove = function(div, e) {
         if(pos > div.find('.video-progress').width()) pos = div.find('.video-progress').width();
 
         var pos_perc = pos / div.find('.video-progress').width();
-        div.find('.video-progress-hover').css("width", pos_perc*100 + "%");
+        div.find('.video-progress-hover').css("width", pos_perc * 100 + "%");
 
         if(eLearnVideoJS.videoProgressMouseDown) {
             // change position without transition effect
-            div.find('.video-progress-bar').css("width", pos_perc*100 + "%");
-            div.find('.video-progress-pointer').css("left", pos_perc*100 + "%");
+            div.find('.video-progress-bar').css("width", pos_perc * 100 + "%");
+            div.find('.video-progress-pointer').css("left", pos_perc * 100 + "%");
             vid.currentTime = vid.duration * pos_perc;
         }
     }
@@ -1161,19 +1161,19 @@ eLearnVideoJS.updateVideoTime = function(div) {
 
     // progress bar
     var progress_bar = div.find('.video-progress-bar');
-    progress_bar.css("width", (vid.currentTime*100)/vid.duration + "%");
+    progress_bar.css("width", (vid.currentTime * 100) / vid.duration + "%");
     div.find('.video-progress-pointer').css("left",
-                                    (vid.currentTime*100)/vid.duration + "%");
+        (vid.currentTime * 100) / vid.duration + "%");
 
     // buffered bar
     var latest_end = 0;
-    for(var i=0; i<vid.buffered.length; i++) {
+    for(var i = 0; i < vid.buffered.length; i++) {
         if(vid.buffered.end(i) > latest_end) {
             latest_end = vid.buffered.end(i);
         }
     }
     var buffered_perc = latest_end / vid.duration;
-    div.find('.video-progress-loaded').css("width", buffered_perc*100 + "%");
+    div.find('.video-progress-loaded').css("width", buffered_perc * 100 + "%");
 };
 
 /**
@@ -1245,7 +1245,7 @@ eLearnVideoJS.videoRemoveBuffering = function(div, event) {
 * .elearnjs-video elements.
 */
 eLearnVideoJS.resizeAllVideoPlayers = function() {
-    $('.elearnjs-video:visible').each(function(i,e) {
+    $('.elearnjs-video:visible').each(function(i, e) {
         eLearnVideoJS.resizeVideoPlayer($(this));
     });
 };
@@ -1289,7 +1289,7 @@ eLearnVideoJS.initiateVideoNotes = function() {
     eLearnVideoJS.loadLocalVideoNotesStorage();
 
     // create list with sorted times for faster checking if something needs to be shown
-    $('.elearnjs-video').each(function(idx,e) {
+    $('.elearnjs-video').each(function(idx, e) {
         var videoContainer = $(this).closest('.video-container');
         var videoNotesContainer = $("<div class='video_notes_container'>");
         var videoNotes;
@@ -1337,7 +1337,7 @@ eLearnVideoJS.initiateVideoNotes = function() {
         var video_user_notes = eLearnVideoJS.getVideoNotesFor(videoContainer.find('video').find('source').first()[0].src);
         // from back to front, since eLearnVideoJS.addNoteToUserNotes adds in front
         if(video_user_notes != undefined) {
-            for(var i=video_user_notes.length-1; i>=0; i--) {
+            for(var i = video_user_notes.length - 1; i >= 0; i--) {
                 var user_note = video_user_notes[i];
                 eLearnVideoJS.addNoteToUserNotes(videoContainer,
                     eLearnVideoJS.createUserNote(user_note.text, user_note.timefrom, user_note.timeto));
@@ -1361,15 +1361,15 @@ eLearnVideoJS.initiateVideoNotes = function() {
 eLearnVideoJS.getUserVideoNotesContainer = function() {
     var userNotes = $('<div class="user_notes timestamps"><h4 lang-code="usernotes"></h4></div>');
     userNotes.append('<div class="note_add_container">'
-                        + '<hr>'
-                        + '<form accept-charset="UTF-8">'
-                        + '<input class="user_note_from" type="text"/>'
-                        + '<input class="user_note_to" type="text"/>'
-                        + '<textarea class="user_note_text" lang-code-placeholder="placeholder.writenote"></textarea>'
-                        + '</form>'
-                        + '<button class="note_add" lang-code="notesave"></button>'
-                        + '<button class="note_cancel" lang-code="notecancel"></button>'
-                        + '</div>');
+        + '<hr>'
+        + '<form accept-charset="UTF-8">'
+        + '<input class="user_note_from" type="text"/>'
+        + '<input class="user_note_to" type="text"/>'
+        + '<textarea class="user_note_text" lang-code-placeholder="placeholder.writenote"></textarea>'
+        + '</form>'
+        + '<button class="note_add" lang-code="notesave"></button>'
+        + '<button class="note_cancel" lang-code="notecancel"></button>'
+        + '</div>');
     userNotes.append('<button class="toggle_note_add" lang-code="noteadd"></button>');
 
     return userNotes;
@@ -1409,9 +1409,9 @@ eLearnVideoJS.showAllNotes = function(notes, b) {
     // show all
     if(b) {
         notes.addClass("show_all");
-        for(var i=0; i<eLearnVideoJS.videoNoteTimes[idx].length; i++) {
+        for(var i = 0; i < eLearnVideoJS.videoNoteTimes[idx].length; i++) {
             var info = eLearnVideoJS.videoNoteTimes[idx][i];
-            var display_note = notes.find('.video_note').not('.backup').filter('#'+info["index"]);
+            var display_note = notes.find('.video_note').not('.backup').filter('#' + info["index"]);
             if(display_note.length == 0) {
                 eLearnVideoJS.showVideoNote(notes, info);
             }
@@ -1429,7 +1429,7 @@ eLearnVideoJS.showAllNotes = function(notes, b) {
 * Will NOT hide others if not.
 */
 eLearnVideoJS.checkShowAll = function(notes_con) {
-    notes_con.find('.note_container').each(function(i,e) {
+    notes_con.find('.note_container').each(function(i, e) {
         if($(this).is('.show_all')) {
             eLearnVideoJS.showAllNotes($(this), true);
         }
@@ -1445,16 +1445,16 @@ eLearnVideoJS.addNotesToProgressbar = function(videoContainer, index) {
     var length = vid.duration;
 
     if(vid.readyState == 0 || vid.duration == 0) {
-        setTimeout(function() {eLearnVideoJS.addNotesToProgressbar(videoContainer, index);}, 100);
+        setTimeout(function() { eLearnVideoJS.addNotesToProgressbar(videoContainer, index); }, 100);
     }
     else {
         videoContainer.find('.video-progress-con').find('.video-progress-note').remove();
-        for(var i=0; i<eLearnVideoJS.videoNoteTimes[index].length; i++) {
+        for(var i = 0; i < eLearnVideoJS.videoNoteTimes[index].length; i++) {
             var info = eLearnVideoJS.videoNoteTimes[index][i];
             var start = info['time'];
 
             var progress_note = $('<div class="video-progress-note">');
-            var progress_pos = (start*100)/length;
+            var progress_pos = (start * 100) / length;
             if(info['user_note']) progress_note.addClass('user-progress-note');
             progress_note.css('left', progress_pos + "%");
             // add all notes, always, since collisions are always based on the width at this moment
@@ -1474,10 +1474,10 @@ eLearnVideoJS.noteTimeUpdate = function(videoContainer, notes_con, index, event)
     var vid = videoContainer.find('video')[0];
     var time = vid.currentTime;
 
-    for(var i=0; i<eLearnVideoJS.videoNoteTimes[index].length; i++) {
+    for(var i = 0; i < eLearnVideoJS.videoNoteTimes[index].length; i++) {
         var info = eLearnVideoJS.videoNoteTimes[index][i];
-        var backup_note = notes_con.find('.video_note.backup').filter('#'+info["index"]);
-        var display_note = notes_con.find('.video_note').not('.backup').filter('#'+info["index"]);
+        var backup_note = notes_con.find('.video_note.backup').filter('#' + info["index"]);
+        var display_note = notes_con.find('.video_note').not('.backup').filter('#' + info["index"]);
 
         if(!backup_note.closest('.note_container').is('.show_all')) {
             // time not reached
@@ -1514,7 +1514,7 @@ eLearnVideoJS.noteTimeUpdate = function(videoContainer, notes_con, index, event)
 *              to hint the note
 */
 eLearnVideoJS.showVideoNote = function(notes_con, info, video, stopAllowed) {
-    var original_note = notes_con.find('.video_note.backup').filter('#'+info["index"]);
+    var original_note = notes_con.find('.video_note.backup').filter('#' + info["index"]);
     var new_note = original_note.clone(true, true); // clone with all listeners
     new_note.removeClass('backup');
     //new_note.attr('id', info["index"]);
@@ -1522,7 +1522,7 @@ eLearnVideoJS.showVideoNote = function(notes_con, info, video, stopAllowed) {
     // timestamp if activated
     if(original_note.closest('.note_container').is('.timestamps')) {
         new_note.prepend('<span class="video_note_timestamp">'
-                            +eLearnVideoJS.createTimeStringColons(info["time"])+'</span>');
+            + eLearnVideoJS.createTimeStringColons(info["time"]) + '</span>');
     }
     // add user note menu button
     if(original_note.is('.user_note')) {
@@ -1541,7 +1541,7 @@ eLearnVideoJS.showVideoNote = function(notes_con, info, video, stopAllowed) {
     if(stopAllowed && info.stopping && video) {
         // do not stop on time skip
         if(!eLearnVideoJS.videoProgressMouseDown
-                || eLearnVideoJS.videoProgressMouseDownTarget.get(0) !== $(video).closest('.elearnjs-video').get(0)) {
+            || eLearnVideoJS.videoProgressMouseDownTarget.get(0) !== $(video).closest('.elearnjs-video').get(0)) {
             video.pause();
         }
     }
@@ -1562,7 +1562,7 @@ eLearnVideoJS.hideVideoNote = function(notes_con, display_note) {
 * Hides all video notes within a specific container.
 */
 eLearnVideoJS.hideAllVideoNotes = function(notes_con) {
-    notes_con.find('.video_note').not('.backup').each(function(i,e) {
+    notes_con.find('.video_note').not('.backup').each(function(i, e) {
         eLearnVideoJS.hideVideoNote(notes_con, $(this));
     });
 };
@@ -1607,7 +1607,7 @@ eLearnVideoJS.showVideoNoteHint = function(video, note) {
             }
             // scroll to note
             if(note_const.is(':visible')
-                    && !eLearnVideoJS.isScrolledIntoView(note_const)) {
+                && !eLearnVideoJS.isScrolledIntoView(note_const)) {
                 note_const.get(0).scrollIntoView();
             }
 
@@ -1660,7 +1660,7 @@ eLearnVideoJS.lastIndexSet = -1;
 */
 eLearnVideoJS.getVideoNoteTimeArray = function(videoContainer) {
     var times = [];
-    videoContainer.find('.video_note.backup').each(function(i,e) {
+    videoContainer.find('.video_note.backup').each(function(i, e) {
         var timeFrom = $(this).attr('timefrom');
         var timeTo = $(this).attr('timeto');
         var user_note = $(this).is(".user_note");
@@ -1674,15 +1674,17 @@ eLearnVideoJS.getVideoNoteTimeArray = function(videoContainer) {
         }
 
         if(timeTo == undefined) timeTo = -1;
-        times.push({"time" : eLearnVideoJS.parseTimeString(timeFrom),
-                    "time_to" : eLearnVideoJS.parseTimeString(timeTo),
-                    "user_note" : user_note,
-                    "hinted" : $(this).is('.hinted'),
-                    "stopping" : $(this).is('.stopping'),
-                    "index" : id});
+        times.push({
+            "time": eLearnVideoJS.parseTimeString(timeFrom),
+            "time_to": eLearnVideoJS.parseTimeString(timeTo),
+            "user_note": user_note,
+            "hinted": $(this).is('.hinted'),
+            "stopping": $(this).is('.stopping'),
+            "index": id
+        });
     });
-    times.sort(function(a,b) {
-        return a["time"]-b["time"];
+    times.sort(function(a, b) {
+        return a["time"] - b["time"];
     });
     return times;
 };
@@ -1710,7 +1712,7 @@ eLearnVideoJS.initiateUserNotes = function() {
 eLearnVideoJS.addUserNoteListeners = function() {
     $(document).on('click', function(e) {
         if($('.user_note_dropdown').length > 0
-            &&!$(e.target).is('.user_note_menu_wrap')
+            && !$(e.target).is('.user_note_menu_wrap')
             && !$(e.target).is('.user_note_menu_wrap *')) {
             eLearnVideoJS.hideUserNoteMenu();
         }
@@ -1778,12 +1780,12 @@ eLearnVideoJS.setVideoNotesAddContainerVisible = function(videoContainer, bool) 
 */
 eLearnVideoJS.createUserNote = function(text, timefrom, timeto, id) {
     return $('<div class="video_note backup user_note" timefrom="'
-                    + eLearnVideoJS.createTimeStringLetters(eLearnVideoJS.parseTimeString(timefrom))
-                    + '" timeto="'
-                    + eLearnVideoJS.createTimeStringLetters(eLearnVideoJS.parseTimeString(timeto))
-                    + '" id="' + id + '">'
-                    + '<div class="content">' + text + '</content>'
-                    + '</div>');
+        + eLearnVideoJS.createTimeStringLetters(eLearnVideoJS.parseTimeString(timefrom))
+        + '" timeto="'
+        + eLearnVideoJS.createTimeStringLetters(eLearnVideoJS.parseTimeString(timeto))
+        + '" id="' + id + '">'
+        + '<div class="content">' + text + '</content>'
+        + '</div>');
 };
 
 /**
@@ -1949,9 +1951,11 @@ eLearnVideoJS.updateUserNotesArray = function(videoContainer) {
     var user_video_notes = [];
     videoContainer.find('.user_notes').find('.user_note.backup').each(function(i, e) {
         var text = $(this).find('.content').html();
-        var video_note_object = {timefrom: $(this).attr('timefrom'),
-                                timeto: $(this).attr('timeto'),
-                                text: text};
+        var video_note_object = {
+            timefrom: $(this).attr('timefrom'),
+            timeto: $(this).attr('timeto'),
+            text: text
+        };
         user_video_notes.push(video_note_object);
     });
     eLearnVideoJS.setVideoNotesFor(src, user_video_notes);
@@ -2074,7 +2078,7 @@ eLearnVideoJS.importFileChosen = function(videoContainer, e, overwrite) {
             var video_user_notes = eLearnVideoJS.getVideoNotesFor(src);
             // from back to front, since eLearnVideoJS.addNoteToUserNotes adds in front
             if(video_user_notes != undefined) {
-                for(var i=video_user_notes.length-1; i>=0; i--) {
+                for(var i = video_user_notes.length - 1; i >= 0; i--) {
                     var user_note = video_user_notes[i];
                     eLearnVideoJS.addNoteToUserNotes(videoContainer,
                         eLearnVideoJS.createUserNote(user_note.text, user_note.timefrom, user_note.timeto));
@@ -2353,7 +2357,7 @@ eLearnVideoJS.parseTimeString = function(str) {
     if(str.match(/^(\d*:){0,2}\d+$/g)) {
         seconds = 0;
         str_parts = str.split(":");
-        for(var i=0; i<str_parts.length && i<3; i++) {
+        for(var i = 0; i < str_parts.length && i < 3; i++) {
             // from end to start
             var part = str_parts[str_parts.length - 1 - i];
             if(part.length > 0) {
@@ -2362,26 +2366,26 @@ eLearnVideoJS.parseTimeString = function(str) {
         }
     }
     // Style Xh Ym Zs
-    else if(str.match(/^(\d+[hms]\s*)+$/g)){
+    else if(str.match(/^(\d+[hms]\s*)+$/g)) {
         var factors = {
-            "h":60*60,
-            "m":60,
-            "s":1
+            "h": 60 * 60,
+            "m": 60,
+            "s": 1
         };
 
         seconds = 0;
         var partTime = "";
 
-        for(var i=0; i<str.length; i++) {
+        for(var i = 0; i < str.length; i++) {
             var char = str.charAt(i);
             if(char.match(/\d/g)) {
                 partTime += char;
             }
-            else if(char.match(/[hms]/g)){
+            else if(char.match(/[hms]/g)) {
                 seconds += parseInt(partTime, 10) * factors[char];
                 partTime = "";
             }
-            else if(char.match(/\S/g)){
+            else if(char.match(/\S/g)) {
                 return undefined;
             }
         }
@@ -2416,10 +2420,10 @@ eLearnVideoJS.createTimeStringLetters = function(seconds) {
 */
 eLearnVideoJS.createTimeStringColons = function(seconds) {
     seconds = Math.floor(Math.abs(seconds));
-    var hours = Math.floor(seconds / (60*60));
-    seconds -= hours*60*60;
+    var hours = Math.floor(seconds / (60 * 60));
+    seconds -= hours * 60 * 60;
     var minutes = Math.floor(seconds / 60);
-    seconds -= minutes*60;
+    seconds -= minutes * 60;
 
     var time_str = seconds;
     if(seconds < 10) {
@@ -2428,7 +2432,7 @@ eLearnVideoJS.createTimeStringColons = function(seconds) {
     time_str = minutes + ":" + time_str;
     if(hours > 0) {
         if(minutes < 10) {
-                time_str = "0" + time_str;
+            time_str = "0" + time_str;
         }
         time_str = hours + ":" + time_str;
     }
@@ -2484,7 +2488,8 @@ eLearnVideoJS.selectTab = function(element) {
 
     var eventObj = {
         "tab": e.html(),
-        "tabbefore" : tabbefore};
+        "tabbefore": tabbefore
+    };
     eLearnVideoJS.fireEvent(div.closest('.tabbed-container')[0], eLearnVideoJS.createEvent("ejstabchange", eventObj));
 };
 
@@ -2538,17 +2543,17 @@ eLearnVideoJS.touchSupportedChanged = function() {
 eLearnVideoJS.createEvent = function(eventName, eventObj) {
     var event; // The custom event that will be created
 
-    if (document.createEvent) {
-      event = document.createEvent("HTMLEvents");
-      event.initEvent(eventName, true, true);
+    if(document.createEvent) {
+        event = document.createEvent("HTMLEvents");
+        event.initEvent(eventName, true, true);
     } else {
-      event = document.createEventObject();
-      event.eventType = eventName;
+        event = document.createEventObject();
+        event.eventType = eventName;
     }
 
     event.eventName = eventName;
 
-    $.each(eventObj, function(k,v) {
+    $.each(eventObj, function(k, v) {
         event[k] = v;
     });
 
@@ -2556,10 +2561,10 @@ eLearnVideoJS.createEvent = function(eventName, eventObj) {
 };
 
 eLearnVideoJS.fireEvent = function(element, event) {
-    if (document.createEvent) {
-      element.dispatchEvent(event);
+    if(document.createEvent) {
+        element.dispatchEvent(event);
     } else {
-      element.fireEvent("on" + event.eventType, event);
+        element.fireEvent("on" + event.eventType, event);
     }
 };
 
@@ -2596,7 +2601,7 @@ eLearnVideoJS.getCSVFromJSON = function(JSONData) {
     var row = "";
 
     //This loop will extract the label from 1st index of on array
-    for (var index in arrData[0]) {
+    for(var index in arrData[0]) {
         //Now convert each value to string and comma-seprated
         row += '"' + index.replace(/"/g, '""') + '"' + eLearnVideoJS.CSV_COLUMN_DELIMITER;
     }
@@ -2604,18 +2609,18 @@ eLearnVideoJS.getCSVFromJSON = function(JSONData) {
     csv += row + eLearnVideoJS.CSV_ROW_DELIMITER;
 
     //1st loop is to extract each row
-    for (var i = 0; i < arrData.length; i++) {
+    for(var i = 0; i < arrData.length; i++) {
         var row = "";
 
         //2nd loop will extract each column and convert it in string comma-seprated
-        for (var index in arrData[i]) {
+        for(var index in arrData[i]) {
             row += '"' + arrData[i][index].replace(/"/g, '""') + '"' + eLearnVideoJS.CSV_COLUMN_DELIMITER;
         }
         //add a line break after each row
         csv += row + eLearnVideoJS.CSV_ROW_DELIMITER;
     }
 
-    if (csv == '') {
+    if(csv == '') {
         return false;
     }
 
@@ -2623,15 +2628,15 @@ eLearnVideoJS.getCSVFromJSON = function(JSONData) {
 };
 
 eLearnVideoJS.getJSONFromCSV = function(CSVData) {
-    var lines=CSVData.replace(/\r/g, "").split(eLearnVideoJS.CSV_ROW_DELIMITER);
+    var lines = CSVData.replace(/\r/g, "").split(eLearnVideoJS.CSV_ROW_DELIMITER);
 
     var result = [];
 
     // extract header values: take quote blocks with trailing DELIMITER
-    var cells=lines[0].match(new RegExp('"(?:[^"]|(""))*"' + eLearnVideoJS.CSV_COLUMN_DELIMITER, "g"));
+    var cells = lines[0].match(new RegExp('"(?:[^"]|(""))*"' + eLearnVideoJS.CSV_COLUMN_DELIMITER, "g"));
     var headers = [];
     // extract headers by removing trailing delimiter
-    for(var i=0; i<cells.length; i++) {
+    for(var i = 0; i < cells.length; i++) {
         headers.push(
             cells[i]
                 .replace(new RegExp(eLearnVideoJS.CSV_COLUMN_DELIMITER + "$", "g"), "")
@@ -2641,15 +2646,15 @@ eLearnVideoJS.getJSONFromCSV = function(CSVData) {
     }
 
     // go through lines below header
-    for(var i=1;i<lines.length;i++) {
+    for(var i = 1; i < lines.length; i++) {
         var obj = {};
-        var currentline=lines[i].match(new RegExp('"(?:[^"]|(""))*"' + eLearnVideoJS.CSV_COLUMN_DELIMITER, "g"));
+        var currentline = lines[i].match(new RegExp('"(?:[^"]|(""))*"' + eLearnVideoJS.CSV_COLUMN_DELIMITER, "g"));
 
         if(!currentline ||
             headers.length > currentline.length) break;
 
         // go through cells
-        for(var j=0;j<headers.length;j++) {
+        for(var j = 0; j < headers.length; j++) {
             obj[headers[j]] = currentline[j]
                 .replace(new RegExp(eLearnVideoJS.CSV_COLUMN_DELIMITER + "$", "g"), "")
                 .replace(/^"/g, "")
