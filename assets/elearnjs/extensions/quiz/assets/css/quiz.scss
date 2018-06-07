@@ -1,6 +1,6 @@
 /*
 * Styles zum quiz.js by Arne Westphal
-* quiz.js v0.4.2 - 18/05/15
+* quiz.js v0.4.3 - 18/06/07
 * eLearning Buero MIN-Fakultaet - Universitaet Hamburg
 */
 
@@ -166,7 +166,6 @@ button.quizButton:active {
 
 .question label.img_radio {
     border: 5px solid transparent;
-    display: inline-block;
     overflow-y: auto;
     float: left;
     padding: 0;
@@ -400,7 +399,7 @@ button.quizButton:active {
 
 /* ----------------------------- MATRIX CHOICE ------------------------------ */
 
-.question[qtype="matrix_choice"] .answers .matrix {}
+/* .question[qtype="matrix_choice"] .answers .matrix {} */
 
 .question[qtype="matrix_choice"] .answers .matrix label {
     display: inline-block;
