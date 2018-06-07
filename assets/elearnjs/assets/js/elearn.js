@@ -1,5 +1,5 @@
 /*
-* v1.0.3 18/05/15 JavaScript eLearn.js - by Arne Westphal
+* v1.0.4 18/06/07 JavaScript eLearn.js - by Arne Westphal
 * eLearning Buero MIN-Fakultaet - Universitaet Hamburg
 * touch-script base by PADILICIOUS.COM and MACOSXAUTOMATION.COM
 * uses ResizeSensor by Marc J. Schmidt. https://github.com/marcj/css-element-queries/
@@ -8,8 +8,8 @@
 // For more intuitive usage of functions. (e.g. eLearnJS.showNext())
 var eLearnJS = eLearnJS || {};
 
-eLearnJS.VERSION_NR = "1.0.3";
-eLearnJS.VERSION_DATE = "05/2018";
+eLearnJS.VERSION_NR = "1.0.4";
+eLearnJS.VERSION_DATE = "06/2018";
 
 eLearnJS.actions = {
     CONTENT_RESIZE : "ContentResize",
@@ -3047,33 +3047,33 @@ eLearnJS.QueryString = function () {
 
 eLearnJS.hasScrollbar = function() {
     // The Modern solution
-  if (typeof window.innerWidth === 'number')
-    return window.innerWidth > document.documentElement.clientWidth
+    if (typeof window.innerWidth === 'number')
+        return window.innerWidth > document.documentElement.clientWidth;
 
-  // rootElem for quirksmode
-  var rootElem = document.documentElement || document.body
+    // rootElem for quirksmode
+    var rootElem = document.documentElement || document.body;
 
-  // Check overflow style property on body for fauxscrollbars
-  var overflowStyle
+    // Check overflow style property on body for fauxscrollbars
+    var overflowStyle;
 
-  if (typeof rootElem.currentStyle !== 'undefined')
-    overflowStyle = rootElem.currentStyle.overflow
+    if (typeof rootElem.currentStyle !== 'undefined')
+        overflowStyle = rootElem.currentStyle.overflow;
 
-  overflowStyle = overflowStyle || window.getComputedStyle(rootElem, '').overflow
+    overflowStyle = overflowStyle || window.getComputedStyle(rootElem, '').overflow;
 
     // Also need to check the Y axis overflow
-  var overflowYStyle
+    var overflowYStyle;
 
-  if (typeof rootElem.currentStyle !== 'undefined')
-    overflowYStyle = rootElem.currentStyle.overflowY
+    if (typeof rootElem.currentStyle !== 'undefined')
+        overflowYStyle = rootElem.currentStyle.overflowY;
 
-  overflowYStyle = overflowYStyle || window.getComputedStyle(rootElem, '').overflowY
+    overflowYStyle = overflowYStyle || window.getComputedStyle(rootElem, '').overflowY;
 
-  var contentOverflows = rootElem.scrollHeight > rootElem.clientHeight
-  var overflowShown    = /^(visible|auto)$/.test(overflowStyle) || /^(visible|auto)$/.test(overflowYStyle)
-  var alwaysShowScroll = overflowStyle === 'scroll' || overflowYStyle === 'scroll'
+    var contentOverflows = rootElem.scrollHeight > rootElem.clientHeight;
+    var overflowShown = /^(visible|auto)$/.test(overflowStyle) || /^(visible|auto)$/.test(overflowYStyle);
+    var alwaysShowScroll = overflowStyle === 'scroll' || overflowYStyle === 'scroll';
 
-  return (contentOverflows && overflowShown) || (alwaysShowScroll)
+    return (contentOverflows && overflowShown) || (alwaysShowScroll);
 };
 
 eLearnJS.scrollbarBefore = false;
