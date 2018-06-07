@@ -79,21 +79,21 @@ div.clickimage
                 &.top
                     i
                         @include prefix(transform, rotate(180deg) translateY(-0.5em) translateX(.32em), webkit)
-                    
+
                     span
                         @include prefix(transform, translateY(2em) translateX(.28em), webkit)
 
                 &.right
                     i
                         @include prefix(transform, rotate(270deg) translateY(-.65em) translateX(-.2em), webkit)
-                    
+
                     span
                         @include prefix(transform, translateY(.6em) translateX(-1.2em), webkit)
 
                 &.left
                     i
                         @include prefix(transform, rotate(90deg) translateX(.2em), webkit)
-                    
+
                     span
                         @include prefix(transform, translateY(.6em) translateX(1.7em), webkit)
 
@@ -212,7 +212,7 @@ div.clickimage
             -ms-flex-item-align: auto
             align-self: auto
             padding: 0.7em 0.8em 0.8em 0.8em
-    
+
             &:nth-child(1)
                 -webkit-order: 1
                 -ms-flex-order: 1
@@ -260,47 +260,77 @@ div.clickimage
         > div
             margin-bottom: 2em
 
-        div
-            &.inactive
-                display: none
+        blockquote
+            &.hint
+                background-color: #eee
+                border-left: 12px solid $accent_color
+                padding: 1em 1em 1em 4em
+                font-style: normal
 
-            p
-                &.task
-                    padding-left: 6em
-                    &:before
-                        font-family: 'eLearn-icons'
-                        content: "t"
-                        color: #808080
-                        font-size: 3em
-                        line-height: 1em
-                        float: left
-                        margin-left: -1.5em
-
-
-                &.hint
-                    background-color: #f0f0f0
-                    border-left: 3px solid $accent_color
-                    padding: 1em 1em 1em 4em
-                    &:first-letter
-                        font-family: 'eLearn-icons'
-                        content: "t"
-                        color: #808080
-                        font-size: 3em
-                        line-height: 1em
-                        float: left
-                        margin-left: -1.5em
-                        color: $accent_color
-                        font-size: 2em
-                        font-weight: normal
-
+                &:before
+                    font-family: 'eLearn-icons'
+                    font-weight: normal
+                    content: "h"
+                    color: $accent_color
+                    font-size: 3em
+                    line-height: 1em
+                    margin-top: 0.2em
+                    margin-left: -1.2em
+                    float: left
+                p
                     &:first-line
                         color: $accent_color
                         font-size: 1.2em
                         font-weight: bold
-                        line-height: 2em
+                        line-height: 1.5em
 
-                    &:before
-                        content: "h"
+            &.task
+                border-left: 12px solid #888
+                padding: 1em 1em 1em 4em
+                font-style: normal
+
+                &:before
+                    font-family: 'eLearn-icons'
+                    font-weight: normal
+                    content: "t"
+                    color: #888
+                    font-size: 3em
+                    line-height: 1em
+                    margin-top: 0.2em
+                    margin-left: -1.2em
+                    float: left
+
+            &.links
+                border-left: 12px solid #888
+                padding: 1em 1em 1em 4em
+                font-style: normal
+
+                &:before
+                    font-family: 'eLearn-icons'
+                    font-weight: normal
+                    content: "l"
+                    color: #888
+                    font-size: 3em
+                    line-height: 1em
+                    margin-top: 0.2em
+                    margin-left: -1.2em
+                    float: left
+
+                ul
+                    list-style: none
+                    padding: 1em 0 0
+                    li
+                        padding-left: 2em
+                        &:before
+                            font-family: 'eLearn-icons'
+                            content: "n"
+                            color: $accent_color
+                            margin-left: -2em
+                            margin-right: 1em
+
+        div
+            &.inactive
+                display: none
 
 
 
@@ -321,36 +351,10 @@ div.clickimage
                     margin: 0
 
 
-            ul.links
-                padding-left: 6em
-                &:before
-                    font-family: 'eLearn-icons'
-                    content: "t"
-                    color: #808080
-                    font-size: 3em
-                    line-height: 1em
-                    float: left
-                    margin-left: -1.5em
-                    content: "l"
-
-
 
         h3 .highlight
             color: $accent_color
             margin-right: 1em
-
-        ul.links
-            list-style: none
-            padding: 1em 0 0
-            border-top: 1px dotted $box_background_color
-            li
-                padding-left: 2em
-                &:before
-                    font-family: 'eLearn-icons'
-                    content: "n"
-                    color: $accent_color
-                    margin-left: -2em
-                    margin-right: 1em
 
 
 
@@ -369,6 +373,6 @@ div.clickimage
 
         &.right i
             @include prefix(transform, rotate(270deg) translateY(-.55em) translateX(-.2em), webkit)
-        
+
         &.left i
             @include prefix(transform, rotate(90deg) translateY(.05em) translateX(.2em), webkit)
