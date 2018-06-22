@@ -2,6 +2,9 @@
 
 # Updates the assets/elearnjs/assets and assets/elearnjs/extensions
 
+# Exit script on CTRL+C
+trap exit INT
+
 GLOBALDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 my_dir=`dirname $0`
@@ -71,32 +74,32 @@ function updateRepository () {
     LINKS=""
     case $NAME in
         elearn.js)
-        LINKS=(${ELEARNJS_LINKS[*]} ${FONT_LINKS[*]})
+        LINKS=("${ELEARNJS_LINKS[@]}" "${FONT_LINKS[@]}")
         ;;
         quiz.js)
-        LINKS=(${QUIZ_LINKS[*]})
+        LINKS=(${QUIZ_LINKS[@]})
         ;;
         elearnvideo.js)
-        LINKS=(${ELEARNVIDEO_LINKS[*]})
+        LINKS=(${ELEARNVIDEO_LINKS[@]})
         ;;
         clickimage.js)
-        LINKS=(${CLICKIMAGE_LINKS[*]})
+        LINKS=(${CLICKIMAGE_LINKS[@]})
         if [ "$BRANCH" = "develop" ]; then BRANCH="development"; fi;
         ;;
         timeslider.js)
-        LINKS=(${TIMESLIDER_LINKS[*]})
+        LINKS=(${TIMESLIDER_LINKS[@]})
         if [ "$BRANCH" = "develop" ]; then BRANCH="development"; fi;
         ;;
     esac
 
     echo "Update ${NAME} from ${BRANCH}."
 
-    for (( ix=0; ix<${#LINKS[*]}; ix=ix+2 ))
+    for (( ix=0; ix<${#LINKS[@]}; ix=ix+2 ))
     do
         ix2=ix+1
         LOCAL="${GLOBALDIR}/${LINKS[ix]}"
         REMOTE="https://raw.githubusercontent.com/elb-min-uhh/${NAME}/${BRANCH}/${LINKS[$ix2]}"
-        updateFile $LOCAL $REMOTE
+        updateFile "$LOCAL" "$REMOTE"
     done
 }
 
@@ -105,7 +108,7 @@ function updateRepository () {
 # $2: remote link, the download URL (full URL)
 #
 function updateFile () {
-    curl --create-dirs -s -o $1 $2
+    curl --create-dirs -s -o "$1" "$2"
 }
 
 # ------------ RUN ACTUAL SCRIPT -------------
