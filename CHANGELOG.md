@@ -1,3 +1,5 @@
+## 1.1.2
+* Update clickimage.js, syntax changes for blocks
 ## 1.1.1
 * More strict TypeScript preferences
 * Added `declaration` files (.d.ts)
