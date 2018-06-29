@@ -138,10 +138,12 @@ class HtmlConverter implements IConverter {
         var opts = new HtmlExportOptionObject(options);
 
         return new Promise<string>((res, rej) => {
-            if(!file)
-                rej("No output path given.");
-            if(fs.existsSync(file) && !forceOverwrite)
-                rej("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
+            if(!file) {
+                return rej("No output path given.");
+            }
+            if(fs.existsSync(file) && !forceOverwrite) {
+                return rej("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
+            }
 
             self.toHtml(markdown, <ConversionObject>options).then((html) => {
                 var filesToExport: FileMoveObject[] = [];

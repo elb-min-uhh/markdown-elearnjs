@@ -147,10 +147,12 @@ class PdfConverter implements IConverter {
         var opts = new PdfExportOptionObject(options);
 
         var ret = new Promise<string>((res, rej) => {
-            if(!file)
-                rej("No output path given.");
-            if(fs.existsSync(file) && !forceOverwrite)
-                rej("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
+            if(!file) {
+                return rej("No output path given.");
+            }
+            if(fs.existsSync(file) && !forceOverwrite) {
+                return rej("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
+            }
 
             self.toHtml(markdown, <ConversionObject>options).then((html) => {
                 HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toFile(file, (err, result) => {

@@ -1,3 +1,5 @@
+## 1.2.2
+* Fixed a few bugs with conversion options and TypeScript syntax.
 ## 1.2.1
 * Fixed a major error when converting to PDF file
 ## 1.2.0
