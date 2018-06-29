@@ -2,7 +2,12 @@
 
 import * as path from 'path';
 import { ncp } from 'ncp';
-import InclusionObject from './objects/InclusionObject';
+import HtmlConverter from './HtmlConverter';
+import ConverterSettingsObject from './objects/settings/ConverterSettingsObject';
+import PdfConverter from './PdfConverter';
+import MarkdownConverter from './MarkdownConverter';
+import ExtensionObject from './objects/ExtensionObject';
+import ConversionObject from './objects/export/ConversionObject';
 
 const divClassRegExp = /<div[ \t]((?:(?!class[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\2|(?!\2).)*\2[ \t]*)*)class[ \t]*=[ \t]*(["'])((?:\\\3|(?!\3).)*)\3((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
 const videoRegExp = /<video[ \t>]/g;
@@ -15,6 +20,9 @@ const assetsPath = '../assets';
 * Allows to get include strings for extension necessary files.
 */
 class ExtensionManager {
+
+    // the default converter used for scanning
+    static htmlConverter: HtmlConverter;
 
     // Scan
     static scanForQuiz(html: string) {
@@ -54,6 +62,59 @@ class ExtensionManager {
                 return "";
             });
         return include;
+    }
+
+    /**
+     * Scans the html code for elearn.js extensions.
+     *
+     * @param html string: the html code to be scanned
+     *
+     * @return ExtensionObject: including which extensions where found
+     * and explicitly which were not found (true/false)
+     */
+    static scanHtmlForAll(html: string) {
+        return new ExtensionObject(
+            ExtensionManager.scanForQuiz(html),
+            ExtensionManager.scanForVideo(html),
+            ExtensionManager.scanForClickImage(html),
+            ExtensionManager.scanForTimeSlider(html)
+        );
+    }
+
+    /**
+     * Scans the markdown code for elearn.js extensions.
+     *
+     * @param markdown string: the original markdown code to be scanned
+     * @param markdownConverter (optional) HtmlConverter or PdfConverter:
+     *  the converter to use for markdown to HTML conversion. If not given,
+     *  a default HtmlConverter will be used.
+     *
+     * @return Promise<ExtensionObject>: including which extensions where found
+     * and explicitly which were not found (true/false)
+     */
+    static scanMarkdownForAll(markdown: string, markdownConverter?: MarkdownConverter) {
+        var ret = new Promise<ExtensionObject>((res, rej) => {
+            // define converter
+            if(!ExtensionManager.htmlConverter)
+                ExtensionManager.htmlConverter = new HtmlConverter(new ConverterSettingsObject());
+
+            let converter: MarkdownConverter = ExtensionManager.htmlConverter;
+            if(markdownConverter
+                && (markdownConverter instanceof HtmlConverter
+                    || markdownConverter instanceof PdfConverter)) {
+                converter = <MarkdownConverter>markdownConverter;
+            }
+
+            var opts = new ConversionObject();
+            opts.bodyOnly = true;
+
+            // convert and then scan
+            converter.toHtml(markdown, opts).then((html) => {
+                res(ExtensionManager.scanHtmlForAll(html));
+            }, rej);
+        });
+
+        return ret;
     }
 
     // Locations to copy from
@@ -154,9 +215,9 @@ class ExtensionManager {
     /**
     * Writes the elearn.js assets to the given path.
     * @param dirPath: string - the path to write the `assets` folder to.
-    * @param {InclusionObject} opts optional options
+    * @param {ExtensionObject} opts optional options
     */
-    static exportAssets(dirPath: string, opts: InclusionObject) {
+    static exportAssets(dirPath: string, opts: ExtensionObject) {
         var outPath = path.resolve(dirPath + "/assets/");
         var folders = [path.resolve(`${__dirname}/${assetsPath}/elearnjs/assets/`)];
 

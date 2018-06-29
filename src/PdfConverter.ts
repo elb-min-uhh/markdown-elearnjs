@@ -6,11 +6,12 @@ import * as Showdown from "showdown";
 import * as HtmlPdf from 'html-pdf';
 import FileManager from './FileManager';
 import ExtensionManager from './ExtensionManager';
-import PdfSettingsObject from './objects/PdfSettingsObject';
-import ConversionObject from './objects/ConversionObject';
-import PdfExportOptionObject from './objects/PdfExportOptionObject';
-import InclusionObject from './objects/InclusionObject';
-const elearnExtension = require('./ShowdownElearnJS.js');
+import PdfSettingsObject from './objects/settings/PdfSettingsObject';
+import ConversionObject from './objects/export/ConversionObject';
+import PdfExportOptionObject from './objects/export/PdfExportOptionObject';
+import InclusionObject from './objects/export/InclusionObject';
+import MarkdownConverter from './MarkdownConverter';
+const elearnExtension = require('./ShowdownElearnJS');
 
 const assetsPath = '../assets';
 
@@ -29,7 +30,7 @@ const defaults: { [key: string]: any } = {
     'customStyleFile': undefined,
 };
 
-class PdfConverter {
+class PdfConverter implements MarkdownConverter {
 
     pdfBodyConverter: Showdown.Converter;
 
@@ -88,7 +89,7 @@ class PdfConverter {
     *
     * @return {Promise<string>} - will resolve with the output html, when done.
     */
-    toPdfHtml(markdown: string, options?: ConversionObject) {
+    toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
         var opts = options || new ConversionObject();
 
@@ -119,6 +120,21 @@ class PdfConverter {
     }
 
     /**
+    * Converts given markdown to a HTML string for a HTML to PDF conversion.
+    * Certain options will specify the output.
+    *
+    * @deprecated use `.toHtml` instead
+    *
+    * @param markdown: string - the markdown code
+    * @param {ConversionObject} options: optional options
+    *
+    * @return {Promise<string>} - will resolve with the output html, when done.
+    */
+    toPdfHtml(markdown: string, options?: ConversionObject) {
+        return this.toHtml(markdown, options);
+    }
+
+    /**
     * Converts given markdown to a PDF File.
     * Certain options will specify the output.
     *
@@ -134,16 +150,16 @@ class PdfConverter {
         const self = this;
         var opts = options || new PdfExportOptionObject();
 
-        var ret = new Promise((res, rej) => {
+        var ret = new Promise<string>((res, rej) => {
             if(!file)
                 throw "No output path given.";
             if(fs.existsSync(file) && !forceOverwrite)
                 throw "File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.";
 
-            self.toPdfHtml(markdown, <ConversionObject>options).then((html) => {
+            self.toHtml(markdown, <ConversionObject>options).then((html) => {
                 HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toFile(file, (err, result) => {
                     if(err) rej(err);
-                    res(result);
+                    res(result.toString());
                 });
             }, (err) => { throw err });
         });
@@ -168,7 +184,7 @@ class PdfConverter {
         var opts = options || new PdfExportOptionObject();
 
         var ret = new Promise((res, rej) => {
-            self.toPdfHtml(markdown, <ConversionObject>options).then((html) => {
+            self.toHtml(markdown, <ConversionObject>options).then((html) => {
                 HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toStream((err, stream) => {
                     if(err) rej(err);
                     res(stream);
@@ -196,7 +212,7 @@ class PdfConverter {
         var opts = options || new PdfExportOptionObject();
 
         var ret = new Promise((res, rej) => {
-            self.toPdfHtml(markdown, <ConversionObject>options).then((html) => {
+            self.toHtml(markdown, <ConversionObject>options).then((html) => {
                 HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toBuffer((err, buffer) => {
                     if(err) rej(err);
                     res(buffer);

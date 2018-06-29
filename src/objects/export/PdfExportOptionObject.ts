@@ -1,10 +1,9 @@
-"use strict"
+"use strict";
 
-import InclusionObject from "./InclusionObject";
+import ConversionObject from "./ConversionObject";
 
-class ConversionObject extends InclusionObject {
-    bodyOnly: boolean = false;
-    automaticExtensionDetection: boolean = false;
+class PdfExportOptionObject extends ConversionObject {
+    renderDelay: number = 0;
 
     /**
      * An Object containing options for the general conversions
@@ -34,6 +33,7 @@ class ConversionObject extends InclusionObject {
      *       in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
+     * @param {number} renderDelay delay of rendering the html to pdf in ms
      */
     constructor(bodyOnly?: boolean,
         language?: string,
@@ -41,12 +41,12 @@ class ConversionObject extends InclusionObject {
         includeQuiz?: boolean,
         includeElearnVideo?: boolean,
         includeClickImage?: boolean,
-        includeTimeSlider?: boolean) {
+        includeTimeSlider?: boolean,
+        renderDelay?: number) {
 
-        super(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider, language);
-        if(bodyOnly !== undefined) this.bodyOnly = bodyOnly;
-        if(automaticExtensionDetection !== undefined) this.automaticExtensionDetection = automaticExtensionDetection;
+        super(bodyOnly, language, automaticExtensionDetection, includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider);
+        if(renderDelay !== undefined) this.renderDelay = renderDelay;
     }
 }
 
-export default ConversionObject;
+export default PdfExportOptionObject;

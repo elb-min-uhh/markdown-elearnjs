@@ -1,8 +1,10 @@
 import * as Showdown from "showdown";
-import ConverterSettingsObject from "./objects/ConverterSettingsObject.js";
-import ConversionObject from "./objects/ConversionObject.js";
-import InclusionObject from "./objects/InclusionObject.js";
-declare class HtmlConverter {
+import ConverterSettingsObject from "./objects/settings/ConverterSettingsObject";
+import ConversionObject from "./objects/export/ConversionObject";
+import InclusionObject from "./objects/export/InclusionObject";
+import MarkdownConverter from "./MarkdownConverter";
+import HtmlExportOptionObject from "./objects/export/HtmlExportOptionObject";
+declare class HtmlConverter implements MarkdownConverter {
     bodyConverter: Showdown.Converter;
     imprintConverter: Showdown.Converter;
     /**
@@ -31,7 +33,20 @@ declare class HtmlConverter {
     *
     * @return Promise: (html) - will resolve with the output html, when done.
     */
-    toHtml(markdown: string, options?: ConversionObject): Promise<{}>;
+    toHtml(markdown: string, options?: ConversionObject): Promise<string>;
+    /**
+    * Converts given markdown to a PDF File.
+    * Certain options will specify the output.
+    *
+    * @param markdown: string - the markdown code
+    * @param file: string - the output file path (including file name)
+    * @param rootPath: string - the root path for relative paths in the file.
+    * @param {HtmlExportOptionObject} options: optional options
+    * @param forceOverwrite: bool - if an existing file should be overwritten.
+    *
+    * @return {Promise<string>} - will resolve with the path when done. (err) when an error occurred.
+    */
+    toFile(markdown: string, file: string, rootPath: string, options?: HtmlExportOptionObject, forceOverwrite?: boolean): Promise<string>;
     /**
     * Inserts necessary elements into the HTML Template to create the
     * final fileContent.

@@ -1,3 +1,8 @@
+## 1.1.3
+* Fixes for spaces in paths
+* Added functionality to the ExtensionManager
+    * scan for all extensions at once
+* Standardized interface for HtmlConverter and PdfConverter
 ## 1.1.2
 * Update clickimage.js, syntax changes for blocks
 ## 1.1.1

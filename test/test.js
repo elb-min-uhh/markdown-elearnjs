@@ -10,26 +10,28 @@ var pdfConverter = new MarkdownElearnJS.PdfConverter();
 var tests = {};
 
 var exampleMarkdown =
-`# This is simple example markdown.
+    `# This is simple example markdown.
 
 We will insert an image here ![Image](withSomeLink.jpg).`;
 
 var exampleMeta =
-`<!--meta
+    `<!--meta
     Title: Test
     Custom: "<script src='someSource.js'></script>"
 -->`;
 
 var exampleImprint =
-`<!--imprint
+    `<!--imprint
     #### elearn.js Template
     Universität Hamburg
 -->`;
 
+// TODO convert to actual correct tests
+
 // ----------- HTML --------------
 
 tests.testToHtmlBody = function() {
-    var html = htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {bodyOnly: true});
+    var html = htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
     html.then((text) => {
         assertFileEqual(text, `${__dirname}/resultFiles/testToHtmlBody.html`).then(() => {
             testDone();
@@ -37,7 +39,7 @@ tests.testToHtmlBody = function() {
             console.error(err);
             testDone();
         });
-    }, (err) => {console.error(err)});
+    }, (err) => { console.error(err) });
 }
 
 tests.testToHtmlFull = function() {
@@ -49,7 +51,7 @@ tests.testToHtmlFull = function() {
             console.error(err);
             testDone();
         });
-    }, (err) => {console.error(err)});
+    }, (err) => { console.error(err) });
 }
 
 tests.testToHtmlFullExtractFiles = function() {
@@ -67,7 +69,7 @@ tests.testToHtmlFullExtractFiles = function() {
             console.error(err);
             testDone();
         });
-    }, (err) => {console.error(err)});
+    }, (err) => { console.error(err) });
 }
 
 tests.testTemplateExample = function() {
@@ -87,7 +89,29 @@ tests.testTemplateExample = function() {
                 console.error(err);
                 testDone();
             });
-        }, (err) => {console.error(err)});
+        }, (err) => { console.error(err) });
+    });
+}
+
+tests.testTemplateToFile = function() {
+    var outFile = `${__dirname}/testTemplateExample.html`
+    fs.readFile(`${__dirname}/inputFiles/testTemplateExample.md`, 'utf8', (err, data) => {
+        if(err) {
+            console.error(err);
+            testDone();
+            return;
+        }
+        htmlConverter.toFile(data,
+            outFile,
+            `${__dirname}/inputFiles/`,
+            {
+                exportAssets: true,
+                exportLinkedFiles: true,
+                automaticExtensionDetection: true
+            }, true).then((text) => {
+                if(text !== outFile) console.error("Wrong output file.");
+                testDone();
+            }, (err) => { console.error(err) });
     });
 }
 
@@ -98,7 +122,8 @@ tests.testAssetExport = function() {
         includeQuiz: true,
         includeClickImage: true,
     }).then(() => {
-        console.log("Assets exported to test/assetExport/");
+        console.log("Assets exported to test/assetExport/. Please check those by yourself.");
+        // TODO actual result checking.
         testDone();
     }, (err) => {
         console.error(err);
@@ -106,10 +131,32 @@ tests.testAssetExport = function() {
     });
 }
 
+tests.testHtmlScanAll = function() {
+    fs.readFile(`${__dirname}/inputFiles/testTemplateExample.md`, 'utf8', (err, data) => {
+        if(err) {
+            console.error(err);
+            testDone();
+            return;
+        }
+        MarkdownElearnJS.ExtensionManager.scanMarkdownForAll(data).then((extensionObject) => {
+            if(extensionObject.includeQuiz && extensionObject.includeElearnVideo
+                && extensionObject.includeClickImage && extensionObject.includeTimeSlider) {
+                testDone();
+            }
+            else {
+                console.error("Unexpected Scan result.", extensionObject);
+            }
+        }, (err) => {
+            console.error(err);
+            testDone();
+        });
+    });
+}
+
 // ---------- PDF -------------
 
 tests.testToPdfBody = function() {
-    var html = pdfConverter.toPdfHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {bodyOnly: true});
+    var html = pdfConverter.toPdfHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
     html.then((text) => {
         assertFileEqual(text, `${__dirname}/resultFiles/testToPdfBody.html`).then(() => {
             testDone();
@@ -117,7 +164,7 @@ tests.testToPdfBody = function() {
             console.error(err);
             testDone();
         });
-    }, (err) => {console.error(err)});
+    }, (err) => { console.error(err) });
 }
 
 tests.testToPdfFull = function() {
@@ -129,7 +176,7 @@ tests.testToPdfFull = function() {
             console.error(err);
             testDone();
         });
-    }, (err) => {console.error(err)});
+    }, (err) => { console.error(err) });
 }
 
 tests.testTemplateExamplePdf = function() {
@@ -148,7 +195,7 @@ tests.testTemplateExamplePdf = function() {
                 console.error(err);
                 testDone();
             });
-        }, (err) => {console.error(err)});
+        }, (err) => { console.error(err) });
     });
 }
 
@@ -184,9 +231,9 @@ var assertFileEqual = function(text, file) {
             data = data.replace(/\r/g, "").replace(/[ \t]*\n/g, "\n").replace(/[ \t\r\n]*$/g, "").trim();
 
             // char compare to find difference
-            for(var i=0; i<text.length; i++) {
+            for(var i = 0; i < text.length; i++) {
                 if(text.charAt(i) !== data.charAt(i)) {
-                    console.error(`Differs at ${i} with text:\n'${text.substr(i-10, 50)}'\n\nfile:\n'${data.substr(i-10, 50)}'`);
+                    console.error(`Differs at ${i} with text:\n'${text.substr(i - 10, 50)}'\n\nfile:\n'${data.substr(i - 10, 50)}'`);
                     break;
                 }
             }

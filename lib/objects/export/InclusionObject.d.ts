@@ -1,9 +1,6 @@
-declare class InclusionObject {
+import ExtensionObject from "../ExtensionObject";
+declare class InclusionObject extends ExtensionObject {
     [key: string]: any;
-    includeQuiz?: boolean;
-    includeElearnVideo?: boolean;
-    includeClickImage?: boolean;
-    includeTimeSlider?: boolean;
     language: string;
     /**
      * An Object containing options for the general conversions

@@ -1,13 +1,11 @@
+import ExtensionObject from "../ExtensionObject";
+
 "use strict"
 
-class InclusionObject {
+class InclusionObject extends ExtensionObject {
     // general index signature
     [key: string]: any;
 
-    includeQuiz?: boolean;
-    includeElearnVideo?: boolean;
-    includeClickImage?: boolean;
-    includeTimeSlider?: boolean;
     language: string = "en";
 
     /**
@@ -40,10 +38,8 @@ class InclusionObject {
         includeTimeSlider?: boolean,
         language?: string) {
 
-        if(includeQuiz !== undefined) this.includeQuiz = includeQuiz;
-        if(includeElearnVideo !== undefined) this.includeElearnVideo = includeElearnVideo;
-        if(includeClickImage !== undefined) this.includeClickImage = includeClickImage;
-        if(includeTimeSlider !== undefined) this.includeTimeSlider = includeTimeSlider;
+        super(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider);
+
         if(language !== undefined) this.language = language;
     }
 }

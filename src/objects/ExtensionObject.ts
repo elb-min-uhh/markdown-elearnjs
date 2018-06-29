@@ -1,6 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class InclusionObject {
+"use strict"
+
+class ExtensionObject {
+    // general index signature
+    [key: string]: any;
+
+    includeQuiz?: boolean;
+    includeElearnVideo?: boolean;
+    includeClickImage?: boolean;
+    includeTimeSlider?: boolean;
+
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
@@ -21,22 +29,17 @@ class InclusionObject {
      *       in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
-     * @param {string} language will change the language
-     *      if not `bodyOnly`.
-     *      Default: "en"
      */
-    constructor(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider, language) {
-        this.language = "en";
-        if (includeQuiz !== undefined)
-            this.includeQuiz = includeQuiz;
-        if (includeElearnVideo !== undefined)
-            this.includeElearnVideo = includeElearnVideo;
-        if (includeClickImage !== undefined)
-            this.includeClickImage = includeClickImage;
-        if (includeTimeSlider !== undefined)
-            this.includeTimeSlider = includeTimeSlider;
-        if (language !== undefined)
-            this.language = language;
+    constructor(includeQuiz?: boolean,
+        includeElearnVideo?: boolean,
+        includeClickImage?: boolean,
+        includeTimeSlider?: boolean) {
+
+        if(includeQuiz !== undefined) this.includeQuiz = includeQuiz;
+        if(includeElearnVideo !== undefined) this.includeElearnVideo = includeElearnVideo;
+        if(includeClickImage !== undefined) this.includeClickImage = includeClickImage;
+        if(includeTimeSlider !== undefined) this.includeTimeSlider = includeTimeSlider;
     }
 }
-exports.default = InclusionObject;
+
+export default ExtensionObject;

@@ -1,10 +1,11 @@
 import * as Showdown from "showdown";
 import * as HtmlPdf from 'html-pdf';
-import PdfSettingsObject from './objects/PdfSettingsObject';
-import ConversionObject from './objects/ConversionObject';
-import PdfExportOptionObject from './objects/PdfExportOptionObject';
-import InclusionObject from './objects/InclusionObject';
-declare class PdfConverter {
+import PdfSettingsObject from './objects/settings/PdfSettingsObject';
+import ConversionObject from './objects/export/ConversionObject';
+import PdfExportOptionObject from './objects/export/PdfExportOptionObject';
+import InclusionObject from './objects/export/InclusionObject';
+import MarkdownConverter from './MarkdownConverter';
+declare class PdfConverter implements MarkdownConverter {
     pdfBodyConverter: Showdown.Converter;
     /**
     * Creates an HtmlConverter with specific options.
@@ -32,6 +33,18 @@ declare class PdfConverter {
     *
     * @return {Promise<string>} - will resolve with the output html, when done.
     */
+    toHtml(markdown: string, options?: ConversionObject): Promise<string>;
+    /**
+    * Converts given markdown to a HTML string for a HTML to PDF conversion.
+    * Certain options will specify the output.
+    *
+    * @deprecated use `.toHtml` instead
+    *
+    * @param markdown: string - the markdown code
+    * @param {ConversionObject} options: optional options
+    *
+    * @return {Promise<string>} - will resolve with the output html, when done.
+    */
     toPdfHtml(markdown: string, options?: ConversionObject): Promise<string>;
     /**
     * Converts given markdown to a PDF File.
@@ -45,7 +58,7 @@ declare class PdfConverter {
     *
     * @return {Promise<string>} - will resolve with the path when done. (err) when an error occurred.
     */
-    toFile(markdown: string, file: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean): Promise<{}>;
+    toFile(markdown: string, file: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean): Promise<string>;
     /**
     * Converts given markdown to a pdf file stream.
     * Certain options will specify the output.

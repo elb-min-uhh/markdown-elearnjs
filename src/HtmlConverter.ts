@@ -1,12 +1,20 @@
 "use strict";
 
+import * as fs from 'fs';
+import * as path from 'path';
 import * as Showdown from "showdown";
-import FileManager from './FileManager.js';
-import ExtensionManager from './ExtensionManager.js';
-import ConverterSettingsObject from "./objects/ConverterSettingsObject.js";
-import ConversionObject from "./objects/ConversionObject.js";
-import InclusionObject from "./objects/InclusionObject.js";
-const elearnExtension = require('./ShowdownElearnJS.js');
+import FileManager from './FileManager';
+import ExtensionManager from './ExtensionManager';
+import ConverterSettingsObject from "./objects/settings/ConverterSettingsObject";
+import ConversionObject from "./objects/export/ConversionObject";
+import InclusionObject from "./objects/export/InclusionObject";
+import MarkdownConverter from "./MarkdownConverter";
+import HtmlExportOptionObject from "./objects/export/HtmlExportOptionObject";
+import FileMoveObject from './FileMoveObject';
+import FileExtractor from './FileExtractor';
+import ExtensionObject from './objects/ExtensionObject';
+import PromiseCounter from './util/PromiseCounter';
+const elearnExtension = require('./ShowdownElearnJS');
 
 const defaults: { [key: string]: any } = {
     'newSectionOnHeading': true,
@@ -16,7 +24,7 @@ const defaults: { [key: string]: any } = {
     'subsubSectionLevel': 4,
 };
 
-class HtmlConverter {
+class HtmlConverter implements MarkdownConverter {
 
     bodyConverter: Showdown.Converter;
     imprintConverter: Showdown.Converter;
@@ -86,7 +94,7 @@ class HtmlConverter {
         const self = this;
         var opts: ConversionObject = options || new ConversionObject();
 
-        var ret = new Promise((res, rej) => {
+        var ret = new Promise<string>((res, rej) => {
             var html = self.bodyConverter.makeHtml(markdown);// conversion
 
             if(opts.bodyOnly) res(html);
@@ -116,6 +124,63 @@ class HtmlConverter {
         });
 
         return ret;
+    }
+
+    /**
+    * Converts given markdown to a PDF File.
+    * Certain options will specify the output.
+    *
+    * @param markdown: string - the markdown code
+    * @param file: string - the output file path (including file name)
+    * @param rootPath: string - the root path for relative paths in the file.
+    * @param {HtmlExportOptionObject} options: optional options
+    * @param forceOverwrite: bool - if an existing file should be overwritten.
+    *
+    * @return {Promise<string>} - will resolve with the path when done. (err) when an error occurred.
+    */
+    toFile(markdown: string, file: string, rootPath: string, options?: HtmlExportOptionObject, forceOverwrite?: boolean) {
+        const self = this;
+        var opts = options || new HtmlExportOptionObject();
+
+        return new Promise<string>((res, rej) => {
+            if(!file)
+                throw "No output path given.";
+            if(fs.existsSync(file) && !forceOverwrite)
+                throw "File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.";
+
+            self.toHtml(markdown, <ConversionObject>options).then((html) => {
+                var filesToExport: FileMoveObject[] = [];
+                // find files to export and change links
+                if(opts.exportLinkedFiles) {
+                    var fileExtractorObject;
+
+                    fileExtractorObject = FileExtractor.replaceAllLinks(html);
+                    html = fileExtractorObject.html;
+                    filesToExport = filesToExport.concat(fileExtractorObject.files);
+                }
+
+                var promises: Promise<any>[] = [];
+
+                // write actual html file
+                var writePromise = new Promise((resolve, reject) => {
+                    fs.writeFile(file, html, (err) => {
+                        if(err) reject(err);
+                        else resolve();
+                    })
+                });
+                promises.push(writePromise);
+                // export assets
+                if(opts.exportAssets)
+                    promises.push(ExtensionManager.exportAssets(path.dirname(file), <ExtensionObject>opts));
+                // export linked files
+                if(opts.exportLinkedFiles)
+                    promises.push(FileExtractor.extractAll(filesToExport, rootPath, path.dirname(file), 30000));
+
+                // actual finish condition
+                var donePromise = new PromiseCounter(promises, 30000);
+                donePromise.then(() => { res(file) }, rej);
+            }, (err) => { throw err });
+        });
     }
 
     /**

@@ -2,8 +2,9 @@
 
 import ConversionObject from "./ConversionObject";
 
-class PdfExportOptionObject extends ConversionObject {
-    renderDelay: number = 0;
+class HtmlExportOptionObject extends ConversionObject {
+    exportAssets: boolean = false;
+    exportLinkedFiles: boolean = false;
 
     /**
      * An Object containing options for the general conversions
@@ -30,10 +31,14 @@ class PdfExportOptionObject extends ConversionObject {
      *      Only if not `bodyOnly`
      *       Default: false
      * @param {boolean} includeTimeSlider will include the import of the timeslider.js
-     *       in the head. The script has to be located under `./assets`
+     *      in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
-     * @param {number} renderDelay delay of rendering the html to pdf in ms
+     * @param {boolean} exportAssets if set to true the elearn.js assets containing
+     *      all included extensions will be exported next to the output file.
+     * @param {boolean} exportLinkedFiles if set to true all linked files
+     *      detected by the `FileExtractor` will be exported to the assets next
+     *      to the output file.
      */
     constructor(bodyOnly?: boolean,
         language?: string,
@@ -42,11 +47,13 @@ class PdfExportOptionObject extends ConversionObject {
         includeElearnVideo?: boolean,
         includeClickImage?: boolean,
         includeTimeSlider?: boolean,
-        renderDelay?: number) {
+        exportAssets?: boolean,
+        exportLinkedFiles?: boolean) {
 
         super(bodyOnly, language, automaticExtensionDetection, includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider);
-        if(renderDelay !== undefined) this.renderDelay = renderDelay;
+        if(exportAssets !== undefined) this.exportAssets = exportAssets;
+        if(exportLinkedFiles !== undefined) this.exportLinkedFiles = exportLinkedFiles;
     }
 }
 
-export default PdfExportOptionObject;
+export default HtmlExportOptionObject;
