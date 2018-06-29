@@ -2,16 +2,17 @@ import * as Showdown from "showdown";
 import ConverterSettingsObject from '../objects/settings/ConverterSettingsObject';
 import ConversionObject from '../objects/export/ConversionObject';
 import InclusionObject from '../objects/export/InclusionObject';
-import MarkdownConverter from './MarkdownConverter';
+import IConverter from './IConverter';
 import HtmlExportOptionObject from '../objects/export/HtmlExportOptionObject';
-declare class HtmlConverter implements MarkdownConverter {
+import ExtensionObject from '../objects/ExtensionObject';
+declare class HtmlConverter implements IConverter {
     bodyConverter: Showdown.Converter;
     imprintConverter: Showdown.Converter;
     /**
     * Creates an HtmlConverter with specific options.
     * @param {ConverterSettingsObject} options: optional options
     */
-    constructor(options: ConverterSettingsObject);
+    constructor(options?: ConverterSettingsObject);
     /**
     * Update one of the conversion options.
     *
@@ -60,5 +61,6 @@ declare class HtmlConverter implements MarkdownConverter {
     * @param {InclusionObject} opts: optional options
     */
     getHTMLFileContent(data: string, html: string, meta: string, imprint: string, opts?: InclusionObject): string;
+    static fillExtensionOptions(html: string, opts: ExtensionObject): ExtensionObject;
 }
 export default HtmlConverter;

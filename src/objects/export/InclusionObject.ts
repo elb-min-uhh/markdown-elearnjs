@@ -12,35 +12,34 @@ class InclusionObject extends ExtensionObject {
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
      *
-     * @param {boolean} includeQuiz will include the import of the quiz.js in the head.
-     *       The script has to be located under `./assets`
+     * @param {object} clone: an object to clone values from:
+     *  - {string} language will change the language
+     *      if not `bodyOnly`.
+     *      Default: "en"
+     *  - {boolean} includeQuiz will include the import of the quiz.js in the head.
+     *      The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
-     * @param {boolean} includeElearnVideo will include the import of the
+     *  - {boolean} includeElearnVideo will include the import of the
      *      elearnvideo.js in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
-     * @param {boolean} includeClickImage will include the import of the clickimage.js
+     *  - {boolean} includeClickImage will include the import of the clickimage.js
      *      in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *       Default: false
-     * @param {boolean} includeTimeSlider will include the import of the timeslider.js
+     *  - {boolean} includeTimeSlider will include the import of the timeslider.js
      *       in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
-     * @param {string} language will change the language
-     *      if not `bodyOnly`.
-     *      Default: "en"
      */
-    constructor(includeQuiz?: boolean,
-        includeElearnVideo?: boolean,
-        includeClickImage?: boolean,
-        includeTimeSlider?: boolean,
-        language?: string) {
+    constructor(clone?: any) {
 
-        super(includeQuiz, includeElearnVideo, includeClickImage, includeTimeSlider);
+        super(clone);
 
-        if(language !== undefined) this.language = language;
+        if(clone) {
+            if(clone.language !== undefined) this.language = clone.language;
+        }
     }
 }
 

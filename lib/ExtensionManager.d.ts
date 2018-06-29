@@ -1,5 +1,5 @@
 import HtmlConverter from './converter/HtmlConverter';
-import MarkdownConverter from './converter/MarkdownConverter';
+import IConverter from './converter/IConverter';
 import ExtensionObject from './objects/ExtensionObject';
 /**
 * Allows to parse HTML code for usage of elearn.js extensions.
@@ -25,14 +25,14 @@ declare class ExtensionManager {
      * Scans the markdown code for elearn.js extensions.
      *
      * @param markdown string: the original markdown code to be scanned
-     * @param markdownConverter (optional) HtmlConverter or PdfConverter:
+     * @param IConverter (optional) HtmlConverter or PdfConverter:
      *  the converter to use for markdown to HTML conversion. If not given,
      *  a default HtmlConverter will be used.
      *
      * @return Promise<ExtensionObject>: including which extensions where found
      * and explicitly which were not found (true/false)
      */
-    static scanMarkdownForAll(markdown: string, markdownConverter?: MarkdownConverter): Promise<ExtensionObject>;
+    static scanMarkdownForAll(markdown: string, IConverter?: IConverter): Promise<ExtensionObject>;
     static getQuizAssetDir(): string;
     static getElearnVideoAssetDir(): string;
     static getClickImageAssetDir(): string;

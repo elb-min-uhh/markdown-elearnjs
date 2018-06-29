@@ -10,7 +10,8 @@ import PdfSettingsObject from '../objects/settings/PdfSettingsObject';
 import ConversionObject from '../objects/export/ConversionObject';
 import PdfExportOptionObject from '../objects/export/PdfExportOptionObject';
 import InclusionObject from '../objects/export/InclusionObject';
-import MarkdownConverter from './MarkdownConverter';
+import IConverter from './IConverter';
+import ExtensionObject from '../objects/ExtensionObject';
 const elearnExtension = require('./ShowdownElearnJS');
 
 const assetsPath = '../../assets';
@@ -30,7 +31,7 @@ const defaults: { [key: string]: any } = {
     'customStyleFile': undefined,
 };
 
-class PdfConverter implements MarkdownConverter {
+class PdfConverter implements IConverter {
 
     pdfBodyConverter: Showdown.Converter;
 
@@ -38,7 +39,7 @@ class PdfConverter implements MarkdownConverter {
     * Creates an HtmlConverter with specific options.
     * @param {PdfSettingsObject} options: optional options
     */
-    constructor(options: PdfSettingsObject) {
+    constructor(options?: PdfSettingsObject) {
         this.pdfBodyConverter = new Showdown.Converter({
             simplifiedAutoLink: true,
             excludeTrailingPunctuationFromURLs: true,
@@ -91,29 +92,24 @@ class PdfConverter implements MarkdownConverter {
     */
     toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
-        var opts = options || new ConversionObject();
+        var opts = new ConversionObject(options);
 
         var ret = new Promise<string>((res, rej) => {
             var html = self.pdfBodyConverter.makeHtml(markdown);// conversion
 
-            if(opts.bodyOnly) res(html);
+            if(opts.bodyOnly) {
+                res(html);
+                return;
+            }
 
             // create meta and imprint
             var meta = elearnExtension.parseMetaData(markdown);
 
             FileManager.getPdfTemplate().then((data) => {
-                if(opts.automaticExtensionDetection) {
-                    if(opts.includeQuiz == undefined)
-                        opts.includeQuiz = ExtensionManager.scanForQuiz(html);
-                    if(opts.includeElearnVideo == undefined)
-                        opts.includeElearnVideo = ExtensionManager.scanForVideo(html);
-                    if(opts.includeClickImage == undefined)
-                        opts.includeClickImage = ExtensionManager.scanForClickImage(html);
-                    if(opts.includeTimeSlider == undefined)
-                        opts.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
-                }
-                res(self.getPDFFileContent(data, html, meta, options));
-            }, (err) => { throw err; });
+                // scan for extensions if necessary
+                opts = Object.assign(opts, PdfConverter.fillExtensionOptions(html, opts));
+                res(self.getPDFFileContent(data, html, meta, opts));
+            }, (err) => { rej(err); });
         });
 
         return ret;
@@ -148,20 +144,20 @@ class PdfConverter implements MarkdownConverter {
     */
     toFile(markdown: string, file: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
-        var opts = options || new PdfExportOptionObject();
+        var opts = new PdfExportOptionObject(options);
 
         var ret = new Promise<string>((res, rej) => {
             if(!file)
-                throw "No output path given.";
+                rej("No output path given.");
             if(fs.existsSync(file) && !forceOverwrite)
-                throw "File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.";
+                rej("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
 
             self.toHtml(markdown, <ConversionObject>options).then((html) => {
                 HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toFile(file, (err, result) => {
                     if(err) rej(err);
                     res(result ? result.filename : "unknown filename");
                 });
-            }, (err) => { throw err });
+            }, (err) => { rej(err) });
         });
 
         return ret;
@@ -181,7 +177,7 @@ class PdfConverter implements MarkdownConverter {
     */
     toStream(markdown: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
-        var opts = options || new PdfExportOptionObject();
+        var opts = new PdfExportOptionObject(options);
 
         var ret = new Promise((res, rej) => {
             self.toHtml(markdown, <ConversionObject>options).then((html) => {
@@ -189,7 +185,7 @@ class PdfConverter implements MarkdownConverter {
                     if(err) rej(err);
                     res(stream);
                 });
-            }, (err) => { throw err });
+            }, (err) => { rej(err) });
         });
 
         return ret;
@@ -209,7 +205,7 @@ class PdfConverter implements MarkdownConverter {
     */
     toBuffer(markdown: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
-        var opts = options || new PdfExportOptionObject();
+        var opts = new PdfExportOptionObject(options);
 
         var ret = new Promise((res, rej) => {
             self.toHtml(markdown, <ConversionObject>options).then((html) => {
@@ -217,7 +213,7 @@ class PdfConverter implements MarkdownConverter {
                     if(err) rej(err);
                     res(buffer);
                 });
-            }, (err) => { throw err });
+            }, (err) => { rej(err); });
         });
 
         return ret;
@@ -235,7 +231,7 @@ class PdfConverter implements MarkdownConverter {
     getPDFFileContent(data: string, html: string, meta: string, opts?: InclusionObject) {
         const self = this;
 
-        var options: InclusionObject = opts || new InclusionObject();
+        var options: InclusionObject = new InclusionObject(opts);
 
         var zoom = `<style>html {zoom: ${self.pdfBodyConverter.getOption('contentZoom')}}</style>`;
         // header and footer
@@ -308,6 +304,20 @@ class PdfConverter implements MarkdownConverter {
         return `<div id="pageFooter" style="font-family: Arial, Verdana, sans-serif; color: #666; position: absolute; height: 100%; width: 100%;">
             <span style="position: absolute; bottom: 0; right: 0">{{page}}</span>
         </div>`;
+    }
+
+    static fillExtensionOptions(html: string, opts: ExtensionObject) {
+        if(opts.automaticExtensionDetection) {
+            if(opts.includeQuiz == undefined)
+                opts.includeQuiz = ExtensionManager.scanForQuiz(html);
+            if(opts.includeElearnVideo == undefined)
+                opts.includeElearnVideo = ExtensionManager.scanForVideo(html);
+            if(opts.includeClickImage == undefined)
+                opts.includeClickImage = ExtensionManager.scanForClickImage(html);
+            if(opts.includeTimeSlider == undefined)
+                opts.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
+        }
+        return opts;
     }
 }
 

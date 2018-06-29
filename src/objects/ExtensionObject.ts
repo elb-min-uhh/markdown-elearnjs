@@ -12,33 +12,32 @@ class ExtensionObject {
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
-     *
-     * @param {boolean} includeQuiz will include the import of the quiz.js in the head.
-     *       The script has to be located under `./assets`
+     * @param {object} clone: an object to clone values from:
+     *  - {boolean} includeQuiz will include the import of the quiz.js in the head.
+     *      The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
-     * @param {boolean} includeElearnVideo will include the import of the
+     *  - {boolean} includeElearnVideo will include the import of the
      *      elearnvideo.js in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
-     * @param {boolean} includeClickImage will include the import of the clickimage.js
+     *  - {boolean} includeClickImage will include the import of the clickimage.js
      *      in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *       Default: false
-     * @param {boolean} includeTimeSlider will include the import of the timeslider.js
+     *  - {boolean} includeTimeSlider will include the import of the timeslider.js
      *       in the head. The script has to be located under `./assets`
      *      Only if not `bodyOnly`
      *      Default: false
      */
-    constructor(includeQuiz?: boolean,
-        includeElearnVideo?: boolean,
-        includeClickImage?: boolean,
-        includeTimeSlider?: boolean) {
+    constructor(clone?: any) {
 
-        if(includeQuiz !== undefined) this.includeQuiz = includeQuiz;
-        if(includeElearnVideo !== undefined) this.includeElearnVideo = includeElearnVideo;
-        if(includeClickImage !== undefined) this.includeClickImage = includeClickImage;
-        if(includeTimeSlider !== undefined) this.includeTimeSlider = includeTimeSlider;
+        if(clone) {
+            if(clone.includeQuiz !== undefined) this.includeQuiz = clone.includeQuiz;
+            if(clone.includeElearnVideo !== undefined) this.includeElearnVideo = clone.includeElearnVideo;
+            if(clone.includeClickImage !== undefined) this.includeClickImage = clone.includeClickImage;
+            if(clone.includeTimeSlider !== undefined) this.includeTimeSlider = clone.includeTimeSlider;
+        }
     }
 }
 

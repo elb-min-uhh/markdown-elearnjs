@@ -8,7 +8,7 @@ import ExtensionManager from '../ExtensionManager';
 import ConverterSettingsObject from '../objects/settings/ConverterSettingsObject';
 import ConversionObject from '../objects/export/ConversionObject';
 import InclusionObject from '../objects/export/InclusionObject';
-import MarkdownConverter from './MarkdownConverter';
+import IConverter from './IConverter';
 import HtmlExportOptionObject from '../objects/export/HtmlExportOptionObject';
 import FileMoveObject from '../FileMoveObject';
 import FileExtractor from '../FileExtractor';
@@ -24,7 +24,7 @@ const defaults: { [key: string]: any } = {
     'subsubSectionLevel': 4,
 };
 
-class HtmlConverter implements MarkdownConverter {
+class HtmlConverter implements IConverter {
 
     bodyConverter: Showdown.Converter;
     imprintConverter: Showdown.Converter;
@@ -33,7 +33,7 @@ class HtmlConverter implements MarkdownConverter {
     * Creates an HtmlConverter with specific options.
     * @param {ConverterSettingsObject} options: optional options
     */
-    constructor(options: ConverterSettingsObject) {
+    constructor(options?: ConverterSettingsObject) {
         this.bodyConverter = new Showdown.Converter({
             simplifiedAutoLink: true,
             excludeTrailingPunctuationFromURLs: true,
@@ -92,12 +92,15 @@ class HtmlConverter implements MarkdownConverter {
     */
     toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
-        var opts: ConversionObject = options || new ConversionObject();
+        var opts = new ConversionObject(options);
 
         var ret = new Promise<string>((res, rej) => {
             var html = self.bodyConverter.makeHtml(markdown);// conversion
 
-            if(opts.bodyOnly) res(html);
+            if(opts.bodyOnly) {
+                res(html);
+                return;
+            }
 
             // create meta and imprint
             var meta = elearnExtension.parseMetaData(markdown);
@@ -108,19 +111,10 @@ class HtmlConverter implements MarkdownConverter {
             }
 
             FileManager.getHtmlTemplate().then((data) => {
-                if(!opts.language) opts.language = "en";
-                if(opts.automaticExtensionDetection) {
-                    if(opts.includeQuiz == undefined)
-                        opts.includeQuiz = ExtensionManager.scanForQuiz(html);
-                    if(opts.includeElearnVideo == undefined)
-                        opts.includeElearnVideo = ExtensionManager.scanForVideo(html);
-                    if(opts.includeClickImage == undefined)
-                        opts.includeClickImage = ExtensionManager.scanForClickImage(html);
-                    if(opts.includeTimeSlider == undefined)
-                        opts.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
-                }
+                // scan for extensions if necessary
+                opts = Object.assign(opts, HtmlConverter.fillExtensionOptions(html, opts));
                 res(self.getHTMLFileContent(data, html, meta, imprint, opts));
-            }, (err) => { throw err; });
+            }, (err) => { rej(err); });
         });
 
         return ret;
@@ -140,13 +134,14 @@ class HtmlConverter implements MarkdownConverter {
     */
     toFile(markdown: string, file: string, rootPath: string, options?: HtmlExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
-        var opts = options || new HtmlExportOptionObject();
+
+        var opts = new HtmlExportOptionObject(options);
 
         return new Promise<string>((res, rej) => {
             if(!file)
-                throw "No output path given.";
+                rej("No output path given.");
             if(fs.existsSync(file) && !forceOverwrite)
-                throw "File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.";
+                rej("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
 
             self.toHtml(markdown, <ConversionObject>options).then((html) => {
                 var filesToExport: FileMoveObject[] = [];
@@ -158,6 +153,9 @@ class HtmlConverter implements MarkdownConverter {
                     html = fileExtractorObject.html;
                     filesToExport = filesToExport.concat(fileExtractorObject.files);
                 }
+
+                // scan for extensions if necessary
+                opts = Object.assign(opts, HtmlConverter.fillExtensionOptions(html, opts));
 
                 var promises: Promise<any>[] = [];
 
@@ -179,7 +177,7 @@ class HtmlConverter implements MarkdownConverter {
                 // actual finish condition
                 var donePromise = new PromiseCounter(promises, 30000);
                 donePromise.then(() => { res(file) }, rej);
-            }, (err) => { throw err });
+            }, (err) => { rej(err) });
         });
     }
 
@@ -196,7 +194,7 @@ class HtmlConverter implements MarkdownConverter {
     * @param {InclusionObject} opts: optional options
     */
     getHTMLFileContent(data: string, html: string, meta: string, imprint: string, opts?: InclusionObject) {
-        var options: InclusionObject = opts || new InclusionObject();
+        var options: InclusionObject = new InclusionObject(opts);
         return data.replace(/\$\$meta\$\$/, () => { return meta })
             .replace(/\$\$extensions\$\$/, () => {
                 return ExtensionManager.getHTMLAssetStrings(
@@ -217,6 +215,20 @@ class HtmlConverter implements MarkdownConverter {
                 }
                 return "";
             });
+    }
+
+    static fillExtensionOptions(html: string, opts: ExtensionObject) {
+        if(opts.automaticExtensionDetection) {
+            if(opts.includeQuiz == undefined)
+                opts.includeQuiz = ExtensionManager.scanForQuiz(html);
+            if(opts.includeElearnVideo == undefined)
+                opts.includeElearnVideo = ExtensionManager.scanForVideo(html);
+            if(opts.includeClickImage == undefined)
+                opts.includeClickImage = ExtensionManager.scanForClickImage(html);
+            if(opts.includeTimeSlider == undefined)
+                opts.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
+        }
+        return opts;
     }
 }
 

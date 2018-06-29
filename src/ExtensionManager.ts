@@ -5,7 +5,7 @@ import { ncp } from 'ncp';
 import HtmlConverter from './converter/HtmlConverter';
 import ConverterSettingsObject from './objects/settings/ConverterSettingsObject';
 import PdfConverter from './converter/PdfConverter';
-import MarkdownConverter from './converter/MarkdownConverter';
+import IConverter from './converter/IConverter';
 import ExtensionObject from './objects/ExtensionObject';
 import ConversionObject from './objects/export/ConversionObject';
 
@@ -73,36 +73,36 @@ class ExtensionManager {
      * and explicitly which were not found (true/false)
      */
     static scanHtmlForAll(html: string) {
-        return new ExtensionObject(
-            ExtensionManager.scanForQuiz(html),
-            ExtensionManager.scanForVideo(html),
-            ExtensionManager.scanForClickImage(html),
-            ExtensionManager.scanForTimeSlider(html)
-        );
+        return new ExtensionObject({
+            includeQuiz: ExtensionManager.scanForQuiz(html),
+            includeElearnVideo: ExtensionManager.scanForVideo(html),
+            includeClickImage: ExtensionManager.scanForClickImage(html),
+            includeTimeSlider: ExtensionManager.scanForTimeSlider(html)
+        });
     }
 
     /**
      * Scans the markdown code for elearn.js extensions.
      *
      * @param markdown string: the original markdown code to be scanned
-     * @param markdownConverter (optional) HtmlConverter or PdfConverter:
+     * @param IConverter (optional) HtmlConverter or PdfConverter:
      *  the converter to use for markdown to HTML conversion. If not given,
      *  a default HtmlConverter will be used.
      *
      * @return Promise<ExtensionObject>: including which extensions where found
      * and explicitly which were not found (true/false)
      */
-    static scanMarkdownForAll(markdown: string, markdownConverter?: MarkdownConverter) {
+    static scanMarkdownForAll(markdown: string, IConverter?: IConverter) {
         var ret = new Promise<ExtensionObject>((res, rej) => {
             // define converter
             if(!ExtensionManager.htmlConverter)
                 ExtensionManager.htmlConverter = new HtmlConverter(new ConverterSettingsObject());
 
-            let converter: MarkdownConverter = ExtensionManager.htmlConverter;
-            if(markdownConverter
-                && (markdownConverter instanceof HtmlConverter
-                    || markdownConverter instanceof PdfConverter)) {
-                converter = <MarkdownConverter>markdownConverter;
+            let converter: IConverter = ExtensionManager.htmlConverter;
+            if(IConverter
+                && (IConverter instanceof HtmlConverter
+                    || IConverter instanceof PdfConverter)) {
+                converter = <IConverter>IConverter;
             }
 
             var opts = new ConversionObject();

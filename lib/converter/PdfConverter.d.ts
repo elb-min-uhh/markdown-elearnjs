@@ -4,14 +4,15 @@ import PdfSettingsObject from '../objects/settings/PdfSettingsObject';
 import ConversionObject from '../objects/export/ConversionObject';
 import PdfExportOptionObject from '../objects/export/PdfExportOptionObject';
 import InclusionObject from '../objects/export/InclusionObject';
-import MarkdownConverter from './MarkdownConverter';
-declare class PdfConverter implements MarkdownConverter {
+import IConverter from './IConverter';
+import ExtensionObject from '../objects/ExtensionObject';
+declare class PdfConverter implements IConverter {
     pdfBodyConverter: Showdown.Converter;
     /**
     * Creates an HtmlConverter with specific options.
     * @param {PdfSettingsObject} options: optional options
     */
-    constructor(options: PdfSettingsObject);
+    constructor(options?: PdfSettingsObject);
     /**
     * Update one of the conversion options.
     *
@@ -104,5 +105,6 @@ declare class PdfConverter implements MarkdownConverter {
     getPdfOutputOptions(rootPath: string, renderDelay?: number): HtmlPdf.CreateOptions;
     getDefaultHeader(): string;
     getDefaultFooter(): string;
+    static fillExtensionOptions(html: string, opts: ExtensionObject): ExtensionObject;
 }
 export default PdfConverter;

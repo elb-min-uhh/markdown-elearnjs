@@ -156,7 +156,7 @@ tests.testHtmlScanAll = function() {
 // ---------- PDF -------------
 
 tests.testToPdfBody = function() {
-    var html = pdfConverter.toPdfHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
+    var html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
     html.then((text) => {
         assertFileEqual(text, `${__dirname}/resultFiles/testToPdfBody.html`).then(() => {
             testDone();
@@ -168,7 +168,7 @@ tests.testToPdfBody = function() {
 }
 
 tests.testToPdfFull = function() {
-    var html = pdfConverter.toPdfHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown);
+    var html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown);
     html.then((text) => {
         assertFileEqual(text, `${__dirname}/resultFiles/testToPdfFull.html`).then(() => {
             testDone();
@@ -186,7 +186,7 @@ tests.testTemplateExamplePdf = function() {
             testDone();
             return;
         }
-        pdfConverter.toPdfHtml(data, {
+        pdfConverter.toHtml(data, {
             automaticExtensionDetection: true
         }).then((text) => {
             assertFileEqual(text, `${__dirname}/resultFiles/testTemplateExamplePdf.html`).then(() => {
