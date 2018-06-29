@@ -1,9 +1,9 @@
 import * as Showdown from "showdown";
-import ConverterSettingsObject from "./objects/settings/ConverterSettingsObject";
-import ConversionObject from "./objects/export/ConversionObject";
-import InclusionObject from "./objects/export/InclusionObject";
-import MarkdownConverter from "./MarkdownConverter";
-import HtmlExportOptionObject from "./objects/export/HtmlExportOptionObject";
+import ConverterSettingsObject from '../objects/settings/ConverterSettingsObject';
+import ConversionObject from '../objects/export/ConversionObject';
+import InclusionObject from '../objects/export/InclusionObject';
+import MarkdownConverter from './MarkdownConverter';
+import HtmlExportOptionObject from '../objects/export/HtmlExportOptionObject';
 declare class HtmlConverter implements MarkdownConverter {
     bodyConverter: Showdown.Converter;
     imprintConverter: Showdown.Converter;

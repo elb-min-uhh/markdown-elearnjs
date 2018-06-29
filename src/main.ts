@@ -1,7 +1,7 @@
 "use strict";
 
-import HtmlConverter from './HtmlConverter';
-import PdfConverter from './PdfConverter';
+import HtmlConverter from './converter/HtmlConverter';
+import PdfConverter from './converter/PdfConverter';
 import FileExtractor from './FileExtractor';
 import FileExtractorObject from './FileExtractorObject';
 import ExtensionManager from './ExtensionManager';

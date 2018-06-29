@@ -4,12 +4,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as Showdown from "showdown";
 import * as HtmlPdf from 'html-pdf';
-import FileManager from './FileManager';
-import ExtensionManager from './ExtensionManager';
-import PdfSettingsObject from './objects/settings/PdfSettingsObject';
-import ConversionObject from './objects/export/ConversionObject';
-import PdfExportOptionObject from './objects/export/PdfExportOptionObject';
-import InclusionObject from './objects/export/InclusionObject';
+import FileManager from '../FileManager';
+import ExtensionManager from '../ExtensionManager';
+import PdfSettingsObject from '../objects/settings/PdfSettingsObject';
+import ConversionObject from '../objects/export/ConversionObject';
+import PdfExportOptionObject from '../objects/export/PdfExportOptionObject';
+import InclusionObject from '../objects/export/InclusionObject';
 import MarkdownConverter from './MarkdownConverter';
 const elearnExtension = require('./ShowdownElearnJS');
 

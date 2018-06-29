@@ -2,10 +2,10 @@
 
 import * as path from 'path';
 import { ncp } from 'ncp';
-import HtmlConverter from './HtmlConverter';
+import HtmlConverter from './converter/HtmlConverter';
 import ConverterSettingsObject from './objects/settings/ConverterSettingsObject';
-import PdfConverter from './PdfConverter';
-import MarkdownConverter from './MarkdownConverter';
+import PdfConverter from './converter/PdfConverter';
+import MarkdownConverter from './converter/MarkdownConverter';
 import ExtensionObject from './objects/ExtensionObject';
 import ConversionObject from './objects/export/ConversionObject';
 

@@ -1,5 +1,5 @@
-import HtmlConverter from './HtmlConverter';
-import MarkdownConverter from './MarkdownConverter';
+import HtmlConverter from './converter/HtmlConverter';
+import MarkdownConverter from './converter/MarkdownConverter';
 import ExtensionObject from './objects/ExtensionObject';
 /**
 * Allows to parse HTML code for usage of elearn.js extensions.

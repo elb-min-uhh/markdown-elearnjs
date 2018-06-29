@@ -3,17 +3,17 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Showdown from "showdown";
-import FileManager from './FileManager';
-import ExtensionManager from './ExtensionManager';
-import ConverterSettingsObject from "./objects/settings/ConverterSettingsObject";
-import ConversionObject from "./objects/export/ConversionObject";
-import InclusionObject from "./objects/export/InclusionObject";
-import MarkdownConverter from "./MarkdownConverter";
-import HtmlExportOptionObject from "./objects/export/HtmlExportOptionObject";
-import FileMoveObject from './FileMoveObject';
-import FileExtractor from './FileExtractor';
-import ExtensionObject from './objects/ExtensionObject';
-import PromiseCounter from './util/PromiseCounter';
+import FileManager from '../FileManager';
+import ExtensionManager from '../ExtensionManager';
+import ConverterSettingsObject from '../objects/settings/ConverterSettingsObject';
+import ConversionObject from '../objects/export/ConversionObject';
+import InclusionObject from '../objects/export/InclusionObject';
+import MarkdownConverter from './MarkdownConverter';
+import HtmlExportOptionObject from '../objects/export/HtmlExportOptionObject';
+import FileMoveObject from '../FileMoveObject';
+import FileExtractor from '../FileExtractor';
+import ExtensionObject from '../objects/ExtensionObject';
+import PromiseCounter from '../util/PromiseCounter';
 const elearnExtension = require('./ShowdownElearnJS');
 
 const defaults: { [key: string]: any } = {

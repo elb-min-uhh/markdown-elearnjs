@@ -1,9 +1,9 @@
 import * as Showdown from "showdown";
 import * as HtmlPdf from 'html-pdf';
-import PdfSettingsObject from './objects/settings/PdfSettingsObject';
-import ConversionObject from './objects/export/ConversionObject';
-import PdfExportOptionObject from './objects/export/PdfExportOptionObject';
-import InclusionObject from './objects/export/InclusionObject';
+import PdfSettingsObject from '../objects/settings/PdfSettingsObject';
+import ConversionObject from '../objects/export/ConversionObject';
+import PdfExportOptionObject from '../objects/export/PdfExportOptionObject';
+import InclusionObject from '../objects/export/InclusionObject';
 import MarkdownConverter from './MarkdownConverter';
 declare class PdfConverter implements MarkdownConverter {
     pdfBodyConverter: Showdown.Converter;
