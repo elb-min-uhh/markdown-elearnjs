@@ -29,6 +29,10 @@ To convert some markdown code to Html you can simply use
 ```js
 var htmlConverter = new MarkdownElearnJS.HtmlConverter();
 
+htmlConverter.toFile(markdown, filePath, rootPath).then((filename) => {
+    console.log(filename);
+}, err => console.error(err));
+
 htmlConverter.toHtml(markdown).then((html) => {
     console.log(html);
 }, err => console.error(err));
@@ -40,22 +44,22 @@ Or for Pdf conversion
 var pdfConverter = new MarkdownElearnJS.PdfConverter();
 
 // save as file
-pdfConverter.toFile(markdown, filePath, rootPath).then((html) => {
-    console.log(html);
+pdfConverter.toFile(markdown, filePath, rootPath).then((filename) => {
+    console.log(filename);
 }, err => console.error(err));
 
 // get a stream
-pdfConverter.toStream(markdown, rootPath).then((html) => {
-    console.log(html);
+pdfConverter.toStream(markdown, rootPath).then(() => {
+    console.log();
 }, err => console.error(err));
 
 //get a buffer
-pdfConverter.toBuffer(markdown, rootPath).then((html) => {
-    console.log(html);
+pdfConverter.toBuffer(markdown, rootPath).then(() => {
+    console.log();
 }, err => console.error(err));
 
 // only the html if you want to use your own render framework
-pdfConverter.toPdfHtml(markdown).then((html) => {
+pdfConverter.toHtml(markdown).then((html) => {
     console.log(html);
 }, err => console.error(err));
 ```
@@ -64,62 +68,12 @@ You can also use conversion options in each function call and specific
 converter settings. Check the
 [wiki pages](https://github.com/elb-min-uhh/markdown-elearnjs/wiki).
 
-### Export Assets
+### Additional Features
 
-If you want to export the [elearn.js](https://github.com/elb-min-uhh/elearn.js)
-assets, you can simply use
-
-```js
-var path = `C://this/is/some/example/path/`;
-var options = {
-    includeQuiz: true
-};
-MarkdownElearnJS.ExtensionManager.exportAssets(path, options).then(() => {
-    console.log("Successfully exported.");
-}, err => console.error(err));
-```
-
-The assets will then be stored as `C://this/is/some/example/path/assets/`.
-Without any options only the basic `elearn.js` will be exported. In the options
-object you can set these values
-```js
-var options = {
-    includeQuiz: true,
-    includeElearnVideo: false,
-    includeClickImage: true,
-    includeTimeSlider: false
-};
-```
-
-### Extract Linked Files
-
-If you want to extract all files linked in the converted markdown code, use
-
-```js
-var fileExtractorObject = MarkdownElearnJS.FileExtractor.replaceAllLinks(html);
-// update the converted html to include the new relative paths
-html = fileExtractorObject.html;
-// extract the files
-MarkdownElearnJS.FileExtractor.extractAll(
-    fileExtractorObject.files,
-    inputRoot,
-    outputRoot,
-    timeout);
-```
-
-The tool will search for all file paths in `img`, `script`, `link` and `source`
-Html elements. Those paths will be replaced with relative paths to the assets
-folder and the updated html can be found as displayed above.
-
-Also all these files are stored in the `fileExtractorObject.files` array,
-which can be used in the `extractAll` function.
-
-The `inputRoot` should lead to the Markdown file's parent directory,
-so the relative links in there can be combined with the `inputRoot` to an
-absolute path.
-The `outputRoot` leads to the parent directory of the output `assets` folder.
-The timeout (in ms) will cancel the extraction process after some time, if
-something went wrong.
+The package does not only support the markdown conversion but also additional
+features like _elearn.js extension detection_, _assets export_ and
+_extraction of linked files_. For more information on this check the
+[wiki pages](https://github.com/elb-min-uhh/markdown-elearnjs/wiki).
 
 ## Known Issues
 
