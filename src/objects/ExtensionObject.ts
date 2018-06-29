@@ -4,10 +4,10 @@ class ExtensionObject {
     // general index signature
     [key: string]: any;
 
-    includeQuiz?: boolean;
-    includeElearnVideo?: boolean;
-    includeClickImage?: boolean;
-    includeTimeSlider?: boolean;
+    public includeQuiz?: boolean;
+    public includeElearnVideo?: boolean;
+    public includeClickImage?: boolean;
+    public includeTimeSlider?: boolean;
 
     /**
      * An Object containing options for the general conversions

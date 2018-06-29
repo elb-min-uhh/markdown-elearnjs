@@ -4,6 +4,6 @@ declare class FileManager {
     /**
     * Reads in a given file.
     */
-    static readFile(filePath: string, callback: (data: string) => any, error?: (err: any) => any): void;
+    private static readFile;
 }
 export default FileManager;

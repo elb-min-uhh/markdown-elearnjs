@@ -2,7 +2,7 @@
 * Runs all necessary methods once to test them.
 */
 const fs = require('fs');
-const MarkdownElearnJS = require('../lib/main');
+const MarkdownElearnJS = require('../out/main');
 
 var htmlConverter = new MarkdownElearnJS.HtmlConverter();
 var pdfConverter = new MarkdownElearnJS.PdfConverter();

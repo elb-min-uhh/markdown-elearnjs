@@ -1,13 +1,9 @@
-import * as Showdown from "showdown";
-import * as HtmlPdf from 'html-pdf';
 import PdfSettingsObject from '../objects/settings/PdfSettingsObject';
 import ConversionObject from '../objects/export/ConversionObject';
 import PdfExportOptionObject from '../objects/export/PdfExportOptionObject';
-import InclusionObject from '../objects/export/InclusionObject';
 import IConverter from './IConverter';
-import ExtensionObject from '../objects/ExtensionObject';
 declare class PdfConverter implements IConverter {
-    pdfBodyConverter: Showdown.Converter;
+    private pdfBodyConverter;
     /**
     * Creates an HtmlConverter with specific options.
     * @param {PdfSettingsObject} options: optional options
@@ -95,16 +91,16 @@ declare class PdfConverter implements IConverter {
     * @param meta: additional header elements for the HTML file
     * @param opts: InclusionObject
     */
-    getPDFFileContent(data: string, html: string, meta: string, opts?: InclusionObject): string;
+    private getPDFFileContent;
     /**
     * Generates the PDF output options for the used node-html-pdf package.
     * @param filePath path to the currently opened file, necessary to link
     *                 included assets.
     * @param renderDelay (optional) delay of rendering by the package in ms.
     */
-    getPdfOutputOptions(rootPath: string, renderDelay?: number): HtmlPdf.CreateOptions;
-    getDefaultHeader(): string;
-    getDefaultFooter(): string;
-    static fillExtensionOptions(html: string, opts: ExtensionObject): ExtensionObject;
+    private getPdfOutputOptions;
+    private getDefaultHeader;
+    private getDefaultFooter;
+    private static fillExtensionOptions;
 }
 export default PdfConverter;

@@ -1,8 +1,8 @@
 "use strict";
 
 class FileMoveObject {
-    inputPath: string;
-    relativeOutputPath: string;
+    public inputPath: string;
+    public relativeOutputPath: string;
 
     constructor(inputPath: string, relativeOutputPath: string) {
         this.inputPath = inputPath;

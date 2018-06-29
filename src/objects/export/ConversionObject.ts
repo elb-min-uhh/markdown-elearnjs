@@ -3,8 +3,8 @@
 import InclusionObject from "./InclusionObject";
 
 class ConversionObject extends InclusionObject {
-    bodyOnly: boolean = false;
-    automaticExtensionDetection: boolean = false;
+    public bodyOnly: boolean = false;
+    public automaticExtensionDetection: boolean = false;
 
     /**
      * An Object containing options for the general conversions

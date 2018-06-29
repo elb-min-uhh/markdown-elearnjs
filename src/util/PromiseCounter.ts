@@ -7,18 +7,18 @@
 class PromiseCounter {
 
     // counter and timeout
-    count!: number;
-    expected!: number;
-    timeout?: NodeJS.Timer;
+    public count!: number;
+    public expected!: number;
+    private timeout?: NodeJS.Timer;
 
     // listener
-    listenerAdded: boolean = false;
-    resolve?: () => any;
-    reject?: (err: any) => any;
+    private listenerAdded: boolean = false;
+    private resolve?: () => any;
+    private reject?: (err: any) => any;
 
     // finish statess
-    done: boolean = false;
-    error?: any;
+    public done: boolean = false;
+    public error?: any;
 
     /**
     * constructor

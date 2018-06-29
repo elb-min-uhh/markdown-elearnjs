@@ -1,4 +1,3 @@
-/// <reference types="node" />
 /**
 * a PromiseCounter.
 * This can be used to wait for multiple promises.
@@ -6,10 +5,10 @@
 declare class PromiseCounter {
     count: number;
     expected: number;
-    timeout?: NodeJS.Timer;
-    listenerAdded: boolean;
-    resolve?: () => any;
-    reject?: (err: any) => any;
+    private timeout?;
+    private listenerAdded;
+    private resolve?;
+    private reject?;
     done: boolean;
     error?: any;
     /**

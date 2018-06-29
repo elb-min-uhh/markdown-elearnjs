@@ -1,13 +1,10 @@
-import * as Showdown from "showdown";
 import ConverterSettingsObject from '../objects/settings/ConverterSettingsObject';
 import ConversionObject from '../objects/export/ConversionObject';
-import InclusionObject from '../objects/export/InclusionObject';
 import IConverter from './IConverter';
 import HtmlExportOptionObject from '../objects/export/HtmlExportOptionObject';
-import ExtensionObject from '../objects/ExtensionObject';
 declare class HtmlConverter implements IConverter {
-    bodyConverter: Showdown.Converter;
-    imprintConverter: Showdown.Converter;
+    private bodyConverter;
+    private imprintConverter;
     /**
     * Creates an HtmlConverter with specific options.
     * @param {ConverterSettingsObject} options: optional options
@@ -60,7 +57,7 @@ declare class HtmlConverter implements IConverter {
     * @param imprint: HTML to be inserted into the elearn.js imprint
     * @param {InclusionObject} opts: optional options
     */
-    getHTMLFileContent(data: string, html: string, meta: string, imprint: string, opts?: InclusionObject): string;
-    static fillExtensionOptions(html: string, opts: ExtensionObject): ExtensionObject;
+    private getHTMLFileContent;
+    private static fillExtensionOptions;
 }
 export default HtmlConverter;

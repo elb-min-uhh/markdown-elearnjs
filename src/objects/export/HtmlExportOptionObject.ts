@@ -3,8 +3,8 @@
 import ConversionObject from "./ConversionObject";
 
 class HtmlExportOptionObject extends ConversionObject {
-    exportAssets: boolean = false;
-    exportLinkedFiles: boolean = false;
+    public exportAssets: boolean = false;
+    public exportLinkedFiles: boolean = false;
 
     /**
      * An Object containing options for the general conversions

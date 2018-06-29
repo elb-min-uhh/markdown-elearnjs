@@ -33,7 +33,7 @@ const defaults: { [key: string]: any } = {
 
 class PdfConverter implements IConverter {
 
-    pdfBodyConverter: Showdown.Converter;
+    private pdfBodyConverter: Showdown.Converter;
 
     /**
     * Creates an HtmlConverter with specific options.
@@ -67,7 +67,7 @@ class PdfConverter implements IConverter {
     * @param opt: string - option key. Same possible as in the constructor.
     * @param val: obj - the value to set the option to.
     */
-    setOption(opt: string, val: any) {
+    public setOption(opt: string, val: any) {
         this.pdfBodyConverter.setOption(opt, val);
     }
 
@@ -75,7 +75,7 @@ class PdfConverter implements IConverter {
     * Update multiple conversion options.
     * @param options: Object - same as in the constructor
     */
-    setOptions(options: PdfSettingsObject) {
+    public setOptions(options: PdfSettingsObject) {
         for(var key in options) {
             this.pdfBodyConverter.setOption(key, options[key]);
         }
@@ -90,7 +90,7 @@ class PdfConverter implements IConverter {
     *
     * @return {Promise<string>} - will resolve with the output html, when done.
     */
-    toHtml(markdown: string, options?: ConversionObject) {
+    public toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
         var opts = new ConversionObject(options);
 
@@ -126,7 +126,7 @@ class PdfConverter implements IConverter {
     *
     * @return {Promise<string>} - will resolve with the output html, when done.
     */
-    toPdfHtml(markdown: string, options?: ConversionObject) {
+    public toPdfHtml(markdown: string, options?: ConversionObject) {
         return this.toHtml(markdown, options);
     }
 
@@ -142,7 +142,7 @@ class PdfConverter implements IConverter {
     *
     * @return {Promise<string>} - will resolve with the path when done. (err) when an error occurred.
     */
-    toFile(markdown: string, file: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
+    public toFile(markdown: string, file: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
         var opts = new PdfExportOptionObject(options);
 
@@ -177,7 +177,7 @@ class PdfConverter implements IConverter {
     *
     * @return Promise: (stream) - will resolve when done. (err) when an error occurred.
     */
-    toStream(markdown: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
+    public toStream(markdown: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
         var opts = new PdfExportOptionObject(options);
 
@@ -205,7 +205,7 @@ class PdfConverter implements IConverter {
     *
     * @return Promise: (stream) - will resolve when done. (err) when an error occurred.
     */
-    toBuffer(markdown: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
+    public toBuffer(markdown: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
         var opts = new PdfExportOptionObject(options);
 
@@ -230,7 +230,7 @@ class PdfConverter implements IConverter {
     * @param meta: additional header elements for the HTML file
     * @param opts: InclusionObject
     */
-    getPDFFileContent(data: string, html: string, meta: string, opts?: InclusionObject) {
+    private getPDFFileContent(data: string, html: string, meta: string, opts?: InclusionObject) {
         const self = this;
 
         var options: InclusionObject = new InclusionObject(opts);
@@ -271,7 +271,7 @@ class PdfConverter implements IConverter {
     *                 included assets.
     * @param renderDelay (optional) delay of rendering by the package in ms.
     */
-    getPdfOutputOptions(rootPath: string, renderDelay?: number): HtmlPdf.CreateOptions {
+    private getPdfOutputOptions(rootPath: string, renderDelay?: number): HtmlPdf.CreateOptions {
         const self = this;
 
         if(!renderDelay) renderDelay = 0;
@@ -298,17 +298,17 @@ class PdfConverter implements IConverter {
         return opts;
     }
 
-    getDefaultHeader() {
+    private getDefaultHeader() {
         return ``;
     }
 
-    getDefaultFooter() {
+    private getDefaultFooter() {
         return `<div id="pageFooter" style="font-family: Arial, Verdana, sans-serif; color: #666; position: absolute; height: 100%; width: 100%;">
             <span style="position: absolute; bottom: 0; right: 0">{{page}}</span>
         </div>`;
     }
 
-    static fillExtensionOptions(html: string, opts: ExtensionObject) {
+    private static fillExtensionOptions(html: string, opts: ExtensionObject) {
         if(opts.automaticExtensionDetection) {
             if(opts.includeQuiz == undefined)
                 opts.includeQuiz = ExtensionManager.scanForQuiz(html);

@@ -26,8 +26,8 @@ const defaults: { [key: string]: any } = {
 
 class HtmlConverter implements IConverter {
 
-    bodyConverter: Showdown.Converter;
-    imprintConverter: Showdown.Converter;
+    private bodyConverter: Showdown.Converter;
+    private imprintConverter: Showdown.Converter;
 
     /**
     * Creates an HtmlConverter with specific options.
@@ -67,7 +67,7 @@ class HtmlConverter implements IConverter {
     * @param opt: string - option key. Same possible as in the constructor.
     * @param val: obj - the value to set the option to.
     */
-    setOption(opt: string, val: any) {
+    public setOption(opt: string, val: any) {
         this.bodyConverter.setOption(opt, val);
     }
 
@@ -75,7 +75,7 @@ class HtmlConverter implements IConverter {
     * Update multiple conversion options.
     * @param options: Object - same as in the constructor
     */
-    setOptions(options: ConverterSettingsObject) {
+    public setOptions(options: ConverterSettingsObject) {
         for(var key in options) {
             this.bodyConverter.setOption(key, options[key]);
         }
@@ -90,7 +90,7 @@ class HtmlConverter implements IConverter {
     *
     * @return Promise: (html) - will resolve with the output html, when done.
     */
-    toHtml(markdown: string, options?: ConversionObject) {
+    public toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
         var opts = new ConversionObject(options);
 
@@ -132,7 +132,7 @@ class HtmlConverter implements IConverter {
     *
     * @return {Promise<string>} - will resolve with the path when done. (err) when an error occurred.
     */
-    toFile(markdown: string, file: string, rootPath: string, options?: HtmlExportOptionObject, forceOverwrite?: boolean) {
+    public toFile(markdown: string, file: string, rootPath: string, options?: HtmlExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
 
         var opts = new HtmlExportOptionObject(options);
@@ -195,7 +195,7 @@ class HtmlConverter implements IConverter {
     * @param imprint: HTML to be inserted into the elearn.js imprint
     * @param {InclusionObject} opts: optional options
     */
-    getHTMLFileContent(data: string, html: string, meta: string, imprint: string, opts?: InclusionObject) {
+    private getHTMLFileContent(data: string, html: string, meta: string, imprint: string, opts?: InclusionObject) {
         var options: InclusionObject = new InclusionObject(opts);
         return data.replace(/\$\$meta\$\$/, () => { return meta })
             .replace(/\$\$extensions\$\$/, () => {
@@ -219,7 +219,7 @@ class HtmlConverter implements IConverter {
             });
     }
 
-    static fillExtensionOptions(html: string, opts: ExtensionObject) {
+    private static fillExtensionOptions(html: string, opts: ExtensionObject) {
         if(opts.automaticExtensionDetection) {
             if(opts.includeQuiz == undefined)
                 opts.includeQuiz = ExtensionManager.scanForQuiz(html);

@@ -1,11 +1,6 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const ExtensionObject_1 = __importDefault(require("../ExtensionObject"));
-"use strict";
-class InclusionObject extends ExtensionObject_1.default {
+import ExtensionObject from "../ExtensionObject";
+declare class InclusionObject extends ExtensionObject {
+    language: string;
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
@@ -31,13 +26,6 @@ class InclusionObject extends ExtensionObject_1.default {
      *      Only if not `bodyOnly`
      *      Default: false
      */
-    constructor(clone) {
-        super(clone);
-        this.language = "en";
-        if (clone) {
-            if (clone.language !== undefined)
-                this.language = clone.language;
-        }
-    }
+    constructor(clone?: any);
 }
-exports.default = InclusionObject;
+export default InclusionObject;

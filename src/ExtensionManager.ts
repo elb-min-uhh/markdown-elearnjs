@@ -22,10 +22,10 @@ const assetsPath = '../assets';
 class ExtensionManager {
 
     // the default converter used for scanning
-    static htmlConverter: HtmlConverter;
+    private static htmlConverter: HtmlConverter;
 
     // Scan
-    static scanForQuiz(html: string) {
+    public static scanForQuiz(html: string) {
         var include = false;
         html.replace(divClassRegExp,
             (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
@@ -36,13 +36,13 @@ class ExtensionManager {
         return include;
     }
 
-    static scanForVideo(html: string) {
+    public static scanForVideo(html: string) {
         var include = false;
         if(html.match(videoRegExp)) include = true;
         return include;
     }
 
-    static scanForClickImage(html: string) {
+    public static scanForClickImage(html: string) {
         var include = false;
         html.replace(divClassRegExp,
             (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
@@ -53,7 +53,7 @@ class ExtensionManager {
         return include;
     }
 
-    static scanForTimeSlider(html: string) {
+    public static scanForTimeSlider(html: string) {
         var include = false;
         html.replace(divClassRegExp,
             (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
@@ -72,7 +72,7 @@ class ExtensionManager {
      * @return ExtensionObject: including which extensions where found
      * and explicitly which were not found (true/false)
      */
-    static scanHtmlForAll(html: string) {
+    public static scanHtmlForAll(html: string) {
         return new ExtensionObject({
             includeQuiz: ExtensionManager.scanForQuiz(html),
             includeElearnVideo: ExtensionManager.scanForVideo(html),
@@ -92,7 +92,7 @@ class ExtensionManager {
      * @return Promise<ExtensionObject>: including which extensions where found
      * and explicitly which were not found (true/false)
      */
-    static scanMarkdownForAll(markdown: string, IConverter?: IConverter) {
+    public static scanMarkdownForAll(markdown: string, IConverter?: IConverter) {
         var ret = new Promise<ExtensionObject>((res, rej) => {
             // define converter
             if(!ExtensionManager.htmlConverter)
@@ -119,49 +119,49 @@ class ExtensionManager {
 
     // Locations to copy from
 
-    static getQuizAssetDir() {
+    private static getQuizAssetDir() {
         return path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/quiz/assets/`);
     }
 
-    static getElearnVideoAssetDir() {
+    private static getElearnVideoAssetDir() {
         return path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/elearnvideo/assets/`);
     }
 
-    static getClickImageAssetDir() {
+    private static getClickImageAssetDir() {
         return path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/clickimage/assets/`);
     }
 
-    static getTimeSliderAssetDir() {
+    private static getTimeSliderAssetDir() {
         return path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/timeslider/assets/`);
     }
 
     // Asset Strings for a HTML Export
 
-    static getHTMLAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
+    public static getHTMLAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
         return `${includeQuiz ? ExtensionManager.getQuizHTMLAssetString() : ""}
                 ${includeElearnVideo ? ExtensionManager.getElearnVideoHTMLAssetString() : ""}
                 ${includeClickImage ? ExtensionManager.getClickImageHTMLAssetString() : ""}
                 ${includeTimeSlider ? ExtensionManager.getTimeSliderHTMLAssetString() : ""}`;
     }
 
-    static getHTMLAssetString(name: string) {
+    private static getHTMLAssetString(name: string) {
         return `<link rel="stylesheet" type="text/css" href="assets/css/${name}.css">
                 <script type="text/javascript" src="assets/js/${name}.js"></script>`;
     }
 
-    static getQuizHTMLAssetString() {
+    private static getQuizHTMLAssetString() {
         return ExtensionManager.getHTMLAssetString("quiz");
     }
 
-    static getElearnVideoHTMLAssetString() {
+    private static getElearnVideoHTMLAssetString() {
         return ExtensionManager.getHTMLAssetString("elearnvideo");
     }
 
-    static getClickImageHTMLAssetString() {
+    private static getClickImageHTMLAssetString() {
         return ExtensionManager.getHTMLAssetString("clickimage");
     }
 
-    static getTimeSliderHTMLAssetString() {
+    private static getTimeSliderHTMLAssetString() {
         return `<link rel="stylesheet" type="text/css" href="assets/css/timeslider.css">
                 <script type="text/javascript" src="assets/js/moment.js"></script>
                 <script type="text/javascript" src="assets/js/timeslider.js"></script>`;
@@ -169,14 +169,14 @@ class ExtensionManager {
 
     // Asset Strings for a PDF Export
 
-    static getPDFAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
+    public static getPDFAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
         return `${includeQuiz ? ExtensionManager.getQuizPDFAssetString() : ""}
                 ${includeElearnVideo ? ExtensionManager.getElearnVideoPDFAssetString() : ""}
                 ${includeClickImage ? ExtensionManager.getClickImagePDFAssetString() : ""}
                 ${includeTimeSlider ? ExtensionManager.getTimeSliderPDFAssetString() : ""}`;
     }
 
-    static getQuizPDFAssetString() {
+    private static getQuizPDFAssetString() {
         return `<link rel="stylesheet" type="text/css"
                     href="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/quiz/assets/css/quiz.css`).replace(/\\/g, "/")}" />
                 <link rel="stylesheet" type="text/css"
@@ -185,7 +185,7 @@ class ExtensionManager {
                     src="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/quiz/assets/js/quiz.js`).replace(/\\/g, "/")}"></script>`;
     }
 
-    static getElearnVideoPDFAssetString() {
+    private static getElearnVideoPDFAssetString() {
         return `<link rel="stylesheet" type="text/css"
                     href="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/elearnvideo/assets/css/elearnvideo.css`).replace(/\\/g, "/")}" />
                 <link rel="stylesheet" type="text/css"
@@ -196,14 +196,14 @@ class ExtensionManager {
                     src="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/pdfAssets/js/elearnvideo.js`).replace(/\\/g, "/")}"></script>`;
     }
 
-    static getClickImagePDFAssetString() {
+    private static getClickImagePDFAssetString() {
         return `<link rel="stylesheet" type="text/css"
                     href="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/clickimage/assets/css/clickimage.css`).replace(/\\/g, "/")}" />
                 <script type="text/javascript"
                     src="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/pdfAssets/js/clickimage.js`).replace(/\\/g, "/")}"></script>`;
     }
 
-    static getTimeSliderPDFAssetString() {
+    private static getTimeSliderPDFAssetString() {
         return `<link rel="stylesheet" type="text/css"
                     href="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/timeslider/assets/css/timeslider.css`).replace(/\\/g, "/")}" />
                 <script type="text/javascript"
@@ -217,7 +217,7 @@ class ExtensionManager {
     * @param dirPath: string - the path to write the `assets` folder to.
     * @param {ExtensionObject} opts optional options
     */
-    static exportAssets(dirPath: string, opts: ExtensionObject) {
+    public static exportAssets(dirPath: string, opts: ExtensionObject) {
         var outPath = path.resolve(dirPath + "/assets/");
         var folders = [path.resolve(`${__dirname}/${assetsPath}/elearnjs/assets/`)];
 
@@ -235,7 +235,7 @@ class ExtensionManager {
     /**
     * Copies/writes a list of folders by their absolute paths to the outPath
     */
-    static writeFolders(folders: string[], outPath: string, callback: () => any, error?: (err: any) => any) {
+    private static writeFolders(folders: string[], outPath: string, callback: () => any, error?: (err: any) => any) {
         if(!folders || !folders.length) {
             if(callback) callback();
             return;

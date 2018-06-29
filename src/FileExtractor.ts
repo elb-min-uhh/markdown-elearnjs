@@ -107,7 +107,7 @@ function copyFile(source: string, target: string, ignoreNotExistent?: boolean) {
 };
 
 class FileExtractor {
-    static extractAll(files: FileMoveObject[], inputRoot: string, outputRoot: string, timeout?: number) {
+    public static extractAll(files: FileMoveObject[], inputRoot: string, outputRoot: string, timeout?: number) {
         var promises: Promise<void>[] = [];
 
         for(var file of files) {
@@ -126,7 +126,7 @@ class FileExtractor {
         });
     }
 
-    static replaceAllLinks(html: string) {
+    public static replaceAllLinks(html: string) {
         var files: FileMoveObject[] = [];
         var fileExtractorObject;
 
@@ -153,7 +153,7 @@ class FileExtractor {
         return new FileExtractorObject(html, files);
     }
 
-    static replaceImages(html: string) {
+    private static replaceImages(html: string) {
         var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(imageSrcRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
@@ -161,7 +161,7 @@ class FileExtractor {
         return new FileExtractorObject(html, files);
     }
 
-    static replaceScripts(html: string) {
+    private static replaceScripts(html: string) {
         var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(scriptSrcRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
@@ -169,7 +169,7 @@ class FileExtractor {
         return new FileExtractorObject(html, files);
     }
 
-    static replaceStyleSheets(html: string) {
+    private static replaceStyleSheets(html: string) {
         var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(linkHrefRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
@@ -177,7 +177,7 @@ class FileExtractor {
         return new FileExtractorObject(html, files);
     }
 
-    static replaceVideoSource(html: string) {
+    private static replaceVideoSource(html: string) {
         var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(videoSourceSrcRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);

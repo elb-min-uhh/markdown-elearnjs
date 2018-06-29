@@ -3,13 +3,13 @@
 import ConverterSettingsObject from "./ConverterSettingsObject";
 
 class PdfSettingsObject extends ConverterSettingsObject {
-    newPageOnSection: boolean = true;
-    contentZoom: number = 1;
-    customHeader?: string;
-    customFooter?: string;
-    headerHeight: string = "0";
-    footerHeight: string = "17mm";
-    customStyleFile?: string;
+    public newPageOnSection: boolean = true;
+    public contentZoom: number = 1;
+    public customHeader?: string;
+    public customFooter?: string;
+    public headerHeight: string = "0";
+    public footerHeight: string = "17mm";
+    public customStyleFile?: string;
 
     /**
      * An Object containing options for the PdfConverter

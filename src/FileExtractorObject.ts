@@ -8,8 +8,8 @@ import FileMoveObject from "./FileMoveObject";
 * and found files.
 */
 class FileExtractorObject {
-    html: string;
-    files: FileMoveObject[];
+    public html: string;
+    public files: FileMoveObject[];
 
     /**
     * @param html: string of html after fileExtraction,

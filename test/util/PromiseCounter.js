@@ -1,6 +1,6 @@
 'use strict';
 
-const PromiseCounter = require("../../lib/util/PromiseCounter");
+const PromiseCounter = require("../../out/util/PromiseCounter");
 
 /**
 * Creates `count` Promises.

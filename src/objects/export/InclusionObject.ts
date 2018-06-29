@@ -4,9 +4,7 @@ import ExtensionObject from "../ExtensionObject";
 
 class InclusionObject extends ExtensionObject {
     // general index signature
-    [key: string]: any;
-
-    language: string = "en";
+    public language: string = "en";
 
     /**
      * An Object containing options for the general conversions

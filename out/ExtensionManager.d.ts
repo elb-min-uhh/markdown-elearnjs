@@ -1,4 +1,3 @@
-import HtmlConverter from './converter/HtmlConverter';
 import IConverter from './converter/IConverter';
 import ExtensionObject from './objects/ExtensionObject';
 /**
@@ -7,7 +6,7 @@ import ExtensionObject from './objects/ExtensionObject';
 * Allows to get include strings for extension necessary files.
 */
 declare class ExtensionManager {
-    static htmlConverter: HtmlConverter;
+    private static htmlConverter;
     static scanForQuiz(html: string): boolean;
     static scanForVideo(html: string): boolean;
     static scanForClickImage(html: string): boolean;
@@ -33,21 +32,21 @@ declare class ExtensionManager {
      * and explicitly which were not found (true/false)
      */
     static scanMarkdownForAll(markdown: string, IConverter?: IConverter): Promise<ExtensionObject>;
-    static getQuizAssetDir(): string;
-    static getElearnVideoAssetDir(): string;
-    static getClickImageAssetDir(): string;
-    static getTimeSliderAssetDir(): string;
+    private static getQuizAssetDir;
+    private static getElearnVideoAssetDir;
+    private static getClickImageAssetDir;
+    private static getTimeSliderAssetDir;
     static getHTMLAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean): string;
-    static getHTMLAssetString(name: string): string;
-    static getQuizHTMLAssetString(): string;
-    static getElearnVideoHTMLAssetString(): string;
-    static getClickImageHTMLAssetString(): string;
-    static getTimeSliderHTMLAssetString(): string;
+    private static getHTMLAssetString;
+    private static getQuizHTMLAssetString;
+    private static getElearnVideoHTMLAssetString;
+    private static getClickImageHTMLAssetString;
+    private static getTimeSliderHTMLAssetString;
     static getPDFAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean): string;
-    static getQuizPDFAssetString(): string;
-    static getElearnVideoPDFAssetString(): string;
-    static getClickImagePDFAssetString(): string;
-    static getTimeSliderPDFAssetString(): string;
+    private static getQuizPDFAssetString;
+    private static getElearnVideoPDFAssetString;
+    private static getClickImagePDFAssetString;
+    private static getTimeSliderPDFAssetString;
     /**
     * Writes the elearn.js assets to the given path.
     * @param dirPath: string - the path to write the `assets` folder to.
@@ -57,6 +56,6 @@ declare class ExtensionManager {
     /**
     * Copies/writes a list of folders by their absolute paths to the outPath
     */
-    static writeFolders(folders: string[], outPath: string, callback: () => any, error?: (err: any) => any): void;
+    private static writeFolders;
 }
 export default ExtensionManager;
