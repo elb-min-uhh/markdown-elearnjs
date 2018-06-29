@@ -13,7 +13,7 @@ import InclusionObject from '../objects/export/InclusionObject';
 import MarkdownConverter from './MarkdownConverter';
 const elearnExtension = require('./ShowdownElearnJS');
 
-const assetsPath = '../assets';
+const assetsPath = '../../assets';
 
 const defaults: { [key: string]: any } = {
     'newSectionOnHeading': true,
@@ -159,7 +159,7 @@ class PdfConverter implements MarkdownConverter {
             self.toHtml(markdown, <ConversionObject>options).then((html) => {
                 HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toFile(file, (err, result) => {
                     if(err) rej(err);
-                    res(result.toString());
+                    res(result ? result.filename : "unknown filename");
                 });
             }, (err) => { throw err });
         });
