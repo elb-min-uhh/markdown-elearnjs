@@ -1,4 +1,4 @@
-## 1.1.3
+## 1.2.0
 * Fixes for spaces in paths
 * Added functionality to the ExtensionManager
     * scan for all extensions at once
