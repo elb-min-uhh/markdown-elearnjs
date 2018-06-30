@@ -1,4 +1,4 @@
-"use strinct"
+"use strinct";
 
 import ConverterSettingsObject from "./ConverterSettingsObject";
 

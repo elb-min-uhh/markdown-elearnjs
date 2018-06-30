@@ -1,46 +1,46 @@
 "use strict";
 
-import * as Showdown from 'showdown';
+import Showdown, { FilterExtension, ListenerExtension } from 'showdown';
 
 // regular expressions
-var indentionRegExp = /(?:^|\n)([ \t]*)(?!(?:\n|$))/g;
+const indentionRegExp = /(?:^|\n)([ \t]*)(?!(?:\n|$))/g;
 
 // original markdown
-var inlineHeadingRegExp = /^(#{1,6})(?!#)(?!<!--no-section-->)[ \t]*(.+?)[ \t]*#*$/gm;
+const inlineHeadingRegExp = /^(#{1,6})(?!#)(?!<!--no-section-->)[ \t]*(.+?)[ \t]*#*$/gm;
 
 // elearn.js syntax extensions
-var sectionRegExp = /(\|{3,5})(?!\|)((?:\\\||(?!\1).)*?)\1(.*)\n/g;
-var firstSectionRegExp = new RegExp(sectionRegExp, "");
-var imprintRegExp = /(?:(?:^|\n)(```+|~~~+)imprint\s*?\n([\s\S]*?)\n\1|(?:^|\n)(<!--+)imprint\s*?\n([\s\S]*?)\n--+>)/;
-var metaBlockRegExp = /(?:(?:^|\n)(---+)\n([\s\S]*?)\n\1|(?:^|\n)(<!--+)meta\n([\s\S]*?)\n--+>)/;
-var metaBlockElementsRegExp = /(?:(?:^|\n)[ \t]*(\w+)\s*:\s*(["'`])((?:\\\2|(?!\2)[\s\S])*?)\2|(?:^|\n)[ \t]*(\w+)\s*:\s*([^\n]*))/g;
+const sectionRegExp = /(\|{3,5})(?!\|)((?:\\\||(?!\1).)*?)\1(.*)\n/g;
+const firstSectionRegExp = new RegExp(sectionRegExp, "");
+const imprintRegExp = /(?:(?:^|\n)(```+|~~~+)imprint\s*?\n([\s\S]*?)\n\1|(?:^|\n)(<!--+)imprint\s*?\n([\s\S]*?)\n--+>)/;
+const metaBlockRegExp = /(?:(?:^|\n)(---+)\n([\s\S]*?)\n\1|(?:^|\n)(<!--+)meta\n([\s\S]*?)\n--+>)/;
+const metaBlockElementsRegExp = /(?:(?:^|\n)[ \t]*(\w+)\s*:\s*(["'`])((?:\\\2|(?!\2)[\s\S])*?)\2|(?:^|\n)[ \t]*(\w+)\s*:\s*([^\n]*))/g;
 
 // elearn.js additional comments
-var hideInOverviewRegExp = /\s*<!--hide-in-overview-->/g;
-var noSectionRegExp = /\s*<!--no-section-->/g;
-var secDescriptionRegExp = /[ \t]*<!--desc[ \t]+(.*?)[ \t]*-->/g;
-var secDescriptionReplacementRegExp = /desc="elearnjs-section-description-(\d+)"/g;
+const hideInOverviewRegExp = /\s*<!--hide-in-overview-->/g;
+const noSectionRegExp = /\s*<!--no-section-->/g;
+const secDescriptionRegExp = /[ \t]*<!--desc[ \t]+(.*?)[ \t]*-->/g;
+const secDescriptionReplacementRegExp = /desc="elearnjs-section-description-(\d+)"/g;
 
-var escapeSectionName = (name: string) => {
+const escapeSectionName = (name: string) => {
     // there should be no single \, since they have to be escaped in markdown
     return name.replace(/\|/g, "\\|");
 };
-var unescapeSectionName = (name: string) => {
+const unescapeSectionName = (name: string) => {
     // unescape \\ needs to be done everywhere when interpreting markdown code
     return name.replace(/\\\|/g, "|").replace(/\\\\/g, "\\");
 };
-var escapeHTMLQuotes = (text: string) => {
+const escapeHTMLQuotes = (text: string) => {
     return text.replace(/"/g, "&quot;");
 };
-var removeMarkdownSyntax = (text: string, converter: Showdown.Converter) => {
+const removeMarkdownSyntax = (text: string, converter: Showdown.Converter) => {
     return converter.makeHtml(text).replace(/<.*?>/g, "");
 };
 
-var descrIndex = 0;
-var descriptions: { [key: number]: string } = {};
+const descriptions: { [key: number]: string } = {};
+let descrIndex = 0;
 
 
-const addSectionOnHeading = {
+const addSectionOnHeading: FilterExtension = {
     type: 'lang',
     filter: (text: string, converter: Showdown.Converter) => {
         const headingDepth = converter.getOption('headingDepth');
@@ -51,17 +51,17 @@ const addSectionOnHeading = {
 
         // parse headings
         if(converter.getOption('newSectionOnHeading')) {
-            var match = text.match(inlineHeadingRegExp);
+            const match = text.match(inlineHeadingRegExp);
             if(match && match.length) {
                 text = text.replace(inlineHeadingRegExp, (wholeMatch, type, content) => {
                     content = content.trim();
-                    var ret = `${type}<!--no-section-->${content}`;
+                    let ret = `${type}<!--no-section-->${content}`;
                     if(type.length <= headingDepth
                         && content.indexOf(`<!--no-section-->`) < 0) {
 
-                        var hideInOverview = content.indexOf(`<!--hide-in-overview-->`) >= 0 ? '<!--hide-in-overview-->' : '';
+                        let hideInOverview = content.indexOf(`<!--hide-in-overview-->`) >= 0 ? '<!--hide-in-overview-->' : '';
                         content = content.replace(hideInOverviewRegExp, "");
-                        var description = content.match(secDescriptionRegExp);
+                        let description = content.match(secDescriptionRegExp);
                         content = content.replace(secDescriptionRegExp, "");
 
                         description = description && description.length ? description[0].trim() : "";
@@ -82,17 +82,16 @@ const addSectionOnHeading = {
                 });
             }
         }
-
         return text;
-    }
+    },
 };
 
-const replaceSectionSyntax = {
+const replaceSectionSyntax: FilterExtension = {
     type: 'lang',
     filter: (text: string, converter: Showdown.Converter) => {
         const conv = converter;
         // clear descriptions, this will be used for replacement of descr. tags
-        var match = text.match(firstSectionRegExp);
+        let match = text.match(firstSectionRegExp);
         if(match && match.length) {
             // replace only first
             text = text.replace(firstSectionRegExp, (wholeMatch, wrap, heading, addition) => {
@@ -106,16 +105,16 @@ const replaceSectionSyntax = {
         }
 
         return text;
-    }
+    },
 };
 
-const pdfSectionSyntax = {
+const pdfSectionSyntax: FilterExtension = {
     type: 'lang',
     filter: (text: string, converter: Showdown.Converter) => {
         const conv = converter;
-        var replacement = converter.getOption('newPageOnSection') ? '<div style="page-break-before: always;">' : '';
+        let replacement = converter.getOption('newPageOnSection') ? '<div style="page-break-before: always;">' : '';
 
-        var match = text.match(firstSectionRegExp);
+        let match = text.match(firstSectionRegExp);
         if(match && match.length) {
             // replace only first
             text = text.replace(firstSectionRegExp, (wholeMatch, wrap, heading, addition) => {
@@ -129,49 +128,49 @@ const pdfSectionSyntax = {
         }
 
         return text;
-    }
+    },
 };
 
-const insertSectionDescription = {
+const insertSectionDescription: FilterExtension = {
     type: 'output',
     filter: (text: string, converter: Showdown.Converter) => {
         text = text.replace(secDescriptionReplacementRegExp,
             (wholeMatch, index) => {
-                var desc = descriptions && descriptions[index] ? `desc="${descriptions[index]}"` : '';
+                let desc = descriptions && descriptions[index] ? `desc="${descriptions[index]}"` : '';
                 delete descriptions[index];
                 return desc;
             });
         return text;
-    }
+    },
 };
 
-const removeMetaBlock = {
+const removeMetaBlock: FilterExtension = {
     type: 'lang',
     filter: (text: string, converter: Showdown.Converter) => {
-        var match = text.match(metaBlockRegExp);
+        let match = text.match(metaBlockRegExp);
         if(match && match.length) {
-            text = text.replace(/\r/g, "").replace(metaBlockRegExp, function() {
+            text = text.replace(/\r/g, "").replace(metaBlockRegExp, () => {
                 return "";
             });
         }
         return text;
-    }
+    },
 };
 
-const parseImprint = {
+const parseImprint: FilterExtension = {
     type: 'lang',
     filter: (text: string, converter: Showdown.Converter) => {
         text = text.replace(/\r/g, "");
-        var imprint = text;
-        text.replace(imprintRegExp, function(wholeMatch, delim1, codeblock1, delim2, codeblock2) {
-            var code = delim1 ? codeblock1 : (delim2 ? codeblock2 : undefined);
+        let imprint = text;
+        text.replace(imprintRegExp, (wholeMatch, delim1, codeblock1, delim2, codeblock2) => {
+            let code = delim1 ? codeblock1 : (delim2 ? codeblock2 : undefined);
             if(!code) return "";
 
             // remove indention up to 4 spaces (1 tab)
-            var shortestIndention = code.replace(/(^|\n)\t/g, "$1    ")
+            let shortestIndention = code.replace(/(^|\n)\t/g, "$1    ")
                 .match(indentionRegExp)
                 .reduce((minIndent: number, match: string) => {
-                    return Math.min(minIndent, match.replace(/\n/g, "").length)
+                    return Math.min(minIndent, match.replace(/\n/g, "").length);
                 }, 4);
             code = removeIndention(code, shortestIndention, 4);
 
@@ -179,80 +178,80 @@ const parseImprint = {
             return "";
         });
         return imprint;
-    }
+    },
 };
 
-const removeImprintBlock = {
+const removeImprintBlock: FilterExtension = {
     type: 'lang',
     filter: (text: string, converter: Showdown.Converter) => {
-        text = text.replace(/\r/g, "").replace(imprintRegExp, function(wholeMatch, delim, content) {
+        text = text.replace(/\r/g, "").replace(imprintRegExp, (wholeMatch, delim, content) => {
             return "";
         });
         return text;
-    }
+    },
 };
 
-const cleanNoSectionComment = {
+const cleanNoSectionComment: ListenerExtension = {
     type: 'listener',
     listeners: {
         'headers.before': (event: any, text: string, options: any, globals: any) => {
             text = text.replace(noSectionRegExp, "");
             return text;
-        }
-    }
+        },
+    },
 };
 
-const cleanHideInOverviewComment = {
+const cleanHideInOverviewComment: ListenerExtension = {
     type: 'listener',
     listeners: {
         'headers.before': (event: any, text: string, options: any, globals: any) => {
             text = text.replace(hideInOverviewRegExp, "");
             return text;
-        }
-    }
+        },
+    },
 };
 
-const cleanSectionDescriptionComment = {
+const cleanSectionDescriptionComment: ListenerExtension = {
     type: 'listener',
     listeners: {
         'headers.before': (event: any, text: string, options: any, globals: any) => {
             text = text.replace(secDescriptionRegExp, "");
             return text;
-        }
-    }
-}
+        },
+    },
+};
 
-const cleanEmptyParagraphs = {
+const cleanEmptyParagraphs: FilterExtension = {
     type: 'output',
     filter: (text: string, converter: Showdown.Converter) => {
-        var cleanBefore = ['div', 'iframe'];
+        let cleanBefore = ['div', 'iframe'];
         text = text.replace(/<p><\/p>/g, "");
 
-        for(var element of cleanBefore) {
-            var regBefore = new RegExp(`<p><${element}`, "g");
-            var regAfter = new RegExp(`</${element}></p>`, "g");
+        for(let element of cleanBefore) {
+            let regBefore = new RegExp(`<p><${element}`, "g");
+            let regAfter = new RegExp(`</${element}></p>`, "g");
             text = text.replace(regBefore, `<${element}`)
                 .replace(regAfter, `</${element}>`);
         }
 
         return text;
-    }
+    },
 };
 
-const cleanMarkdownAttribute = {
+const cleanMarkdownAttribute: FilterExtension = {
     type: 'output',
     filter: (text: string, converter: Showdown.Converter) => {
         // check for HTML elements containing a markdown attribute
-        var markdownAttributeRegExp = /<(\S+)((?:[ \t]+(?!markdown[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3)*)([ \t]+markdown[ \t]*=[ \t]*(["'])(?:\\\5|(?!\5).)*\5)([^>]*)>/gi;
+        let markdownAttributeRegExp = /<(\S+)((?:[ \t]+(?!markdown[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3)*)([ \t]+markdown[ \t]*=[ \t]*(["'])(?:\\\5|(?!\5).)*\5)([^>]*)>/gi;
         return text.replace(markdownAttributeRegExp,
             (wholeMatch, tag, before, wrapBefore, attr, wrap, after, closingSlash) => {
                 // remove the attribute
                 return wholeMatch.replace(attr, "");
             });
-    }
+    },
 };
 
-var elearnHtmlBody = () => {
+const elearnHtmlBody = () => {
     return [
         addSectionOnHeading,
         cleanNoSectionComment,
@@ -265,9 +264,9 @@ var elearnHtmlBody = () => {
         cleanEmptyParagraphs,
         cleanMarkdownAttribute,
     ];
-}
+};
 
-var elearnPdfBody = () => {
+const elearnPdfBody = () => {
     return [
         addSectionOnHeading,
         cleanNoSectionComment,
@@ -280,14 +279,14 @@ var elearnPdfBody = () => {
         cleanEmptyParagraphs,
         cleanMarkdownAttribute,
     ];
-}
+};
 
-var elearnImprint = () => {
+const elearnImprint = () => {
     return [parseImprint];
-}
+};
 
-var parseSection = (converter: Showdown.Converter, wholeMatch: string, wrap: string, heading: string, addition: string) => {
-    var size = wrap.length;
+const parseSection = (converter: Showdown.Converter, wholeMatch: string, wrap: string, heading: string, addition: string) => {
+    let size = wrap.length;
     heading = unescapeSectionName(heading);
     // make html to eval markdown syntax, remove created HTML elements then
     // assume < > as escaped chars &lt; and &gt; when not marking an html element
@@ -295,23 +294,23 @@ var parseSection = (converter: Showdown.Converter, wholeMatch: string, wrap: str
     heading = escapeHTMLQuotes(heading);
 
     // check for sub or subsubsection
-    var sub = '';
-    for(var i = 3; i < size; i++) sub += 'sub';
+    let sub = '';
+    for(let i = 3; i < size; i++) sub += 'sub';
     // check for hide in overview
-    var hide = '';
+    let hide = '';
     if(addition.indexOf(`<!--hide-in-overview-->`) >= 0) hide = "hide-in-overview";
     // set class attribute
-    var clazz = sub || hide ? ` class="${sub}${sub && hide ? ' ' : ''}${hide}"` : '';
+    let clazz = sub || hide ? ` class="${sub}${sub && hide ? ' ' : ''}${hide}"` : '';
 
     // check descriptions
-    var desc = '';
+    let desc = '';
     if(addition.match(secDescriptionRegExp)) {
-        var descriptionContent = '';
-        addition.replace(secDescriptionRegExp, (wholeMatch, content) => {
+        let descriptionContent = '';
+        addition.replace(secDescriptionRegExp, (wm, content) => {
             descriptionContent = content;
             return '';
         });
-        var desc = ` desc="elearnjs-section-description-${descrIndex}"`;
+        desc = ` desc="elearnjs-section-description-${descrIndex}"`;
         descriptions[descrIndex] = converter.makeHtml(escapeHTMLQuotes(descriptionContent)).replace(/^<p>/g, "").replace(/<\/p>$/g, "");
         descrIndex++;
     }
@@ -319,13 +318,13 @@ var parseSection = (converter: Showdown.Converter, wholeMatch: string, wrap: str
     return `<section markdown="1" name="${heading}"${clazz}${desc}>\n`;
 };
 
-var parseMetaData = (text: string) => {
-    var meta = "";
+const parseMetaData = (text: string) => {
+    let meta = "";
     text = text.replace(/\r/g, "");
-    text.replace(metaBlockRegExp, function(wholeMatch: string, delim1: string, content1: string, delim2: string, content2: string) {
-        var content = delim1 ? content1 : (delim2 ? content2 : "");
+    text.replace(metaBlockRegExp, (wholeMatch: string, delim1: string, content1: string, delim2: string, content2: string) => {
+        let content = delim1 ? content1 : (delim2 ? content2 : "");
         // 2 options: Key: ["'`]MULTILINE_VALUE["'`] or Key: VALUE
-        meta = content.replace(metaBlockElementsRegExp, function(wholeMatch, tag1, valueSurrounding, value1, tag2, value2) {
+        meta = content.replace(metaBlockElementsRegExp, (wm, tag1, valueSurrounding, value1, tag2, value2) => {
             // ignore escaped endings
             if(wholeMatch.match(/^(\w+)\s*:\s*(["'`])([\s\S]*?)\\\2$/)) return wholeMatch;
 
@@ -336,12 +335,12 @@ var parseMetaData = (text: string) => {
         return "";
     });
     return meta;
-}
+};
 
-var createMeta = (tag: string, value: string, valueSurrounding: string) => {
+const createMeta = (tag: string, value: string, valueSurrounding: string) => {
     // unescape
     if(valueSurrounding) {
-        var regex = new RegExp("\\\\" + valueSurrounding, "g");
+        let regex = new RegExp("\\\\" + valueSurrounding, "g");
         value = value.replace(regex, valueSurrounding);
     }
     if(tag.toLowerCase() === "title") {
@@ -352,26 +351,26 @@ var createMeta = (tag: string, value: string, valueSurrounding: string) => {
         return value;
     }
     else {
-        return `<meta name="${tag.toLowerCase()}" content="${escapeHTMLQuotes(value)}"/>`
+        return `<meta name="${tag.toLowerCase()}" content="${escapeHTMLQuotes(value)}"/>`;
     }
-}
+};
 
 /**
-* Removes up to @param indentionSize spaces (or tabs if tabsize <= indentionSize)
-* from the beginning of each line.
-*/
-var removeIndention = (block: string, indentionSize: number, tabSize: number) => {
+ * Removes up to @param indentionSize spaces (or tabs if tabsize <= indentionSize)
+ * from the beginning of each line.
+ */
+const removeIndention = (block: string, indentionSize: number, tabSize: number) => {
     if(indentionSize === 0) return block;
     if(indentionSize === undefined) indentionSize = 4;
     if(tabSize === undefined) tabSize = 4;
-    var tabsRemoved = Math.floor(indentionSize / tabSize);
-    var spaceRegExp = new RegExp(`(^|\n)([ ]{1,${indentionSize}}${tabsRemoved > 0 ? `|\\t{1,${tabsRemoved}}` : ""})`, "g");
+    let tabsRemoved = Math.floor(indentionSize / tabSize);
+    let spaceRegExp = new RegExp(`(^|\n)([ ]{1,${indentionSize}}${tabsRemoved > 0 ? `|\\t{1,${tabsRemoved}}` : ""})`, "g");
     return block.replace(spaceRegExp, (wholeMatch, lineBreak, indention) => {
         return lineBreak;
     });
-}
+};
 
-module.exports.elearnHtmlBody = elearnHtmlBody;
-module.exports.elearnPdfBody = elearnPdfBody;
-module.exports.elearnImprint = elearnImprint;
-module.exports.parseMetaData = parseMetaData;
+export { elearnHtmlBody };
+export { elearnPdfBody };
+export { elearnImprint };
+export { parseMetaData };

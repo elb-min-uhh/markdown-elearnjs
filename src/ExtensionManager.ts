@@ -1,13 +1,13 @@
 "use strict";
 
-import * as path from 'path';
 import { ncp } from 'ncp';
+import * as path from 'path';
 import HtmlConverter from './converter/HtmlConverter';
-import ConverterSettingsObject from './objects/settings/ConverterSettingsObject';
-import PdfConverter from './converter/PdfConverter';
 import IConverter from './converter/IConverter';
-import ExtensionObject from './objects/ExtensionObject';
+import PdfConverter from './converter/PdfConverter';
 import ConversionObject from './objects/export/ConversionObject';
+import ExtensionObject from './objects/ExtensionObject';
+import ConverterSettingsObject from './objects/settings/ConverterSettingsObject';
 
 const divClassRegExp = /<div[ \t]((?:(?!class[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\2|(?!\2).)*\2[ \t]*)*)class[ \t]*=[ \t]*(["'])((?:\\\3|(?!\3).)*)\3((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
 const videoRegExp = /<video[ \t>]/g;
@@ -15,10 +15,10 @@ const videoRegExp = /<video[ \t>]/g;
 const assetsPath = '../assets';
 
 /**
-* Allows to parse HTML code for usage of elearn.js extensions.
-* Allows to get path to extension necessary files.
-* Allows to get include strings for extension necessary files.
-*/
+ * Allows to parse HTML code for usage of elearn.js extensions.
+ * Allows to get path to extension necessary files.
+ * Allows to get include strings for extension necessary files.
+ */
 class ExtensionManager {
 
     // the default converter used for scanning
@@ -26,7 +26,7 @@ class ExtensionManager {
 
     // Scan
     public static scanForQuiz(html: string) {
-        var include = false;
+        let include = false;
         html.replace(divClassRegExp,
             (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
                 classVal: string, after: string, closingSlash: string) => {
@@ -37,13 +37,13 @@ class ExtensionManager {
     }
 
     public static scanForVideo(html: string) {
-        var include = false;
+        let include = false;
         if(html.match(videoRegExp)) include = true;
         return include;
     }
 
     public static scanForClickImage(html: string) {
-        var include = false;
+        let include = false;
         html.replace(divClassRegExp,
             (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
                 classVal: string, after: string, closingSlash: string) => {
@@ -54,7 +54,7 @@ class ExtensionManager {
     }
 
     public static scanForTimeSlider(html: string) {
-        var include = false;
+        let include = false;
         html.replace(divClassRegExp,
             (wholeMatch: string, before: string, wrapBefore: string, wrap: string,
                 classVal: string, after: string, closingSlash: string) => {
@@ -77,7 +77,7 @@ class ExtensionManager {
             includeQuiz: ExtensionManager.scanForQuiz(html),
             includeElearnVideo: ExtensionManager.scanForVideo(html),
             includeClickImage: ExtensionManager.scanForClickImage(html),
-            includeTimeSlider: ExtensionManager.scanForTimeSlider(html)
+            includeTimeSlider: ExtensionManager.scanForTimeSlider(html),
         });
     }
 
@@ -92,20 +92,20 @@ class ExtensionManager {
      * @return Promise<ExtensionObject>: including which extensions where found
      * and explicitly which were not found (true/false)
      */
-    public static scanMarkdownForAll(markdown: string, IConverter?: IConverter) {
-        var ret = new Promise<ExtensionObject>((res, rej) => {
+    public static scanMarkdownForAll(markdown: string, markdownConverter?: IConverter) {
+        let ret = new Promise<ExtensionObject>((res, rej) => {
             // define converter
             if(!ExtensionManager.htmlConverter)
                 ExtensionManager.htmlConverter = new HtmlConverter(new ConverterSettingsObject());
 
             let converter: IConverter = ExtensionManager.htmlConverter;
-            if(IConverter
-                && (IConverter instanceof HtmlConverter
-                    || IConverter instanceof PdfConverter)) {
-                converter = <IConverter>IConverter;
+            if(markdownConverter
+                && (markdownConverter instanceof HtmlConverter
+                    || markdownConverter instanceof PdfConverter)) {
+                converter = <IConverter>markdownConverter;
             }
 
-            var opts = new ConversionObject();
+            let opts = new ConversionObject();
             opts.bodyOnly = true;
 
             // convert and then scan
@@ -114,6 +114,44 @@ class ExtensionManager {
             }, rej);
         });
 
+        return ret;
+    }
+
+    // Asset Strings for a HTML Export
+
+    public static getHTMLAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
+        return `${includeQuiz ? ExtensionManager.getQuizHTMLAssetString() : ""}
+                ${includeElearnVideo ? ExtensionManager.getElearnVideoHTMLAssetString() : ""}
+                ${includeClickImage ? ExtensionManager.getClickImageHTMLAssetString() : ""}
+                ${includeTimeSlider ? ExtensionManager.getTimeSliderHTMLAssetString() : ""}`;
+    }
+
+    // Asset Strings for a PDF Export
+
+    public static getPDFAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
+        return `${includeQuiz ? ExtensionManager.getQuizPDFAssetString() : ""}
+                ${includeElearnVideo ? ExtensionManager.getElearnVideoPDFAssetString() : ""}
+                ${includeClickImage ? ExtensionManager.getClickImagePDFAssetString() : ""}
+                ${includeTimeSlider ? ExtensionManager.getTimeSliderPDFAssetString() : ""}`;
+    }
+
+    /**
+     * Writes the elearn.js assets to the given path.
+     * @param dirPath: string - the path to write the `assets` folder to.
+     * @param {ExtensionObject} opts optional options
+     */
+    public static exportAssets(dirPath: string, opts: ExtensionObject) {
+        let outPath = path.resolve(dirPath + "/assets/");
+        let folders = [path.resolve(`${__dirname}/${assetsPath}/elearnjs/assets/`)];
+
+        if(opts.includeQuiz) folders.push(ExtensionManager.getQuizAssetDir());
+        if(opts.includeElearnVideo) folders.push(ExtensionManager.getElearnVideoAssetDir());
+        if(opts.includeClickImage) folders.push(ExtensionManager.getClickImageAssetDir());
+        if(opts.includeTimeSlider) folders.push(ExtensionManager.getTimeSliderAssetDir());
+
+        let ret = new Promise((res, rej) => {
+            ExtensionManager.writeFolders(folders, outPath, res, rej);
+        });
         return ret;
     }
 
@@ -133,15 +171,6 @@ class ExtensionManager {
 
     private static getTimeSliderAssetDir() {
         return path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/timeslider/assets/`);
-    }
-
-    // Asset Strings for a HTML Export
-
-    public static getHTMLAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
-        return `${includeQuiz ? ExtensionManager.getQuizHTMLAssetString() : ""}
-                ${includeElearnVideo ? ExtensionManager.getElearnVideoHTMLAssetString() : ""}
-                ${includeClickImage ? ExtensionManager.getClickImageHTMLAssetString() : ""}
-                ${includeTimeSlider ? ExtensionManager.getTimeSliderHTMLAssetString() : ""}`;
     }
 
     private static getHTMLAssetString(name: string) {
@@ -168,13 +197,6 @@ class ExtensionManager {
     }
 
     // Asset Strings for a PDF Export
-
-    public static getPDFAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
-        return `${includeQuiz ? ExtensionManager.getQuizPDFAssetString() : ""}
-                ${includeElearnVideo ? ExtensionManager.getElearnVideoPDFAssetString() : ""}
-                ${includeClickImage ? ExtensionManager.getClickImagePDFAssetString() : ""}
-                ${includeTimeSlider ? ExtensionManager.getTimeSliderPDFAssetString() : ""}`;
-    }
 
     private static getQuizPDFAssetString() {
         return `<link rel="stylesheet" type="text/css"
@@ -213,36 +235,16 @@ class ExtensionManager {
     }
 
     /**
-    * Writes the elearn.js assets to the given path.
-    * @param dirPath: string - the path to write the `assets` folder to.
-    * @param {ExtensionObject} opts optional options
-    */
-    public static exportAssets(dirPath: string, opts: ExtensionObject) {
-        var outPath = path.resolve(dirPath + "/assets/");
-        var folders = [path.resolve(`${__dirname}/${assetsPath}/elearnjs/assets/`)];
-
-        if(opts.includeQuiz) folders.push(ExtensionManager.getQuizAssetDir());
-        if(opts.includeElearnVideo) folders.push(ExtensionManager.getElearnVideoAssetDir());
-        if(opts.includeClickImage) folders.push(ExtensionManager.getClickImageAssetDir());
-        if(opts.includeTimeSlider) folders.push(ExtensionManager.getTimeSliderAssetDir());
-
-        var ret = new Promise((res, rej) => {
-            ExtensionManager.writeFolders(folders, outPath, res, rej);
-        });
-        return ret;
-    }
-
-    /**
-    * Copies/writes a list of folders by their absolute paths to the outPath
-    */
+     * Copies/writes a list of folders by their absolute paths to the outPath
+     */
     private static writeFolders(folders: string[], outPath: string, callback: () => any, error?: (err: any) => any) {
         if(!folders || !folders.length) {
             if(callback) callback();
             return;
         }
         // get first folder + remove from array
-        var inPath = folders.shift();
-        ncp(inPath!, outPath, function(err: any) {
+        let inPath = folders.shift();
+        ncp(inPath!, outPath, (err: any) => {
             if(err) {
                 if(error) error(err);
                 return;

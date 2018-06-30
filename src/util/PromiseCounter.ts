@@ -1,14 +1,19 @@
 "use strict";
 
 /**
-* a PromiseCounter.
-* This can be used to wait for multiple promises.
-*/
+ * a PromiseCounter.
+ * This can be used to wait for multiple promises.
+ */
 class PromiseCounter {
 
     // counter and timeout
     public count!: number;
     public expected!: number;
+
+    // finish statess
+    public done: boolean = false;
+    public error?: any;
+
     private timeout?: NodeJS.Timer;
 
     // listener
@@ -16,34 +21,30 @@ class PromiseCounter {
     private resolve?: () => any;
     private reject?: (err: any) => any;
 
-    // finish statess
-    public done: boolean = false;
-    public error?: any;
-
     /**
-    * constructor
-    *
-    * @param promises: Promise[] list of promises to wait for
-    * @param timeout (optional): integer, timeout in ms
-    */
+     * constructor
+     *
+     * @param promises: Promise[] list of promises to wait for
+     * @param timeout (optional): integer, timeout in ms
+     */
     constructor(promises: Promise<any>[], timeout?: number) {
         const self = this;
 
-        if(!promises || promises.length == undefined) {
-            throw "No promise array given.";
+        if(!promises || promises.length === undefined) {
+            throw new Error("No promise array given.");
         }
 
         self.count = 0;
         self.expected = promises.length;
 
         // add timeout if given
-        if(timeout != null) {
+        if(timeout !== null && timeout !== undefined) {
             self.timeout = setTimeout(() => {
                 self.onError(`Timeout in PromiseCounter after ${timeout} ms.`);
             }, timeout);
         }
 
-        for(var promise of promises) {
+        for(let promise of promises) {
             promise.then(
                 () => {
                     self.onResolve();
@@ -54,9 +55,9 @@ class PromiseCounter {
     }
 
     /**
-    * adds a Promise-Like callback
-    */
-    then(resolve: () => any, reject: (err: any) => any) {
+     * adds a Promise-Like callback
+     */
+    public then(resolve: () => any, reject: (err: any) => any) {
         this.listenerAdded = true;
         this.resolve = resolve;
         this.reject = reject;
@@ -64,18 +65,18 @@ class PromiseCounter {
         this.checkDone();
     }
 
-    onResolve() {
+    public onResolve() {
         this.count++;
         this.checkDone();
     }
 
-    onError(err: any) {
+    public onError(err: any) {
         if(!err) this.error = new Error("Undefined error in PromiseCounter.");
         else this.error = err;
         this.checkDone();
     }
 
-    checkDone() {
+    public checkDone() {
         if(this.done || !this.listenerAdded) return; // only finalize once
         if(this.error) {
             this.done = true;

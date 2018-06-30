@@ -29,7 +29,6 @@
   "devDependencies": {
     "@types/html-pdf": "^2.1.2",
     "@types/ncp": "^2.0.1",
-    "@types/showdown": "^1.7.4",
     "@types/node": "^10.3.1"
   }
 }

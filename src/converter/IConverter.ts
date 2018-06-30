@@ -1,6 +1,6 @@
-import ConversionObject from "../objects/export/ConversionObject";
-
 "use strict";
+
+import ConversionObject from "../objects/export/ConversionObject";
 
 interface IConverter {
     toHtml(markdown: string, options?: ConversionObject): Promise<string>;

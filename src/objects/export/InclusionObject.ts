@@ -1,6 +1,6 @@
-import ExtensionObject from "../ExtensionObject";
+"use strict";
 
-"use strict"
+import ExtensionObject from "../ExtensionObject";
 
 class InclusionObject extends ExtensionObject {
     // general index signature

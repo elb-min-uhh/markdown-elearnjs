@@ -4,28 +4,28 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import FileExtractorObject from './FileExtractorObject';
-import PromiseCounter from './util/PromiseCounter';
 import FileMoveObject from './FileMoveObject';
+import PromiseCounter from './util/PromiseCounter';
 
 // Capturing groups: 1, 2 for attributes before src, 3: wrapping char ["'], 4: src value
-var imageSrcRegExp = /<(img)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)src[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
-var scriptSrcRegExp = /<(script)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)src[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
-var linkHrefRegExp = /<(link)[ \t]((?:(?!href[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)href[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
-var videoSourceSrcRegExp = /<(source)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)src[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
+let imageSrcRegExp = /<(img)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)src[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
+let scriptSrcRegExp = /<(script)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)src[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
+let linkHrefRegExp = /<(link)[ \t]((?:(?!href[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)href[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
+let videoSourceSrcRegExp = /<(source)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)src[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
 
-var notHttpRegExp = /^(?!https?).*/g;
-var isRelativePath = /\.[\/]/;
+let notHttpRegExp = /^(?!https?).*/g;
+let isRelativePath = /\.[\/]/;
 
-var processSourceReplacement = function(wholeMatch: string, tag: string, before: string, wrapBefore: string,
-    wrap: string, val: string, after: string, closingSlash: string, files: FileMoveObject[]) {
+const processSourceReplacement = (wholeMatch: string, tag: string, before: string, wrapBefore: string,
+    wrap: string, val: string, after: string, closingSlash: string, files: FileMoveObject[]) => {
 
-    var ret = wholeMatch;
+    let ret = wholeMatch;
 
     // update and extract if local file
     if(val.match(notHttpRegExp)) {
-        var fileName = path.basename(val);
+        let fileName = path.basename(val);
 
-        var inputPath = val;
+        let inputPath = val;
 
         // replace val
         switch(tag.toLowerCase()) {
@@ -35,7 +35,7 @@ var processSourceReplacement = function(wholeMatch: string, tag: string, before:
             case "link": val = `assets/css/${fileName}`; break;
         }
 
-        var outputPath = val;
+        let outputPath = val;
 
         if(inputPath !== outputPath) {
             files.push(new FileMoveObject(inputPath, outputPath));
@@ -53,12 +53,12 @@ var processSourceReplacement = function(wholeMatch: string, tag: string, before:
 };
 
 /**
-* Copy a file, creates nonexistent directories
-*
-* @return Promise<void>: resolves when done.
-*/
+ * Copy a file, creates nonexistent directories
+ *
+ * @return Promise<void>: resolves when done.
+ */
 function copyFile(source: string, target: string, ignoreNotExistent?: boolean) {
-    var promise = new Promise<void>((resolve, reject) => {
+    let promise = new Promise<void>((resolve, reject) => {
         source = decodeURI(source);
         target = decodeURI(target);
 
@@ -79,45 +79,45 @@ function copyFile(source: string, target: string, ignoreNotExistent?: boolean) {
             return;
         }
 
-        var ensureDirectoryExistence = function(filePath: string) {
-            var dirname = path.dirname(filePath);
+        let ensureDirectoryExistence = (filePath: string) => {
+            let dirname = path.dirname(filePath);
             if(fs.existsSync(dirname)) {
                 return true;
             }
             ensureDirectoryExistence(dirname);
             fs.mkdirSync(dirname);
-        }
+        };
         ensureDirectoryExistence(target);
 
-        var cbCalled = false;
-        var rd = fs.createReadStream(source);
-        rd.on("error", function(err: any) {
+        let cbCalled = false;
+        let rd = fs.createReadStream(source);
+        rd.on("error", (err: any) => {
             reject(err);
         });
-        var wr = fs.createWriteStream(target);
-        wr.on("error", function(err: any) {
+        let wr = fs.createWriteStream(target);
+        wr.on("error", (err: any) => {
             reject(err);
         });
-        wr.on("close", function(ex: any) {
+        wr.on("close", (ex: any) => {
             resolve();
         });
         rd.pipe(wr);
     });
     return promise;
-};
+}
 
 class FileExtractor {
     public static extractAll(files: FileMoveObject[], inputRoot: string, outputRoot: string, timeout?: number) {
-        var promises: Promise<void>[] = [];
+        let promises: Promise<void>[] = [];
 
-        for(var file of files) {
+        for(let file of files) {
             if(!file.inputPath || !file.relativeOutputPath) continue;
-            var inputPath = path.isAbsolute(file.inputPath) ?
+            let inputPath = path.isAbsolute(file.inputPath) ?
                 path.resolve(file.inputPath).replace(/\\/g, "/")
                 : path.resolve(`${inputRoot}/${file.inputPath}`).replace(/\\/g, "/");
-            var outputPath = path.resolve(`${outputRoot}/${file.relativeOutputPath}`).replace(/\\/g, "/");
+            let outputPath = path.resolve(`${outputRoot}/${file.relativeOutputPath}`).replace(/\\/g, "/");
 
-            var promise = copyFile(inputPath, outputPath, true);
+            let promise = copyFile(inputPath, outputPath, true);
             promises.push(promise);
         }
 
@@ -127,8 +127,8 @@ class FileExtractor {
     }
 
     public static replaceAllLinks(html: string) {
-        var files: FileMoveObject[] = [];
-        var fileExtractorObject;
+        let files: FileMoveObject[] = [];
+        let fileExtractorObject;
 
         // process images
         fileExtractorObject = FileExtractor.replaceImages(html);
@@ -154,7 +154,7 @@ class FileExtractor {
     }
 
     private static replaceImages(html: string) {
-        var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
+        let files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(imageSrcRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
         });
@@ -162,7 +162,7 @@ class FileExtractor {
     }
 
     private static replaceScripts(html: string) {
-        var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
+        let files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(scriptSrcRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
         });
@@ -170,7 +170,7 @@ class FileExtractor {
     }
 
     private static replaceStyleSheets(html: string) {
-        var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
+        let files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(linkHrefRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
         });
@@ -178,7 +178,7 @@ class FileExtractor {
     }
 
     private static replaceVideoSource(html: string) {
-        var files: FileMoveObject[] = []; // will be filled by processSourceReplacement
+        let files: FileMoveObject[] = []; // will be filled by processSourceReplacement
         html = html.replace(videoSourceSrcRegExp, (wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash) => {
             return processSourceReplacement(wholeMatch, tag, before, wrapBefore, wrap, val, after, closingSlash, files);
         });

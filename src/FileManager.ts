@@ -6,7 +6,7 @@ const assetsPath = '../assets';
 
 class FileManager {
     public static getHtmlTemplate() {
-        var ret = new Promise<string>((resolve, reject) => {
+        let ret = new Promise<string>((resolve, reject) => {
             FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template.html`, (data) => {
                 resolve(data);
             }, (err: any) => reject(err));
@@ -16,7 +16,7 @@ class FileManager {
     }
 
     public static getPdfTemplate() {
-        var ret = new Promise<string>((resolve, reject) => {
+        let ret = new Promise<string>((resolve, reject) => {
             FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template_pdf.html`, (data) => {
                 resolve(data);
             }, (err: any) => reject(err));
@@ -26,11 +26,11 @@ class FileManager {
     }
 
     /**
-    * Reads in a given file.
-    */
+     * Reads in a given file.
+     */
     private static readFile(filePath: string, callback: (data: string) => any, error?: (err: any) => any) {
         fs.readFile(filePath, 'utf8', (err, data) => {
-            if(err && error != null) error(err);
+            if(err && error !== null && error !== undefined) error(err);
             if(callback) callback(data);
         });
     }
