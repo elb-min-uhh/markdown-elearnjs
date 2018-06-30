@@ -1,5 +1,6 @@
 
 .vscode
+out
 
 .DS_Store
 test/testTemplateExample.pdf

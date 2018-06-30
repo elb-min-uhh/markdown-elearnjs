@@ -1,3 +1,6 @@
+## 1.2.3
+* Add scopes (private/public) to variables and functions
+    * this fixes type problems for projects using this package
 ## 1.2.2
 * Fixed a few bugs with conversion options and TypeScript syntax.
 ## 1.2.1

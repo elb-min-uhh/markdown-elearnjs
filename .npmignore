@@ -1,5 +1,6 @@
 .DS_Store
 .github
+PULL_REQUEST_TEMPLATE.md
 .gitmodules
 .gitattributes
 .eslintrc.json
@@ -22,6 +23,8 @@ yarn.lock
 /scripts/
 /src/
 /test/
+run_tests.sh
+update_assets.sh
 tscommand*.txt
 /coverage/
 /.nyc_output
