@@ -1,6 +1,7 @@
 ## 1.2.4
 * Setup tslint
 * Refactored code, to match more strict code styles
+* Improved input types of object constructors
 ## 1.2.3
 * Add scopes (private/public) to variables and functions
     * this fixes type problems for projects using this package

@@ -9,7 +9,7 @@ class PdfExportOptionObject extends ConversionObject {
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
      *
-     * @param {object} clone: an object to clone values from:
+     * @param {object} options: an object to clone values from:
      *  - {boolean} bodyOnly will only return the HTML body.
      *  - {string} language will change the language
      *      if not `bodyOnly`.
@@ -36,11 +36,20 @@ class PdfExportOptionObject extends ConversionObject {
      *      Default: false
      *  - {number} renderDelay delay of rendering the html to pdf in ms
      */
-    constructor(clone?: any) {
+    constructor(options?: {
+        bodyOnly?: boolean,
+        language?: "en" | "de",
+        automaticExtensionDetection?: boolean,
+        includeQuiz?: boolean,
+        includeElearnVideo?: boolean
+        includeClickImage?: boolean,
+        includeTimeSlider?: boolean,
+        renderDelay?: number,
+    }) {
 
-        super(clone);
-        if(clone) {
-            if(clone.renderDelay !== undefined) this.renderDelay = clone.renderDelay;
+        super(options);
+        if(options) {
+            if(options.renderDelay !== undefined) this.renderDelay = options.renderDelay;
         }
     }
 }

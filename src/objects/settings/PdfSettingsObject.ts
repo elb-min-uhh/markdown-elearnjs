@@ -35,18 +35,31 @@ class PdfSettingsObject extends ConverterSettingsObject {
      *  - footerHeight : string - CSS declaration of the footer's height
      *  - customStyleFile : string - absolute path to a styling css file
      */
-    constructor(clone?: any) {
+    constructor(options?: {
+        newSectionOnHeading?: boolean,
+        headingDepth?: 1 | 2 | 3 | 4 | 5 | 6,
+        useSubSections?: boolean,
+        subSectionLevel?: 1 | 2 | 3 | 4 | 5 | 6,
+        subsubSectionLevel?: 1 | 2 | 3 | 4 | 5 | 6,
+        newPageOnSection?: boolean;
+        contentZoom?: number;
+        customHeader?: string;
+        customFooter?: string;
+        headerHeight?: string;
+        footerHeight?: string;
+        customStyleFile?: string;
+    }) {
 
-        super(clone);
+        super(options);
 
-        if(clone) {
-            if(clone.newPageOnSection !== undefined) this.newPageOnSection = clone.newPageOnSection;
-            if(clone.contentZoom !== undefined) this.contentZoom = clone.contentZoom;
-            if(clone.customHeader !== undefined) this.customHeader = clone.customHeader;
-            if(clone.customFooter !== undefined) this.customFooter = clone.customFooter;
-            if(clone.headerHeight !== undefined) this.headerHeight = clone.headerHeight;
-            if(clone.footerHeight !== undefined) this.footerHeight = clone.footerHeight;
-            if(clone.customStyleFile !== undefined) this.customStyleFile = clone.customStyleFile;
+        if(options) {
+            if(options.newPageOnSection !== undefined) this.newPageOnSection = options.newPageOnSection;
+            if(options.contentZoom !== undefined) this.contentZoom = options.contentZoom;
+            if(options.customHeader !== undefined) this.customHeader = options.customHeader;
+            if(options.customFooter !== undefined) this.customFooter = options.customFooter;
+            if(options.headerHeight !== undefined) this.headerHeight = options.headerHeight;
+            if(options.footerHeight !== undefined) this.footerHeight = options.footerHeight;
+            if(options.customStyleFile !== undefined) this.customStyleFile = options.customStyleFile;
         }
     }
 }

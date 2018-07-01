@@ -10,7 +10,7 @@ class ConversionObject extends InclusionObject {
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
      *
-     * @param {object} clone: an object to clone values from:
+     * @param {object} options: an object to clone values from:
      *  - {boolean} bodyOnly will only return the HTML body.
      *  - {string} language will change the language
      *      if not `bodyOnly`.
@@ -36,13 +36,21 @@ class ConversionObject extends InclusionObject {
      *      Only if not `bodyOnly`
      *      Default: false
      */
-    constructor(clone?: any) {
+    constructor(options?: {
+        bodyOnly?: boolean,
+        language?: "en" | "de",
+        automaticExtensionDetection?: boolean,
+        includeQuiz?: boolean,
+        includeElearnVideo?: boolean
+        includeClickImage?: boolean,
+        includeTimeSlider?: boolean,
+    }) {
 
-        super(clone);
+        super(options);
 
-        if(clone) {
-            if(clone.bodyOnly !== undefined) this.bodyOnly = clone.bodyOnly;
-            if(clone.automaticExtensionDetection !== undefined) this.automaticExtensionDetection = clone.automaticExtensionDetection;
+        if(options) {
+            if(options.bodyOnly !== undefined) this.bodyOnly = options.bodyOnly;
+            if(options.automaticExtensionDetection !== undefined) this.automaticExtensionDetection = options.automaticExtensionDetection;
         }
     }
 }

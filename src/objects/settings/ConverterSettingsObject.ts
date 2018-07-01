@@ -5,15 +5,15 @@ class ConverterSettingsObject {
     [key: string]: any;
 
     public newSectionOnHeading: boolean = true;
-    public headingDepth: number = 3;
+    public headingDepth: 1 | 2 | 3 | 4 | 5 | 6 = 3;
     public useSubSections: boolean = true;
-    public subSectionLevel: number = 3;
-    public subsubSectionLevel: number = 4;
+    public subSectionLevel: 1 | 2 | 3 | 4 | 5 | 6 = 3;
+    public subsubSectionLevel: 1 | 2 | 3 | 4 | 5 | 6 = 4;
 
     /**
      * An Object containing options for the general Converters
      *
-     * @param {object} clone: an object to clone values from:
+     * @param {object} options: an object to clone values from:
      *  - newSectionOnHeading: bool - if sections are automatically created
      *      at headings.
      *      Default: true
@@ -27,14 +27,20 @@ class ConverterSettingsObject {
      *  - subsubSectionLevel : int - level from which on sections are subsubsections.
      *      Default: 4 (H4) (will not be created with everything as default)
      */
-    constructor(clone?: any) {
+    constructor(options?: {
+        newSectionOnHeading?: boolean,
+        headingDepth?: 1 | 2 | 3 | 4 | 5 | 6,
+        useSubSections?: boolean,
+        subSectionLevel?: 1 | 2 | 3 | 4 | 5 | 6,
+        subsubSectionLevel?: 1 | 2 | 3 | 4 | 5 | 6,
+    }) {
 
-        if(clone) {
-            if(clone.newSectionOnHeading !== undefined) this.newSectionOnHeading = clone.newSectionOnHeading;
-            if(clone.headingDepth !== undefined) this.headingDepth = clone.headingDepth;
-            if(clone.useSubSections !== undefined) this.useSubSections = clone.useSubSections;
-            if(clone.subSectionLevel !== undefined) this.subSectionLevel = clone.subSectionLevel;
-            if(clone.subsubSectionLevel !== undefined) this.subsubSectionLevel = clone.subsubSectionLevel;
+        if(options) {
+            if(options.newSectionOnHeading !== undefined) this.newSectionOnHeading = options.newSectionOnHeading;
+            if(options.headingDepth !== undefined) this.headingDepth = options.headingDepth;
+            if(options.useSubSections !== undefined) this.useSubSections = options.useSubSections;
+            if(options.subSectionLevel !== undefined) this.subSectionLevel = options.subSectionLevel;
+            if(options.subsubSectionLevel !== undefined) this.subsubSectionLevel = options.subsubSectionLevel;
         }
     }
 }

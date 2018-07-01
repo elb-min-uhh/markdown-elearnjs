@@ -4,15 +4,14 @@ import ExtensionObject from "../ExtensionObject";
 
 class InclusionObject extends ExtensionObject {
     // general index signature
-    public language: string = "en";
+    public language: "en" | "de" = "en";
 
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
      *
-     * @param {object} clone: an object to clone values from:
+     * @param {object} options: an object to clone values from:
      *  - {string} language will change the language
-     *      if not `bodyOnly`.
      *      Default: "en"
      *  - {boolean} includeQuiz will include the import of the quiz.js in the head.
      *      The script has to be located under `./assets`
@@ -31,12 +30,18 @@ class InclusionObject extends ExtensionObject {
      *      Only if not `bodyOnly`
      *      Default: false
      */
-    constructor(clone?: any) {
+    constructor(options?: {
+        language?: "en" | "de",
+        includeQuiz?: boolean,
+        includeElearnVideo?: boolean
+        includeClickImage?: boolean,
+        includeTimeSlider?: boolean,
+    }) {
 
-        super(clone);
+        super(options);
 
-        if(clone) {
-            if(clone.language !== undefined) this.language = clone.language;
+        if(options) {
+            if(options.language !== undefined) this.language = options.language;
         }
     }
 }

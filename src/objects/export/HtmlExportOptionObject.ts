@@ -10,7 +10,7 @@ class HtmlExportOptionObject extends ConversionObject {
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
      *
-     * @param {object} clone: an object to clone values from:
+     * @param {object} options: an object to clone values from:
      *  - {boolean} bodyOnly will only return the HTML body.
      *  - {string} language will change the language
      *      if not `bodyOnly`.
@@ -41,13 +41,23 @@ class HtmlExportOptionObject extends ConversionObject {
      *      detected by the `FileExtractor` will be exported to the assets next
      *      to the output file.
      */
-    constructor(clone?: any) {
+    constructor(options?: {
+        bodyOnly?: boolean,
+        language?: "en" | "de",
+        automaticExtensionDetection?: boolean,
+        includeQuiz?: boolean,
+        includeElearnVideo?: boolean
+        includeClickImage?: boolean,
+        includeTimeSlider?: boolean,
+        exportAssets?: boolean,
+        exportLinkedFiles?: boolean,
+    }) {
 
-        super(clone);
+        super(options);
 
-        if(clone) {
-            if(clone.exportAssets !== undefined) this.exportAssets = clone.exportAssets;
-            if(clone.exportLinkedFiles !== undefined) this.exportLinkedFiles = clone.exportLinkedFiles;
+        if(options) {
+            if(options.exportAssets !== undefined) this.exportAssets = options.exportAssets;
+            if(options.exportLinkedFiles !== undefined) this.exportLinkedFiles = options.exportLinkedFiles;
         }
 
     }

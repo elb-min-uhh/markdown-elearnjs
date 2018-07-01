@@ -12,7 +12,7 @@ class ExtensionObject {
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
-     * @param {object} clone: an object to clone values from:
+     * @param {object} options: an object to clone values from:
      *  - {boolean} includeQuiz will include the import of the quiz.js in the head.
      *      The script has to be located under `./assets`
      *      Only if not `bodyOnly`
@@ -30,13 +30,18 @@ class ExtensionObject {
      *      Only if not `bodyOnly`
      *      Default: false
      */
-    constructor(clone?: any) {
+    constructor(options?: {
+        includeQuiz?: boolean,
+        includeElearnVideo?: boolean
+        includeClickImage?: boolean,
+        includeTimeSlider?: boolean,
+    }) {
 
-        if(clone) {
-            if(clone.includeQuiz !== undefined) this.includeQuiz = clone.includeQuiz;
-            if(clone.includeElearnVideo !== undefined) this.includeElearnVideo = clone.includeElearnVideo;
-            if(clone.includeClickImage !== undefined) this.includeClickImage = clone.includeClickImage;
-            if(clone.includeTimeSlider !== undefined) this.includeTimeSlider = clone.includeTimeSlider;
+        if(options) {
+            if(options.includeQuiz !== undefined) this.includeQuiz = options.includeQuiz;
+            if(options.includeElearnVideo !== undefined) this.includeElearnVideo = options.includeElearnVideo;
+            if(options.includeClickImage !== undefined) this.includeClickImage = options.includeClickImage;
+            if(options.includeTimeSlider !== undefined) this.includeTimeSlider = options.includeTimeSlider;
         }
     }
 }
