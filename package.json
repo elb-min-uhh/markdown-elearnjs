@@ -5,7 +5,9 @@
   "main": "out/main.js",
   "typings": "out/main.d.ts",
   "scripts": {
-    "test": "node test/test.js",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && nyc mocha --recursive --colors -u tdd out/test/",
     "prepublishOnly": "tsc -p ./"
   },
   "keywords": [
@@ -28,7 +30,10 @@
   },
   "devDependencies": {
     "@types/html-pdf": "^2.1.2",
+    "@types/mocha": "^5.2.4",
     "@types/ncp": "^2.0.1",
-    "@types/node": "^10.3.1"
+    "@types/node": "^10.3.1",
+    "@types/rimraf": "^2.0.2",
+    "rimraf": "^2.6.2"
   }
 }

@@ -1,8 +1,0 @@
-*
-!.gitignore
-
-!assetExport
-!inputFiles
-!resultFiles
-!util
-!test.js
