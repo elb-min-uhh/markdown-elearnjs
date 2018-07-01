@@ -85,7 +85,8 @@ tests.testTemplateExample = function() {
             return;
         }
         htmlConverter.toHtml(data, {
-            automaticExtensionDetection: true
+            automaticExtensionDetection: true,
+            language: "de",
         }).then((text) => {
             text = MarkdownElearnJS.FileExtractor.replaceAllLinks(text).html;
             assertFileEqual(text, `${__dirname}/resultFiles/testTemplateExample.html`).then(() => {
@@ -112,7 +113,8 @@ tests.testTemplateToFile = function() {
             {
                 exportAssets: true,
                 exportLinkedFiles: true,
-                automaticExtensionDetection: true
+                automaticExtensionDetection: true,
+                language: "de",
             }, true).then((text) => {
                 if(text !== outFile) console.error("Wrong output file.");
                 testDone();

@@ -161,7 +161,7 @@ class HtmlConverter implements IConverter {
                 return rej("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
             }
 
-            self.toHtml(markdown, <ConversionObject>options).then((html) => {
+            self.toHtml(markdown, opts).then((html) => {
                 let filesToExport: FileMoveObject[] = [];
                 // find files to export and change links
                 if(opts.exportLinkedFiles) {
