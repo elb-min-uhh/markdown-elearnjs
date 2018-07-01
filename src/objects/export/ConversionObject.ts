@@ -3,54 +3,37 @@
 import InclusionObject from "./InclusionObject";
 
 class ConversionObject extends InclusionObject {
-    public bodyOnly: boolean = false;
-    public automaticExtensionDetection: boolean = false;
+    /**
+     * bodyOnly will only return the HTML body.
+     * Default: false
+     */
+    public bodyOnly?: boolean = false;
+    /**
+     * automaticExtensionDetection will scan for extensions and
+     * include only those found. Will only autodetect extensions with
+     * undefined as `includeEXTENSION` value.
+     * Only if not `bodyOnly`
+     * Default: false
+     */
+    public automaticExtensionDetection?: boolean = false;
 
     /**
      * An Object containing options for the general conversions
      * of the HtmlConverter and PdfConverter functions.
      *
-     * @param {object} options: an object to clone values from:
-     *  - {boolean} bodyOnly will only return the HTML body.
-     *  - {string} language will change the language
-     *      if not `bodyOnly`.
-     *      Default: "en"
-     *  - {boolean} automaticExtensionDetection will scan for extensions and
-     *      include only those found. Might be overwritten by specific `includeXY`
-     *      Only if not `bodyOnly`
-     *      Default: false
-     *  - {boolean} includeQuiz will include the import of the quiz.js in the head.
-     *      The script has to be located under `./assets`
-     *      Only if not `bodyOnly`
-     *      Default: false
-     *  - {boolean} includeElearnVideo will include the import of the
-     *      elearnvideo.js in the head. The script has to be located under `./assets`
-     *      Only if not `bodyOnly`
-     *      Default: false
-     *  - {boolean} includeClickImage will include the import of the clickimage.js
-     *      in the head. The script has to be located under `./assets`
-     *      Only if not `bodyOnly`
-     *       Default: false
-     *  - {boolean} includeTimeSlider will include the import of the timeslider.js
-     *       in the head. The script has to be located under `./assets`
-     *      Only if not `bodyOnly`
-     *      Default: false
+     * @param {object} options: Manual values for this objects fields. All optional.
      */
-    constructor(options?: {
-        bodyOnly?: boolean,
-        language?: "en" | "de",
-        automaticExtensionDetection?: boolean,
-        includeQuiz?: boolean,
-        includeElearnVideo?: boolean
-        includeClickImage?: boolean,
-        includeTimeSlider?: boolean,
-    }) {
-
+    constructor(options?: ConversionObject) {
         super(options);
 
+        const keys = ["bodyOnly", "automaticExtensionDetection"];
+
         if(options) {
-            if(options.bodyOnly !== undefined) this.bodyOnly = options.bodyOnly;
-            if(options.automaticExtensionDetection !== undefined) this.automaticExtensionDetection = options.automaticExtensionDetection;
+            Object.keys(options).forEach((key) => {
+                if(keys.indexOf(key) >= 0) {
+                    this[key] = options[key];
+                }
+            });
         }
     }
 }

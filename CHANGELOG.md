@@ -1,3 +1,7 @@
+## 1.2.5
+* Improved objects further
+    * All fields are optional, but creating an object with the constructor
+    will fill in default values
 ## 1.2.4
 * Setup tslint
 * Refactored code, to match more strict code styles

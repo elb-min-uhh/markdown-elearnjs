@@ -244,10 +244,10 @@ class PdfConverter implements IConverter {
      * @param meta: additional header elements for the HTML file
      * @param opts: InclusionObject
      */
-    private getPDFFileContent(data: string, html: string, meta: string, opts?: InclusionObject) {
+    private getPDFFileContent(data: string, html: string, meta: string, options?: InclusionObject) {
         const self = this;
 
-        let options: InclusionObject = new InclusionObject(opts);
+        let opts: InclusionObject = new InclusionObject(options);
 
         let zoom = `<style>html {zoom: ${self.pdfBodyConverter.getOption('contentZoom')}}</style>`;
         // header and footer
@@ -266,10 +266,10 @@ class PdfConverter implements IConverter {
         return data.replace(/\$\$meta\$\$/, () => meta)
             .replace(/\$\$extensions\$\$/, () => {
                 return ExtensionManager.getPDFAssetStrings(
-                    options.includeQuiz,
-                    options.includeElearnVideo,
-                    options.includeClickImage,
-                    options.includeTimeSlider);
+                    opts.includeQuiz,
+                    opts.includeElearnVideo,
+                    opts.includeClickImage,
+                    opts.includeTimeSlider);
             })
             .replace(/\$\$zoom\$\$/, () => zoom)
             .replace(/\$\$custom_style\$\$/, () => customStyle)

@@ -211,24 +211,24 @@ class HtmlConverter implements IConverter {
      * @param imprint: HTML to be inserted into the elearn.js imprint
      * @param {InclusionObject} opts: optional options
      */
-    private getHTMLFileContent(data: string, html: string, meta: string, imprint: string, opts?: InclusionObject) {
-        let options: InclusionObject = new InclusionObject(opts);
+    private getHTMLFileContent(data: string, html: string, meta: string, imprint: string, options?: InclusionObject) {
+        let opts = new InclusionObject(options);
         return data.replace(/\$\$meta\$\$/, () => meta)
             .replace(/\$\$extensions\$\$/, () => {
                 return ExtensionManager.getHTMLAssetStrings(
-                    options.includeQuiz,
-                    options.includeElearnVideo,
-                    options.includeClickImage,
-                    options.includeTimeSlider);
+                    opts.includeQuiz,
+                    opts.includeElearnVideo,
+                    opts.includeClickImage,
+                    opts.includeTimeSlider);
             })
             .replace(/\$\$imprint\$\$/, () => imprint)
             .replace(/\$\$body\$\$/, () => html)
             .replace(/\$\$language\$\$/, () => {
-                if(options.language && options.language !== "de") {
+                if(opts.language && opts.language !== "de") {
                     return `<script>
-                                eLearnJS.setLanguage("${options.language}");
-                                try { eLearnVideoJS.setLanguage("${options.language}") } catch(e){ console.log(e) };
-                                try { quizJS.setLanguage("${options.language}") } catch(e){ console.log(e) };
+                                eLearnJS.setLanguage("${opts.language}");
+                                try { eLearnVideoJS.setLanguage("${opts.language}") } catch(e){ console.log(e) };
+                                try { quizJS.setLanguage("${opts.language}") } catch(e){ console.log(e) };
                             </script>`;
                 }
                 return "";
