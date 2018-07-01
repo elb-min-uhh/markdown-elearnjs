@@ -6,7 +6,7 @@
   "typings": "out/main.d.ts",
   "scripts": {
     "test": "node test/test.js",
-    "prepublishOnly": "tsc -p src/ --outDir out/"
+    "prepublishOnly": "tsc -p ./"
   },
   "keywords": [
     "Markdown",
