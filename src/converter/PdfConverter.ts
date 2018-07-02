@@ -11,6 +11,7 @@ import InclusionObject from '../objects/export/InclusionObject';
 import PdfExportOptionObject from '../objects/export/PdfExportOptionObject';
 import ExtensionObject from '../objects/ExtensionObject';
 import PdfSettingsObject from '../objects/settings/PdfSettingsObject';
+import AConverter from './AConverter';
 import IConverter from './IConverter';
 import * as elearnExtension from './ShowdownElearnJS';
 
@@ -31,16 +32,18 @@ const defaults: { [key: string]: any } = {
     customStyleFile: undefined,
 };
 
-class PdfConverter implements IConverter {
+class PdfConverter extends AConverter implements IConverter {
 
-    private pdfBodyConverter: Showdown.Converter;
+    protected converter: Showdown.Converter;
 
     /**
      * Creates an HtmlConverter with specific options.
      * @param {PdfSettingsObject} options: optional options
      */
     constructor(options?: PdfSettingsObject) {
-        this.pdfBodyConverter = new Showdown.Converter({
+        super();
+
+        this.converter = new Showdown.Converter({
             simplifiedAutoLink: true,
             excludeTrailingPunctuationFromURLs: true,
             strikethrough: true,
@@ -50,14 +53,12 @@ class PdfConverter implements IConverter {
 
         // set export defaults
         Object.keys(defaults).forEach((key) => {
-            this.pdfBodyConverter.setOption(key, defaults[key]);
+            this.converter.setOption(key, defaults[key]);
         });
 
         // overwrite defaults with given options
         if(options) {
-            Object.keys(options).forEach((key) => {
-                this.pdfBodyConverter.setOption(key, options[key]);
-            });
+            this.setOptions(options);
         }
     }
 
@@ -76,40 +77,22 @@ class PdfConverter implements IConverter {
     }
 
     /**
-     * Update one of the conversion options.
-     *
-     * @param opt: string - option key. Same possible as in the constructor.
-     * @param val: obj - the value to set the option to.
-     */
-    public setOption(opt: string, val: any) {
-        this.pdfBodyConverter.setOption(opt, val);
-    }
-
-    /**
      * Update multiple conversion options.
      * @param options: Object - same as in the constructor
      */
     public setOptions(options: PdfSettingsObject) {
+        options = new PdfSettingsObject(options);
         Object.keys(options).forEach((key) => {
-            this.pdfBodyConverter.setOption(key, options[key]);
+            this.setOption(key, options[key]);
         });
     }
 
-    /**
-     * Converts given markdown to a HTML string for a HTML to PDF conversion.
-     * Certain options will specify the output.
-     *
-     * @param markdown: string - the markdown code
-     * @param {ConversionObject} options: optional options
-     *
-     * @return {Promise<string>} - will resolve with the output html, when done.
-     */
     public toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
         let opts = new ConversionObject(options);
 
         let ret = new Promise<string>((res, rej) => {
-            let html = self.pdfBodyConverter.makeHtml(markdown);// conversion
+            let html = self.converter.makeHtml(markdown);// conversion
 
             if(opts.bodyOnly) {
                 res(html);
@@ -249,14 +232,14 @@ class PdfConverter implements IConverter {
 
         let opts: InclusionObject = new InclusionObject(options);
 
-        let zoom = `<style>html {zoom: ${self.pdfBodyConverter.getOption('contentZoom')}}</style>`;
+        let zoom = `<style>html {zoom: ${self.converter.getOption('contentZoom')}}</style>`;
         // header and footer
-        let header = self.pdfBodyConverter.getOption('customHeader');
+        let header = self.converter.getOption('customHeader');
         if(!header) header = self.getDefaultHeader();
-        let footer = self.pdfBodyConverter.getOption('customFooter');
+        let footer = self.converter.getOption('customFooter');
         if(!footer) footer = self.getDefaultFooter();
 
-        let customStyleFile = self.pdfBodyConverter.getOption('customStyleFile');
+        let customStyleFile = self.converter.getOption('customStyleFile');
         let customStyle = "";
         if(customStyleFile && customStyleFile.length > 0 && fs.existsSync(path.resolve(customStyleFile))) {
             customStyleFile = "file:///" + path.resolve(customStyleFile).replace(/\\/g, "/");
@@ -300,10 +283,10 @@ class PdfConverter implements IConverter {
                 left: "23mm",
             },
             header: {
-                height: self.pdfBodyConverter.getOption('headerHeight'),
+                height: self.converter.getOption('headerHeight'),
             },
             footer: {
-                height: self.pdfBodyConverter.getOption('footerHeight'),
+                height: self.converter.getOption('footerHeight'),
             },
             renderDelay,
             base: "file:///" + rootPath.replace(/\\/g, "/") + "/",

@@ -30,6 +30,75 @@ const exampleImprint =
     Universität Hamburg
 -->`;
 
+describe('PDF Converter Setup', () => {
+
+    it('should create an PdfConverter with correct settings', () => {
+        let conv = new PdfConverter({
+            headingDepth: 2,
+            newSectionOnHeading: false,
+            useSubSections: false,
+            subSectionLevel: 4,
+            subsubSectionLevel: 5,
+
+            contentZoom: 2,
+            customFooter: "testfooter",
+            customHeader: "testheader",
+            footerHeight: "20mm",
+            headerHeight: "20mm",
+            customStyleFile: "somefile",
+            newPageOnSection: false,
+        });
+
+        assert.equal(conv.getOption("headingDepth"), 2);
+        assert.equal(conv.getOption("newSectionOnHeading"), false);
+        assert.equal(conv.getOption("useSubSections"), false);
+        assert.equal(conv.getOption("subSectionLevel"), 4);
+        assert.equal(conv.getOption("subsubSectionLevel"), 5);
+
+        assert.equal(conv.getOption("contentZoom"), 2);
+        assert.equal(conv.getOption("customFooter"), "testfooter");
+        assert.equal(conv.getOption("customHeader"), "testheader");
+        assert.equal(conv.getOption("footerHeight"), "20mm");
+        assert.equal(conv.getOption("headerHeight"), "20mm");
+        assert.equal(conv.getOption("customStyleFile"), "somefile");
+        assert.equal(conv.getOption("newPageOnSection"), false);
+    });
+
+    it('should update settings in PdfConverter', () => {
+        let conv = new PdfConverter();
+
+        conv.setOptions({
+            headingDepth: 2,
+            newSectionOnHeading: false,
+            useSubSections: false,
+            subSectionLevel: 4,
+            subsubSectionLevel: 5,
+
+            contentZoom: 2,
+            customFooter: "testfooter",
+            customHeader: "testheader",
+            footerHeight: "20mm",
+            headerHeight: "20mm",
+            customStyleFile: "somefile",
+            newPageOnSection: false,
+        });
+
+        assert.equal(conv.getOption("headingDepth"), 2);
+        assert.equal(conv.getOption("newSectionOnHeading"), false);
+        assert.equal(conv.getOption("useSubSections"), false);
+        assert.equal(conv.getOption("subSectionLevel"), 4);
+        assert.equal(conv.getOption("subsubSectionLevel"), 5);
+
+        assert.equal(conv.getOption("contentZoom"), 2);
+        assert.equal(conv.getOption("customFooter"), "testfooter");
+        assert.equal(conv.getOption("customHeader"), "testheader");
+        assert.equal(conv.getOption("footerHeight"), "20mm");
+        assert.equal(conv.getOption("headerHeight"), "20mm");
+        assert.equal(conv.getOption("customStyleFile"), "somefile");
+        assert.equal(conv.getOption("newPageOnSection"), false);
+    });
+
+});
 
 describe('PDF conversion', () => {
     before(() => {
@@ -55,7 +124,7 @@ describe('PDF conversion', () => {
         new PromiseCounter(promises, 15000).then(() => {
             done();
         }, (err) => {
-            throw err;
+            done(err);
         });
     });
 
@@ -69,29 +138,46 @@ describe('PDF conversion', () => {
                     .then(() => {
                         done();
                     }, (err) => {
-                        assert.fail(err);
-                        done();
+                        done(err);
                     });
             }, (err) => {
-                assert.fail(err);
-                done();
+                done(err);
             });
         });
 
         // basic full document test
-        it('should create a valid pdf document', (done) => {
+        it('should create a valid pdf document without autodetection', (done) => {
             let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown);
             html.then((text) => {
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`))
                     .then(() => {
                         done();
                     }, (err) => {
-                        assert.fail(err);
-                        done();
+                        done(err);
                     });
             }, (err) => {
-                assert.fail(err);
-                done();
+                done(err);
+            });
+        });
+
+        // basic full document test
+        it('should create a valid pdf document', (done) => {
+            let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
+                automaticExtensionDetection: true,
+                includeQuiz: false,
+                includeElearnVideo: false,
+                includeClickImage: false,
+                includeTimeSlider: false,
+            });
+            html.then((text) => {
+                AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`))
+                    .then(() => {
+                        done();
+                    }, (err) => {
+                        done(err);
+                    });
+            }, (err) => {
+                done(err);
             });
         });
 
@@ -102,7 +188,8 @@ describe('PDF conversion', () => {
         it('should create the correct document with extensions', (done) => {
             fs.readFile(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8', (error, data) => {
                 if(error) {
-                    throw error;
+                    done(error);
+                    return;
                 }
                 pdfConverter.toHtml(data, {
                     language: "de",
@@ -112,12 +199,10 @@ describe('PDF conversion', () => {
                         .then(() => {
                             done();
                         }, (err) => {
-                            assert.fail(err);
-                            done();
+                            done(err);
                         });
                 }, (err) => {
-                    assert.fail(err);
-                    done();
+                    done(err);
                 });
             });
         });
@@ -144,8 +229,100 @@ describe('PDF conversion', () => {
                     done();
                     return;
                 }, (err) => {
-                    assert.fail(err);
+                    done(err);
+                });
+        }).slow(20000).timeout(30000);
+
+        it('should not create the file, no path given', (done) => {
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // convert the file
+            assert.rejects(pdfConverter.toFile(data,
+                undefined!,
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                    renderDelay: 5000,
+                })).then(() => {
                     done();
+                }, (err) => {
+                    done(err);
+                });
+        }).slow(20000).timeout(30000);
+
+        it('should not create the file, file exists already', (done) => {
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // convert the file
+            assert.rejects(pdfConverter.toFile(data,
+                path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExample.pdf`),
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                })).then(() => {
+                    done();
+                }, (err) => {
+                    done(err);
+                });
+        }).slow(20000).timeout(30000);
+
+        it('should create a stream', (done) => {
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // convert the file
+            pdfConverter.toStream(data,
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                }).then(() => {
+                    done();
+                    return;
+                }, (err) => {
+                    done(err);
+                });
+        }).slow(20000).timeout(30000);
+
+        it('should create a buffer', (done) => {
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // convert the file
+            pdfConverter.toBuffer(data,
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                }).then(() => {
+                    done();
+                    return;
+                }, (err) => {
+                    done(err);
                 });
         }).slow(20000).timeout(30000);
     });

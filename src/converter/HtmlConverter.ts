@@ -13,6 +13,7 @@ import InclusionObject from '../objects/export/InclusionObject';
 import ExtensionObject from '../objects/ExtensionObject';
 import ConverterSettingsObject from '../objects/settings/ConverterSettingsObject';
 import PromiseCounter from '../util/PromiseCounter';
+import AConverter from './AConverter';
 import IConverter from './IConverter';
 import * as elearnExtension from './ShowdownElearnJS';
 
@@ -24,9 +25,9 @@ const defaults: { [key: string]: any } = {
     subsubSectionLevel: 4,
 };
 
-class HtmlConverter implements IConverter {
+class HtmlConverter extends AConverter implements IConverter {
 
-    private bodyConverter: Showdown.Converter;
+    protected converter: Showdown.Converter;
     private imprintConverter: Showdown.Converter;
 
     /**
@@ -34,7 +35,9 @@ class HtmlConverter implements IConverter {
      * @param {ConverterSettingsObject} options: optional options
      */
     constructor(options?: ConverterSettingsObject) {
-        this.bodyConverter = new Showdown.Converter({
+        super();
+
+        this.converter = new Showdown.Converter({
             simplifiedAutoLink: true,
             excludeTrailingPunctuationFromURLs: true,
             strikethrough: true,
@@ -53,13 +56,11 @@ class HtmlConverter implements IConverter {
 
         // set export defaults
         Object.keys(defaults).forEach((key) => {
-            this.bodyConverter.setOption(key, defaults[key]);
+            this.converter.setOption(key, defaults[key]);
         });
 
         if(options) {
-            Object.keys(options).forEach((key) => {
-                this.bodyConverter.setOption(key, options[key]);
-            });
+            this.setOptions(options);
         }
     }
 
@@ -77,41 +78,12 @@ class HtmlConverter implements IConverter {
         return opts;
     }
 
-    /**
-     * Update one of the conversion options.
-     *
-     * @param opt: string - option key. Same possible as in the constructor.
-     * @param val: obj - the value to set the option to.
-     */
-    public setOption(opt: string, val: any) {
-        this.bodyConverter.setOption(opt, val);
-    }
-
-    /**
-     * Update multiple conversion options.
-     * @param options: Object - same as in the constructor
-     */
-    public setOptions(options: ConverterSettingsObject) {
-        Object.keys(options).forEach((key) => {
-            this.bodyConverter.setOption(key, options[key]);
-        });
-    }
-
-    /**
-     * Converts given markdown to a HTML string.
-     * Certain options will specify the output.
-     *
-     * @param markdown: string - the markdown code
-     * @param {ConversionObject} options: optional options
-     *
-     * @return Promise: (html) - will resolve with the output html, when done.
-     */
     public toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
         let opts = new ConversionObject(options);
 
         let ret = new Promise<string>((res, rej) => {
-            let html = self.bodyConverter.makeHtml(markdown);// conversion
+            let html = self.converter.makeHtml(markdown);// conversion
 
             if(opts.bodyOnly) {
                 res(html);

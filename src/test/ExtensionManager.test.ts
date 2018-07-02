@@ -4,7 +4,10 @@ import assert from 'assert';
 import * as fs from "fs";
 import path from 'path';
 import rimraf from 'rimraf';
+import HtmlConverter from '../converter/HtmlConverter';
+import PdfConverter from '../converter/PdfConverter';
 import { ExtensionManager } from '../main';
+import ExtensionObject from '../objects/ExtensionObject';
 import PromiseCounter from '../util/PromiseCounter';
 import AssertExtensions from './helpers/assertExtensions';
 
@@ -32,7 +35,7 @@ describe('Extension Manager', () => {
         new PromiseCounter(promises, 15000).then(() => {
             done();
         }, (err) => {
-            throw err;
+            done(err);
         });
     });
 
@@ -68,8 +71,62 @@ describe('Extension Manager', () => {
                     path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
                 done();
             }, (err) => {
-                assert.fail(err);
-                done();
+                done(err);
             });
+    });
+
+    it('should detect all extensions in markdown', (done) => {
+        let inBuf = fs.readFileSync(
+            path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+            { encoding: 'utf8' });
+        let data = inBuf.toString();
+
+        ExtensionManager.scanMarkdownForAll(data).then((extensionObject) => {
+            assert.deepEqual(extensionObject, new ExtensionObject({
+                includeClickImage: true,
+                includeElearnVideo: true,
+                includeQuiz: true,
+                includeTimeSlider: true,
+            }));
+            done();
+        });
+    });
+
+    it('should detect all extensions in markdown with given HtmlConverter', (done) => {
+        let inBuf = fs.readFileSync(
+            path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+            { encoding: 'utf8' });
+        let data = inBuf.toString();
+
+        let htmlConverter = new HtmlConverter();
+
+        ExtensionManager.scanMarkdownForAll(data, htmlConverter).then((extensionObject) => {
+            assert.deepEqual(extensionObject, new ExtensionObject({
+                includeClickImage: true,
+                includeElearnVideo: true,
+                includeQuiz: true,
+                includeTimeSlider: true,
+            }));
+            done();
+        });
+    });
+
+    it('should detect all extensions in markdown with given PdfConverter', (done) => {
+        let inBuf = fs.readFileSync(
+            path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+            { encoding: 'utf8' });
+        let data = inBuf.toString();
+
+        let pdfConverter = new PdfConverter();
+
+        ExtensionManager.scanMarkdownForAll(data, pdfConverter).then((extensionObject) => {
+            assert.deepEqual(extensionObject, new ExtensionObject({
+                includeClickImage: true,
+                includeElearnVideo: true,
+                includeQuiz: true,
+                includeTimeSlider: true,
+            }));
+            done();
+        });
     });
 });

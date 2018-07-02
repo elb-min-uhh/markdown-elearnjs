@@ -40,7 +40,10 @@ class PromiseCounter {
         // add timeout if given
         if(timeout !== null && timeout !== undefined) {
             self.timeout = setTimeout(() => {
-                self.onError(`Timeout in PromiseCounter after ${timeout} ms.`);
+                // only timeout if there was no error before, and the promise
+                // is not logically done
+                if(!self.error && self.count < self.expected)
+                    self.onError(`Timeout in PromiseCounter after ${timeout} ms.`);
             }, timeout);
         }
 
@@ -66,11 +69,13 @@ class PromiseCounter {
     }
 
     public onResolve() {
+        if(this.done) return;
         this.count++;
         this.checkDone();
     }
 
     public onError(err: any) {
+        if(this.done) return;
         if(!err) this.error = new Error("Undefined error in PromiseCounter.");
         else this.error = err;
         this.checkDone();

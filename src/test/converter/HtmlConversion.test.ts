@@ -32,6 +32,51 @@ const exampleImprint =
 -->`;
 
 
+describe('HTML Converter Setup', () => {
+
+    it('should create an HtmlConverter with correct settings', () => {
+        let conv = new HtmlConverter({
+            headingDepth: 2,
+            newSectionOnHeading: false,
+            useSubSections: false,
+            subSectionLevel: 4,
+            subsubSectionLevel: 5,
+        });
+
+        assert.equal(conv.getOption("headingDepth"), 2);
+        assert.equal(conv.getOption("newSectionOnHeading"), false);
+        assert.equal(conv.getOption("useSubSections"), false);
+        assert.equal(conv.getOption("subSectionLevel"), 4);
+        assert.equal(conv.getOption("subsubSectionLevel"), 5);
+    });
+
+    it('should update settings in HtmlConverter', () => {
+        let conv = new HtmlConverter();
+
+        assert.notEqual(conv.getOption("headingDepth"), 2);
+        assert.notEqual(conv.getOption("newSectionOnHeading"), false);
+        assert.notEqual(conv.getOption("useSubSections"), false);
+        assert.notEqual(conv.getOption("subSectionLevel"), 4);
+        assert.notEqual(conv.getOption("subsubSectionLevel"), 5);
+
+        conv.setOptions({
+            headingDepth: 2,
+            newSectionOnHeading: false,
+            useSubSections: false,
+            subSectionLevel: 4,
+            subsubSectionLevel: 5,
+        });
+
+        assert.equal(conv.getOption("headingDepth"), 2);
+        assert.equal(conv.getOption("newSectionOnHeading"), false);
+        assert.equal(conv.getOption("useSubSections"), false);
+        assert.equal(conv.getOption("subSectionLevel"), 4);
+        assert.equal(conv.getOption("subsubSectionLevel"), 5);
+    });
+
+});
+
+
 describe('HTML conversion', () => {
     before(() => {
         htmlConverter = new HtmlConverter();
@@ -56,7 +101,7 @@ describe('HTML conversion', () => {
         new PromiseCounter(promises, 15000).then(() => {
             done();
         }, (err) => {
-            throw err;
+            done(err);
         });
     });
 
@@ -70,12 +115,10 @@ describe('HTML conversion', () => {
                     .then(() => {
                         done();
                     }, (err) => {
-                        assert.fail(err);
-                        done();
+                        done(err);
                     });
             }, (err) => {
-                assert.fail(err);
-                done();
+                done(err);
             });
         });
 
@@ -87,31 +130,32 @@ describe('HTML conversion', () => {
                     .then(() => {
                         done();
                     }, (err) => {
-                        assert.fail(err);
-                        done();
+                        done(err);
                     });
             }, (err) => {
-                assert.fail(err);
-                done();
+                done(err);
             });
         });
 
         // basic full document with export ready links
         it('should create a valid html doc with updated file links', (done) => {
-            htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown)
-                .then((text) => {
-                    text = FileExtractor.replaceAllLinks(text).html;
-                    AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlFullExtractFiles.html`))
-                        .then(() => {
-                            done();
-                        }, (err) => {
-                            assert.fail(err);
-                            done();
-                        });
-                }, (err) => {
-                    assert.fail(err);
-                    done();
-                });
+            htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
+                automaticExtensionDetection: true,
+                includeQuiz: false,
+                includeElearnVideo: false,
+                includeClickImage: false,
+                includeTimeSlider: false,
+            }).then((text) => {
+                text = FileExtractor.replaceAllLinks(text).html;
+                AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlFullExtractFiles.html`))
+                    .then(() => {
+                        done();
+                    }, (err) => {
+                        done(err);
+                    });
+            }, (err) => {
+                done(err);
+            });
         });
 
     });
@@ -121,7 +165,8 @@ describe('HTML conversion', () => {
         it('should create the correct document without extensions', (done) => {
             fs.readFile(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8', (error, data) => {
                 if(error) {
-                    throw error;
+                    done(error);
+                    return;
                 }
                 htmlConverter.toHtml(data, { language: "de" }).then((text) => {
                     text = FileExtractor.replaceAllLinks(text).html;
@@ -129,12 +174,10 @@ describe('HTML conversion', () => {
                         .then(() => {
                             done();
                         }, (err) => {
-                            assert.fail(err);
-                            done();
+                            done(err);
                         });
                 }, (err) => {
-                    assert.fail(err);
-                    done();
+                    done(err);
                 });
             });
         });
@@ -142,7 +185,8 @@ describe('HTML conversion', () => {
         it('should create the correct document with extensions', (done) => {
             fs.readFile(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8', (error, data) => {
                 if(error) {
-                    throw error;
+                    done(error);
+                    return;
                 }
                 htmlConverter.toHtml(data, {
                     language: "de",
@@ -156,12 +200,10 @@ describe('HTML conversion', () => {
                         .then(() => {
                             done();
                         }, (err) => {
-                            assert.fail(err);
-                            done();
+                            done(err);
                         });
                 }, (err) => {
-                    assert.fail(err);
-                    done();
+                    done(err);
                 });
             });
         });
@@ -169,7 +211,8 @@ describe('HTML conversion', () => {
         it('should create the correct document with extension detection', (done) => {
             fs.readFile(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8', (error, data) => {
                 if(error) {
-                    throw error;
+                    done(error);
+                    return;
                 }
                 htmlConverter.toHtml(data, {
                     language: "de",
@@ -180,12 +223,10 @@ describe('HTML conversion', () => {
                         .then(() => {
                             done();
                         }, (err) => {
-                            assert.fail(err);
-                            done();
+                            done(err);
                         });
                 }, (err) => {
-                    assert.fail(err);
-                    done();
+                    done(err);
                 });
             });
         });
@@ -235,8 +276,7 @@ describe('HTML conversion', () => {
 
                     done();
                 }, (err) => {
-                    assert.fail(err);
-                    done();
+                    done(err);
                 });
         }).slow(500);
 
@@ -273,8 +313,7 @@ describe('HTML conversion', () => {
 
                     done();
                 }, (err) => {
-                    assert.fail(err);
-                    done();
+                    done(err);
                 });
         }).slow(250);
 

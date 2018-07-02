@@ -42,11 +42,13 @@ class PdfSettingsObject extends ConverterSettingsObject {
 
         super(options);
 
-        const keys = ["newSectionOnHeading",
-            "headingDepth",
-            "useSubSections",
-            "subSectionLevel",
-            "subsubSectionLevel"];
+        const keys = ["newPageOnSection",
+            "contentZoom",
+            "customHeader",
+            "customFooter",
+            "headerHeight",
+            "footerHeight",
+            "customStyleFile"];
 
         if(options) {
             Object.keys(options).forEach((key) => {

@@ -7,7 +7,7 @@
   "scripts": {
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "test": "npm run compile && nyc mocha --recursive --colors -u tdd out/test/",
+    "test": "npm run compile && nyc mocha --recursive --colors --require ts-node/register -u tdd src/test/**/*.test.ts",
     "prepublishOnly": "tsc -p ./"
   },
   "keywords": [
@@ -35,5 +35,24 @@
     "@types/node": "^10.3.1",
     "@types/rimraf": "^2.0.2",
     "rimraf": "^2.6.2"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/test/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "lcov"
+    ],
+    "cache": false,
+    "all": true,
+    "report-dir": "./coverage"
   }
 }
