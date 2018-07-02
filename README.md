@@ -1,5 +1,8 @@
 # markdown-elearnjs
 
+[![Build Status](https://westphal.goip.de/jenkins/buildStatus/icon?job=markdown-elearnjs)](https://westphal.goip.de/jenkins/job/markdown-elearnjs)
+[![Test Status](https://westphal.goip.de/jenkins-test-badge/master)](https://westphal.goip.de/jenkins/job/markdown-elearnjs)
+
 `markdown-elearnjs` is a node.js package for simple markdown conversion
 to [elearn.js](https://github.com/elb-min-uhh/elearn.js) based HTML and PDF.
 It is used for example by
