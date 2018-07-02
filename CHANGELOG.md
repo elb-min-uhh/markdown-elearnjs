@@ -1,4 +1,5 @@
 ## 1.2.6
+* Added Mocha based tests
 * Fixed minor option conversion bug in HtmlConverter.toFile
 ## 1.2.5
 * Improved objects further
