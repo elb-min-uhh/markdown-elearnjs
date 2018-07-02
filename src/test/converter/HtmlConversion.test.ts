@@ -7,7 +7,7 @@ import rimraf from 'rimraf';
 import FileExtractor from '../../FileExtractor';
 import { HtmlConverter } from '../../main';
 import PromiseCounter from '../../util/PromiseCounter';
-import AssertExtensions from '../helpers/assertExtensions';
+import AssertExtensions from '../helpers/AssertExtensions';
 
 const pathToTestAssets = '../../../testAssets/';
 const pathToAssets = '../../../assets/elearnjs/';

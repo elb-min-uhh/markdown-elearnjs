@@ -6,7 +6,8 @@ import path from 'path';
 import rimraf from 'rimraf';
 import { PdfConverter } from '../../main';
 import PromiseCounter from '../../util/PromiseCounter';
-import AssertExtensions from '../helpers/assertExtensions';
+import AssertExtensions from '../helpers/AssertExtensions';
+import PostProcessing from '../helpers/PostProcessing';
 
 const pathToTestAssets = '../../../testAssets/';
 const pathToAssets = '../../../assets/elearnjs/';
@@ -134,6 +135,7 @@ describe('PDF conversion', () => {
         it('should create a valid pdf body', (done) => {
             let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
             html.then((text) => {
+                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfBody.html`))
                     .then(() => {
                         done();
@@ -149,6 +151,7 @@ describe('PDF conversion', () => {
         it('should create a valid pdf document without autodetection', (done) => {
             let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown);
             html.then((text) => {
+                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`))
                     .then(() => {
                         done();
@@ -170,6 +173,7 @@ describe('PDF conversion', () => {
                 includeTimeSlider: false,
             });
             html.then((text) => {
+                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`))
                     .then(() => {
                         done();
@@ -195,6 +199,7 @@ describe('PDF conversion', () => {
                     language: "de",
                     automaticExtensionDetection: true,
                 }).then((text) => {
+                    text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
                     AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExamplePdf.html`))
                         .then(() => {
                             done();

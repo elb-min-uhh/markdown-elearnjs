@@ -46,7 +46,7 @@ describe("FileExtractor", () => {
             // copy to itself, should be ignored
             objects.push(new FileMoveObject(
                 path.join(pathToTestAssets, `resultFiles/testTemplateExample.pdf`),
-                path.join(`testTemplateExample.pdf`)));
+                path.join(`resultFiles/testTemplateExample.pdf`)));
 
             // not existent
             objects.push(new FileMoveObject(
