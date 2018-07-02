@@ -1,3 +1,4 @@
 assets/* linguist-vendored
+testAssets/* linguist-vendored
 test/* linguist-vendored
 out/* linguist-vendored

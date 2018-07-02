@@ -1,6 +1,7 @@
 
 .vscode
 out
+test-report.xml
 
 .DS_Store
 

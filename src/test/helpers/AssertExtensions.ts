@@ -35,8 +35,12 @@ ${data.substr(i - 10, 50)}
 
                 let correct = text.localeCompare(data) === 0;
 
-                assert.ok(correct, difference);
-                res();
+                if(correct) {
+                    res();
+                }
+                else {
+                    rej(difference);
+                }
             });
         });
         return ret;

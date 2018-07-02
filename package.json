@@ -8,6 +8,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "npm run compile && nyc mocha --recursive --colors --require ts-node/register -u tdd src/test/**/*.test.ts",
+    "quietTest": "npm run compile && nyc mocha --recursive --colors --require ts-node/register -u tdd --reporter xunit --reporter-options output=./test-report.xml src/test/**/*.test.ts",
     "prepublishOnly": "tsc -p ./"
   },
   "keywords": [
@@ -40,7 +41,7 @@
     "typescript": "^2.9.2"
   },
   "nyc": {
-    "check-coverage": true,
+    "check-coverage": false,
     "per-file": true,
     "include": [
       "src/**/*.ts"
