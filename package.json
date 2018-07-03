@@ -57,8 +57,8 @@
     "reporter": [
       "lcov"
     ],
-    "cache": false,
-    "all": true,
-    "report-dir": "./coverage"
+    "report-dir": "./coverage",
+    "sourceMap": true,
+    "instrument": true
   }
 }
