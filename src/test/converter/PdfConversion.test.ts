@@ -12,8 +12,6 @@ import PostProcessing from '../helpers/PostProcessing';
 const pathToTestAssets = '../../../testAssets/';
 const pathToAssets = '../../../assets/elearnjs/';
 
-let pdfConverter: PdfConverter;
-
 const exampleMarkdown =
     `# This is simple example markdown.
 
@@ -99,9 +97,39 @@ describe('PDF Converter Setup', () => {
         assert.equal(conv.getOption("newPageOnSection"), false);
     });
 
+    it('inserts the correct settings', (done) => {
+        let footer = `THIS IS THE TEST FOOTER`;
+        let header = `THIS IS THE TEST HEADER`;
+
+        let pdfConverter = new PdfConverter({
+            customFooter: footer,
+            customHeader: header,
+            customStyleFile: path.join(__dirname, pathToAssets, "extensions", "quiz", "assets", "css", "quiz.css").replace(/\\/, "/"),
+        });
+
+        let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown);
+
+        html.then((text) => {
+            try {
+                assert.ok(text.indexOf('quiz.css') >= 0);
+                assert.ok(text.indexOf(footer) >= 0);
+                assert.ok(text.indexOf(header) >= 0);
+            }
+            catch(err) {
+                done(err); return;
+            }
+            done();
+        }, (err) => {
+            done(err);
+        });
+    });
+
 });
 
 describe('PDF conversion', () => {
+
+    let pdfConverter: PdfConverter;
+
     before(() => {
         pdfConverter = new PdfConverter();
     });
@@ -134,6 +162,22 @@ describe('PDF conversion', () => {
         // basic body only test
         it('should create a valid pdf body', (done) => {
             let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
+            html.then((text) => {
+                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+                AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfBody.html`))
+                    .then(() => {
+                        done();
+                    }, (err) => {
+                        done(err);
+                    });
+            }, (err) => {
+                done(err);
+            });
+        });
+
+        // basic body only test with toPdfHtml
+        it('should create a valid pdf body with toPdfHtml', (done) => {
+            let html = pdfConverter.toPdfHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
             html.then((text) => {
                 text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfBody.html`))
@@ -271,9 +315,13 @@ describe('PDF conversion', () => {
             // create output folder
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
+            // create dummy
+            let file = fs.openSync(path.join(__dirname, pathToTestAssets, "export", "dummy"), "w+");
+            fs.closeSync(file);
+
             // convert the file
             assert.rejects(pdfConverter.toFile(data,
-                path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExample.pdf`),
+                path.join(__dirname, pathToTestAssets, "export", "dummy"),
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",

@@ -1,3 +1,5 @@
+## 1.2.8
+* Extended test cases
 ## 1.2.7
 * Fixes for npm publish packaging
 ## 1.2.6

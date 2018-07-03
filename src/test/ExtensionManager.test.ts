@@ -40,6 +40,33 @@ describe('Extension Manager', () => {
     });
 
     // basic body only test
+    it('export assets without extension correctly', (done) => {
+
+        // create output folder
+        fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+        // export assets
+        ExtensionManager.exportAssets(
+            path.join(__dirname, pathToTestAssets, "export"), {}).then(() => {
+                AssertExtensions.assertFilesEqual(
+                    path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearn.js"),
+                    path.join(__dirname, pathToAssets, "assets", "js", "elearn.js"));
+
+                assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js", "quiz.js")));
+                assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearnvideo.js")));
+                assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js", "clickimage.js")));
+                assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js", "timeslider.js")));
+
+                AssertExtensions.assertFilesEqual(
+                    path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Icons.woff"),
+                    path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
+                done();
+            }, (err) => {
+                done(err);
+            });
+    });
+
+    // basic body only test
     it('should export selected assets correctly', (done) => {
 
         // create output folder
@@ -73,6 +100,18 @@ describe('Extension Manager', () => {
             }, (err) => {
                 done(err);
             });
+    });
+
+    it('detects no extensions in basic html', () => {
+        let html = `<h1>This is basic HTML without any extension</h1>`;
+
+        let extensionObject = ExtensionManager.scanHtmlForAll(html);
+        assert.deepEqual(extensionObject, new ExtensionObject({
+            includeClickImage: false,
+            includeElearnVideo: false,
+            includeQuiz: false,
+            includeTimeSlider: false,
+        }));
     });
 
     it('should detect all extensions in markdown', (done) => {

@@ -12,12 +12,14 @@ import AssertExtensions from '../helpers/AssertExtensions';
 const pathToTestAssets = '../../../testAssets/';
 const pathToAssets = '../../../assets/elearnjs/';
 
-let htmlConverter: HtmlConverter;
-
 const exampleMarkdown =
     `# This is simple example markdown.
 
-We will insert an image here ![Image](withSomeLink.jpg).`;
+We will insert an image here ![Image](withSomeLink.jpg).
+
+## Heading 2
+
+### Heading 3`;
 
 const exampleMeta =
     `<!--meta
@@ -30,6 +32,20 @@ const exampleImprint =
     #### elearn.js Template
     Universität Hamburg
 -->`;
+
+
+
+const exampleMeta2 =
+    `---
+    Title: Test
+    Custom: "<script src='someSource.js'></script>"
+---`;
+
+const exampleImprint2 =
+    `\`\`\`imprint
+    #### elearn.js Template
+    Universität Hamburg
+\`\`\``;
 
 
 describe('HTML Converter Setup', () => {
@@ -74,10 +90,31 @@ describe('HTML Converter Setup', () => {
         assert.equal(conv.getOption("subsubSectionLevel"), 5);
     });
 
+    it('creates correct subsections', (done) => {
+        let htmlConverter = new HtmlConverter({
+            subSectionLevel: 2,
+            subsubSectionLevel: 3,
+        });
+        let html = htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
+        html.then((text) => {
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlBodySubSub.html`))
+                .then(() => {
+                    done();
+                }, (err) => {
+                    done(err);
+                });
+        }, (err) => {
+            done(err);
+        });
+    });
+
 });
 
 
 describe('HTML conversion', () => {
+
+    let htmlConverter: HtmlConverter;
+
     before(() => {
         htmlConverter = new HtmlConverter();
     });
@@ -124,7 +161,7 @@ describe('HTML conversion', () => {
 
         // basic full document test
         it('should create a valid html document', (done) => {
-            let html = htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown);
+            let html = htmlConverter.toHtml(exampleMeta2 + "\n" + exampleImprint2 + "\n" + exampleMarkdown);
             html.then((text) => {
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlFull.html`))
                     .then(() => {
@@ -316,6 +353,57 @@ describe('HTML conversion', () => {
                     done(err);
                 });
         }).slow(250);
+
+        it('should not create the file, no path given', (done) => {
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // convert the file
+            assert.rejects(htmlConverter.toFile(data,
+                undefined!,
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                    renderDelay: 5000,
+                })).then(() => {
+                    done();
+                }, (err) => {
+                    done(err);
+                });
+        }).slow(20000).timeout(30000);
+
+        it('should not create the file, file exists already', (done) => {
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // create dummy
+            let file = fs.openSync(path.join(__dirname, pathToTestAssets, "export", "dummy"), "w+");
+            fs.closeSync(file);
+
+            // convert the file
+            assert.rejects(htmlConverter.toFile(data,
+                path.join(__dirname, pathToTestAssets, "export", "dummy"),
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                })).then(() => {
+                    done();
+                }, (err) => {
+                    done(err);
+                });
+        }).slow(20000).timeout(30000);
 
     });
 });
