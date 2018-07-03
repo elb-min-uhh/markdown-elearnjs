@@ -1,3 +1,5 @@
+## 1.2.7
+* Fixes for npm publish packaging
 ## 1.2.6
 * Added Mocha based tests
 * Added CI-Runner results to README (only master status)
