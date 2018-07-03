@@ -8,8 +8,8 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "npm run compile && nyc mocha --recursive --colors --require ts-node/register -u tdd src/test/**/*.test.ts",
-    "quietTest": "npm run compile && nyc mocha --recursive --colors --require ts-node/register -u tdd --reporter xunit --reporter-options output=./test-report.xml src/test/**/*.test.ts",
-    "prepublishOnly": "tsc -p ./"
+    "testQuiet": "npm run compile && nyc mocha --recursive --require ts-node/register -u tdd --reporter xunit --reporter-options output=./test-report.xml --retries 1 src/test/**/*.test.ts",
+    "prepublishOnly": "npm run compile"
   },
   "keywords": [
     "Markdown",
