@@ -1,5 +1,6 @@
 ## 1.2.6
 * Added Mocha based tests
+* Added CI-Runner results to README (only master status)
 * Fixed minor option conversion bug in HtmlConverter.toFile
 ## 1.2.5
 * Improved objects further
