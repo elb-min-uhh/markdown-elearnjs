@@ -33,6 +33,7 @@ node {
         }
 
         stage('Publish Tests') {
+            sh "touch test-report.xml" // update timestamp
             junit allowEmptyResults: true, testResults: 'test-report.xml'
             publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: 'Code Coverage']);
         }
