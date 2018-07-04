@@ -280,7 +280,7 @@ describe('PDF conversion', () => {
                 }, (err) => {
                     done(err);
                 });
-        }).slow(20000).timeout(30000);
+        }).slow(40000).timeout(60000);
 
         it('should not create the file, no path given', (done) => {
             let inBuf = fs.readFileSync(
@@ -304,7 +304,7 @@ describe('PDF conversion', () => {
                 }, (err) => {
                     done(err);
                 });
-        }).slow(20000).timeout(30000);
+        }).slow(40000).timeout(60000);
 
         it('should not create the file, file exists already', (done) => {
             let inBuf = fs.readFileSync(
@@ -331,7 +331,7 @@ describe('PDF conversion', () => {
                 }, (err) => {
                     done(err);
                 });
-        }).slow(20000).timeout(30000);
+        }).slow(40000).timeout(60000);
 
         it('should create a stream', (done) => {
             let inBuf = fs.readFileSync(
@@ -354,7 +354,7 @@ describe('PDF conversion', () => {
                 }, (err) => {
                     done(err);
                 });
-        }).slow(20000).timeout(30000);
+        }).slow(40000).timeout(60000);
 
         it('should create a buffer', (done) => {
             let inBuf = fs.readFileSync(
@@ -377,6 +377,6 @@ describe('PDF conversion', () => {
                 }, (err) => {
                     done(err);
                 });
-        }).slow(20000).timeout(30000);
+        }).slow(40000).timeout(60000);
     });
 });
