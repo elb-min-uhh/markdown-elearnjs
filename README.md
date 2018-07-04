@@ -1,6 +1,7 @@
 # markdown-elearnjs
 
 [![Build Status](https://westphal.goip.de/jenkins/buildStatus/icon?job=markdown-elearnjs)](https://westphal.goip.de/jenkins/job/markdown-elearnjs)
+[![npm](https://westphal.goip.de/jenkins-test-badge/npm/)](https://www.npmjs.com/package/markdown-elearnjs)
 [![Test Status](https://westphal.goip.de/jenkins-test-badge/tests/master/)](https://westphal.goip.de/jenkins/job/markdown-elearnjs/lastCompletedBuild/testReport/)
 [![Test Coverage](https://westphal.goip.de/jenkins-test-badge/coverage/master/)](https://westphal.goip.de/jenkins/job/markdown-elearnjs/Code_20Coverage/)
 
