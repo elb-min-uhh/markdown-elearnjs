@@ -20,10 +20,7 @@ node {
         stage('Test') {
             try {
                 // assert build in 'Build' succeeded
-                sh '''#!/bin/bash
-                shopt -s globstar
-                nyc mocha --recursive --require ts-node/register -u tdd --reporter xunit --reporter-options output=./test-report.xml --reporter spec --retries 1 src/test/**/*.test.ts
-                '''
+                sh "npm run testXUnit"
                 if(currentBuild.result != "SUCCESS") throw new Exception();
             }
             catch(err) {

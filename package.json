@@ -8,7 +8,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "npm run compile && nyc mocha --recursive --colors --require ts-node/register -u tdd src/test/**/*.test.ts",
-    "testQuiet": "npm run compile && nyc mocha --recursive --require ts-node/register -u tdd --reporter xunit --reporter-options output=./test-report.xml --retries 1 src/test/**/*.test.ts",
+    "testXUnit": "npm run compile && multi='spec=- xunit=test-report.xml' nyc mocha --require ts-node/register --retries 1 -u tdd -R mocha-multi **/*.test.ts",
     "prepublishOnly": "npm run compile"
   },
   "keywords": [
@@ -36,6 +36,7 @@
     "@types/node": "^10.3.1",
     "@types/rimraf": "^2.0.2",
     "mocha": "^5.2.0",
+    "mocha-multi": "^1.0.1",
     "rimraf": "^2.6.2",
     "ts-node": "^7.0.0",
     "typescript": "^2.9.2"
