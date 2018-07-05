@@ -88,6 +88,11 @@ describe("PromiseCounter", () => {
     it('should throw an error with no promise array given', () => {
         assert.throws(() => {
             let nothing = new PromiseCounter(undefined!);
+            nothing.then(() => {
+                assert.fail("Should not get here");
+            }, (err) => {
+                assert.fail("Should not get here");
+            });
         });
     });
 

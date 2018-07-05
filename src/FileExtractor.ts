@@ -14,7 +14,6 @@ let linkHrefRegExp = /<(link)[ \t]((?:(?!href[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(
 let videoSourceSrcRegExp = /<(source)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)src[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
 
 let notHttpRegExp = /^(?!https?).*/g;
-let isRelativePath = /\.[\/]/;
 
 const processSourceReplacement = (wholeMatch: string, tag: string, before: string, wrapBefore: string,
     wrap: string, val: string, after: string, closingSlash: string, files: FileMoveObject[]) => {
@@ -30,9 +29,15 @@ const processSourceReplacement = (wholeMatch: string, tag: string, before: strin
         // replace val
         switch(tag.toLowerCase()) {
             case "img":
-            case "source": val = `assets/img/${fileName}`; break;
-            case "script": val = `assets/js/${fileName}`; break;
-            case "link": val = `assets/css/${fileName}`; break;
+            case "source":
+                val = `assets/img/${fileName}`; break;
+            case "script":
+                val = `assets/js/${fileName}`; break;
+            case "link":
+                val = `assets/css/${fileName}`; break;
+            default:
+                // do nothing
+                break;
         }
 
         let outputPath = val;
@@ -89,7 +94,6 @@ function copyFile(source: string, target: string, ignoreNotExistent?: boolean) {
         };
         ensureDirectoryExistence(target);
 
-        let cbCalled = false;
         let rd = fs.createReadStream(source);
         rd.on("error", (err: any) => {
             reject(err);

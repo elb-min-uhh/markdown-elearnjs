@@ -86,10 +86,12 @@ class PromiseCounter {
         if(this.error) {
             this.done = true;
             if(this.reject) this.reject(this.error);
+            if(this.timeout) clearTimeout(this.timeout);
         }
         else if(this.count === this.expected) {
             this.done = true;
             if(this.resolve) this.resolve();
+            if(this.timeout) clearTimeout(this.timeout);
         }
     }
 }

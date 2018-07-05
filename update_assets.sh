@@ -7,7 +7,7 @@ trap exit INT
 
 GLOBALDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-my_dir=`dirname $0`
+my_dir="$(dirname $0)"
 
 # Defined local and remote paths
 

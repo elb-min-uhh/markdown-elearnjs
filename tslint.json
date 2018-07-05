@@ -9,7 +9,7 @@
         ],
         "class-name": true,
         "curly": false,
-        "max-line-length": false,
+        "max-line-length": [ false ],
         "member-ordering": [
             true,
             {

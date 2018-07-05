@@ -5,7 +5,7 @@ import * as fs from "fs";
 import path from 'path';
 import rimraf from 'rimraf';
 import FileMoveObject from '../FileMoveObject';
-import { FileExtractor, FileExtractorObject } from '../main';
+import { FileExtractor } from '../main';
 import PromiseCounter from '../util/PromiseCounter';
 
 const pathToTestAssets = '../../testAssets/';
