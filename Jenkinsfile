@@ -35,7 +35,24 @@ node {
             publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: 'Code Coverage']);
         }
     }
+    // when jump is FAILED or UNSTABLE
     catch(err) {
-        // jump out of failing stages
+        try {
+            def defaultRecipient = '$DEFAULT_RECIPIENTS'
+            def comitter = sh (
+                script: 'git --no-pager show -s --format=\'%ae\'',
+                returnStdout: true
+            ).trim()
+
+            def jobName = currentBuild.fullDisplayName
+
+            emailext body: '''${SCRIPT, template="groovy-html.template"}''',
+                mimeType: 'text/html',
+                subject: "[Jenkins] ${jobName}",
+                to: "${comitter}, ${defaultRecipient}"
+        }
+        catch(innerErr) {
+            // ignore email send errors
+        }
     }
 }
