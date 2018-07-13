@@ -15,6 +15,7 @@ import ConverterSettingsObject from '../objects/settings/ConverterSettingsObject
 import PromiseCounter from '../util/PromiseCounter';
 import AConverter from './AConverter';
 import IConverter from './IConverter';
+import IShowdownConverter from './IShowdownConverter';
 import * as elearnExtension from './ShowdownElearnJS';
 
 const defaults: { [key: string]: any } = {
@@ -27,8 +28,8 @@ const defaults: { [key: string]: any } = {
 
 class HtmlConverter extends AConverter implements IConverter {
 
-    protected converter: Showdown.Converter;
-    private imprintConverter: Showdown.Converter;
+    protected converter: IShowdownConverter;
+    private imprintConverter: IShowdownConverter;
 
     /**
      * Creates an HtmlConverter with specific options.

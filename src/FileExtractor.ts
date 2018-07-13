@@ -35,9 +35,6 @@ const processSourceReplacement = (wholeMatch: string, tag: string, before: strin
                 val = `assets/js/${fileName}`; break;
             case "link":
                 val = `assets/css/${fileName}`; break;
-            default:
-                // do nothing
-                break;
         }
 
         let outputPath = val;

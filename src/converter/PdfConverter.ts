@@ -13,6 +13,7 @@ import ExtensionObject from '../objects/ExtensionObject';
 import PdfSettingsObject from '../objects/settings/PdfSettingsObject';
 import AConverter from './AConverter';
 import IConverter from './IConverter';
+import IShowdownConverter from './IShowdownConverter';
 import * as elearnExtension from './ShowdownElearnJS';
 
 const assetsPath = '../../assets';
@@ -34,7 +35,7 @@ const defaults: { [key: string]: any } = {
 
 class PdfConverter extends AConverter implements IConverter {
 
-    protected converter: Showdown.Converter;
+    protected converter: IShowdownConverter;
 
     /**
      * Creates an HtmlConverter with specific options.

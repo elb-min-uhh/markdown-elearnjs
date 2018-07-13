@@ -1,16 +1,16 @@
 "use strict";
 
-import * as Showdown from "showdown";
 import ConversionObject from "../objects/export/ConversionObject";
 import ConverterSettingsObject from "../objects/settings/ConverterSettingsObject";
 import IConverter from "./IConverter";
+import IShowdownConverter from "./IShowdownConverter";
 
 abstract class AConverter implements IConverter {
 
     /**
      * The converter used for the main body markdown conversion.
      */
-    protected abstract converter: Showdown.Converter;
+    protected abstract converter: IShowdownConverter;
 
     public abstract toHtml(markdown: string, options?: ConversionObject): Promise<string>;
 
