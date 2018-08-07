@@ -96,6 +96,10 @@ describe('Extension Manager', () => {
                 AssertExtensions.assertFilesEqual(
                     path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Icons.woff"),
                     path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
+
+                AssertExtensions.assertFilesEqual(
+                    path.join(__dirname, pathToTestAssets, "export", "assets", "lang", "elearnjs-en.js"),
+                    path.join(__dirname, pathToAssets, "assets", "lang", "elearnjs-en.js"));
                 done();
             }, (err) => {
                 done(err);

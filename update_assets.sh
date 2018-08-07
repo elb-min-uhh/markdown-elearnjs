@@ -20,6 +20,8 @@ ELEARNJS_LINKS=(
     "assets/elearnjs/assets/css/elearn.scss" "Template/assets/css/elearn.scss"
     "assets/elearnjs/assets/img/haken.svg" "Template/assets/img/haken.svg"
     "assets/elearnjs/assets/img/logo-uhh.gif" "Template/assets/img/logo-uhh.gif"
+    "assets/elearnjs/assets/lang/elearnjs-de.js" "Template/assets/lang/elearnjs-de.js"
+    "assets/elearnjs/assets/lang/elearnjs-en.js" "Template/assets/lang/elearnjs-en.js"
 )
 
 FONT_LINKS=(

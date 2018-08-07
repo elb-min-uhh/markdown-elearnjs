@@ -1,3 +1,5 @@
+## 1.2.11
+* Added missing files from elearn.js
 ## 1.2.10
 * Updated elearn.js (develop version)
 ## 1.2.9
