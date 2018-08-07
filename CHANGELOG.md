@@ -1,3 +1,8 @@
+## 1.2.10
+* Updated elearn.js (develop version)
+## 1.2.9
+* Better test reporting
+* Fixes of dependency problems
 ## 1.2.8
 * Extended test cases
 ## 1.2.7
