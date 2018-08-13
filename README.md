@@ -54,13 +54,13 @@ pdfConverter.toFile(markdown, filePath, rootPath).then((filename) => {
 }, err => console.error(err));
 
 // get a stream
-pdfConverter.toStream(markdown, rootPath).then(() => {
-    console.log();
+pdfConverter.toStream(markdown, rootPath).then((stream) => {
+    // do something with the stream
 }, err => console.error(err));
 
 //get a buffer
-pdfConverter.toBuffer(markdown, rootPath).then(() => {
-    console.log();
+pdfConverter.toBuffer(markdown, rootPath).then((buffer) => {
+    // do something with the buffer
 }, err => console.error(err));
 
 // only the html if you want to use your own render framework
