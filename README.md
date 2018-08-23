@@ -87,6 +87,9 @@ _extraction of linked files_. For more information on this check the
         horizontally)
         * Workaround: add forced page break
             `<div style="page-break-before: always;"></div>`
+    * PDF might have no text
+        * Workaround: Try setting a Render Delay and a zoom factor in the
+        settings for PDF Export
 * Windows:
     * _.woff_ fonts are not supported by _phantom.js_, which is used
     in the _.pdf_ conversion process. Fonts might appear differently.
