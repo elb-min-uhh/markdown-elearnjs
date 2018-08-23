@@ -193,7 +193,9 @@ describe('PDF conversion', () => {
 
         // basic full document test
         it('should create a valid pdf document without autodetection', (done) => {
-            let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown);
+            let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
+                language: "de",
+            });
             html.then((text) => {
                 text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`))
@@ -211,6 +213,7 @@ describe('PDF conversion', () => {
         it('should create a valid pdf document', (done) => {
             let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 automaticExtensionDetection: true,
+                language: "de",
                 includeQuiz: false,
                 includeElearnVideo: false,
                 includeClickImage: false,
@@ -219,6 +222,30 @@ describe('PDF conversion', () => {
             html.then((text) => {
                 text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`))
+                    .then(() => {
+                        done();
+                    }, (err) => {
+                        done(err);
+                    });
+            }, (err) => {
+                done(err);
+            });
+        });
+
+
+        // basic full document test with english language selection
+        it('should create a valid pdf document with english language', (done) => {
+            let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
+                automaticExtensionDetection: true,
+                language: "en",
+                includeQuiz: false,
+                includeElearnVideo: false,
+                includeClickImage: false,
+                includeTimeSlider: false,
+            });
+            html.then((text) => {
+                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+                AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFullEnglish.html`))
                     .then(() => {
                         done();
                     }, (err) => {

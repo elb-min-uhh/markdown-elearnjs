@@ -22,12 +22,12 @@ class AssertExtensions {
                         difference = `Differs at ${i} with
 Generated:
 ----------
-${text.substr(i - 10, 50)}
+${text.substr(i - 10, 150)}
 ----------
 
 From File:
 ----------
-${data.substr(i - 10, 50)}
+${data.substr(i - 10, 150)}
 ----------\n`;
                         break;
                     }

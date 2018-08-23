@@ -1,3 +1,6 @@
+## 1.3.1
+* Allow language selection for PDF export
+    * this will fully allow custom translations
 ## 1.3.0
 * Implement elearn.js function `addTranslation` and `addTranslations` to
 actually allow usage of customized translations in PDF export

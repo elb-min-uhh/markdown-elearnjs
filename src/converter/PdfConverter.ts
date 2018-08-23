@@ -260,6 +260,16 @@ class PdfConverter extends AConverter implements IConverter {
             .replace(/\$\$header\$\$/, () => header)
             .replace(/\$\$footer\$\$/, () => footer)
             .replace(/\$\$body\$\$/, () => html)
+            .replace(/\$\$language\$\$/, () => {
+                if(opts.language && opts.language !== "de") {
+                    return `<script>
+                                eLearnJS.setLanguage("${opts.language}");
+                                try { eLearnVideoJS.setLanguage("${opts.language}") } catch(e){ console.log(e) };
+                                try { quizJS.setLanguage("${opts.language}") } catch(e){ console.log(e) };
+                            </script>`;
+                }
+                return "";
+            })
             .replace(/\$\$assetspath\$\$/g, () => "file:///" + path.resolve(`${__dirname}/${assetsPath}/elearnjs/`).replace(/\\/g, "/"));
     }
 
