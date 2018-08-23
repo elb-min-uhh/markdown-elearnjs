@@ -6,6 +6,7 @@ const eLearnJS = eLearnJS || {};
 
 $(document).ready(function() {
     eLearnJS.createContentOverview();
+    if(eLearnJS.selectedLocale === undefined) eLearnJS.setLanguage("de");
 });
 
 // -------------------------------------------------------------------------------------
@@ -97,16 +98,108 @@ eLearnJS.createContentOverview = function() {
     }
 }
 
+eLearnJS.selectedLocale = undefined;
+eLearnJS.localization = {
+    "de": {},
+    "en": {},
+}
+
+
+/**
+* Sets the language for all elements.
+*/
+eLearnJS.setLanguage = function(langCode) {
+    langCode = langCode.toLowerCase();
+    if(eLearnJS.localization[langCode] !== undefined) {
+        eLearnJS.selectedLocale = langCode;
+        $('[lang-code],[lang-code-title]').each(function(i, e) {
+            eLearnJS.localizeElement($(e));
+        });
+    }
+    else {
+        throw "Unsupported language selected. Supported language codes are: " + Object.keys(eLearnJS.localization).toString();
+    }
+}
+eLearnJS.selectLanguage = eLearnJS.setLanguage;
+
+/**
+* Localizes one specific element to match the selected language.
+* The selected language is the eLearnJS.selectedLocale if not specific
+* `lang` attribute is present in the HTML element
+*/
+eLearnJS.localizeElement = function(el, force) {
+    if($(el).attr('localized') === "false" && !force) return;
+
+    var loc = eLearnJS.selectedLocale;
+    if(el.closest('[lang]').length) {
+        var lang = el.closest('[lang]').attr('lang').toLowerCase();
+        if(eLearnJS.localization[lang]) loc = lang;
+    }
+
+    if(el.attr("lang-code")) {
+        var text = eLearnJS.localization[loc][el.attr("lang-code")];
+        if(text) {
+            if($(el).attr('localized') === "html") el.html(text);
+            else el.text(text);
+        }
+    }
+
+    if(el.attr("lang-code-title")) {
+        var text = eLearnJS.localization[loc][el.attr("lang-code-title")];
+        if(text) {
+            el.attr('title', text);
+        }
+    }
+};
+
+/**
+ * Adds custom localization keys to the storage.
+ * @param {String} langCode The language to add keys to.
+ * @param {Object} localeObject The localization object of type { key1: translation1, key2: ... }
+ */
+eLearnJS.addTranslation = function(langCode, localeObject) {
+    if(eLearnJS.localization[langCode] != undefined) {
+        eLearnJS.localization[langCode] = eLearnJS.objectAssign(eLearnJS.localization[langCode], localeObject);
+    }
+};
+
+/**
+ * Adds custom localization keys to the storage.
+ * @param {*} localizationObject The localization object of type { langCode1: localeObject1, langCode2: ... }
+ */
+eLearnJS.addTranslations = function(localizationObject) {
+    var langCodes = Object.keys(localizationObject);
+    for(var i = 0; i < langCodes.length; i++) {
+        eLearnJS.addTranslation(langCodes[i], localizationObject[langCodes[i]]);
+    }
+};
+
+eLearnJS.objectAssign = function(obj1, obj2) {
+    try {
+        ret = Object.assign(obj1, obj2);
+    }
+    catch(e) {
+        var objs = [obj1, obj2];
+        ret = {};
+
+        for(var objIdx = 0; objIdx < objs.length; objIdx++) {
+            var obj = objs[objIdx];
+            var keys = Object.keys(obj);
+            for(var i = 0; i < keys.length; i++) {
+                ret[keys[i]] = obj[keys[i]];
+            }
+        }
+    }
+
+    return ret;
+};
+
 // dummy functions to catch undefined errors
 eLearnJS.toggleAllSections = function() { };
 eLearnJS.setNavigationTitle = function() { };
 eLearnJS.setBackButtonEnabled = function() { };
 eLearnJS.setBackButtonText = function() { };
 eLearnJS.setBackPage = function() { };
-eLearnJS.setLanguage = function() { };
-eLearnJS.selectLanguage = function() { };
-eLearnJS.addTranslation = function() { };
-eLearnJS.addTranslations = function() { };
 
 eLearnJS.generalDirectionButtonsEnabled = function() { };
 eLearnJS.setKeyNavigationEnabled = function() { };

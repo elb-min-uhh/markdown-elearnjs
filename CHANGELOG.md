@@ -1,3 +1,7 @@
+## 1.3.0
+* Implement elearn.js function `addTranslation` and `addTranslations` to
+actually allow usage of customized translations in PDF export
+    * elearn.js internal texts are not visible in PDF output
 ## 1.2.13
 * Updated elearn.js v1.0.5
 * Updated quiz.js
