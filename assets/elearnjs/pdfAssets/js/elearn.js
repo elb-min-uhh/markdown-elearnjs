@@ -7,6 +7,7 @@ const eLearnJS = eLearnJS || {};
 $(document).ready(function() {
     eLearnJS.createContentOverview();
     if(eLearnJS.selectedLocale === undefined) eLearnJS.setLanguage("de");
+    else eLearnJS.setLanguage(eLearnJS.selectedLocale);
 });
 
 // -------------------------------------------------------------------------------------

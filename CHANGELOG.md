@@ -1,3 +1,6 @@
+## 1.3.2
+* Fix language selection in PDF
+    * always set language once after loading
 ## 1.3.1
 * Allow language selection for PDF export
     * this will fully allow custom translations
