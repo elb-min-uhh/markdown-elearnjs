@@ -23,11 +23,11 @@ eLearnJS.createContentOverview = function() {
         var text = "<ul>";
         var level = 0;
         var levels = {
-            SUB : 1,
-            SUBSUB : 2
+            SUB: 1,
+            SUBSUB: 2
         };
 
-        for(var i=0; i<$('section').length; i++) {
+        for(var i = 0; i < $('section').length; i++) {
 
             var sec = $($('section')[i]);
 
@@ -66,7 +66,7 @@ eLearnJS.createContentOverview = function() {
                 }
             }
 
-            text += "<li onclick='overviewShowSection("+i+"); event.stopPropagation();'>";
+            text += "<li onclick='overviewShowSection(" + i + "); event.stopPropagation();'>";
 
             text += "<div class='sectionRead'><div class='img'></div></div>";
             text += "<span class='title'>" + sec.attr('name') + "</span>";
@@ -81,12 +81,12 @@ eLearnJS.createContentOverview = function() {
         }
         // close all open ul's
         while(level >= 0) {
-            text+="</ul>";
+            text += "</ul>";
             level--;
         }
 
         $('#content-overview').html(text);
-        $('#content-overview').find('li').each(function(i,e) {
+        $('#content-overview').find('li').each(function(i, e) {
             if($(this).children('ul').length != 0) {
                 $(this).addClass("wide");
             }
@@ -98,14 +98,16 @@ eLearnJS.createContentOverview = function() {
 }
 
 // dummy functions to catch undefined errors
-eLearnJS.toggleAllSections = function() {};
-eLearnJS.setNavigationTitle = function() {};
-eLearnJS.setBackButtonEnabled = function() {};
-eLearnJS.setBackButtonText = function() {};
-eLearnJS.setBackPage = function() {};
-eLearnJS.setLanguage = function() {};
-eLearnJS.selectLanguage = function() {};
+eLearnJS.toggleAllSections = function() { };
+eLearnJS.setNavigationTitle = function() { };
+eLearnJS.setBackButtonEnabled = function() { };
+eLearnJS.setBackButtonText = function() { };
+eLearnJS.setBackPage = function() { };
+eLearnJS.setLanguage = function() { };
+eLearnJS.selectLanguage = function() { };
+eLearnJS.addTranslation = function() { };
+eLearnJS.addTranslations = function() { };
 
-eLearnJS.generalDirectionButtonsEnabled = function() {};
-eLearnJS.setKeyNavigationEnabled = function() {};
-eLearnJS.generalProgressbarEnabled = function() {};
+eLearnJS.generalDirectionButtonsEnabled = function() { };
+eLearnJS.setKeyNavigationEnabled = function() { };
+eLearnJS.generalProgressbarEnabled = function() { };
