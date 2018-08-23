@@ -57,6 +57,8 @@ quizJS.questionVisibility = {};
 quizJS.timerAlertActive = false;
 quizJS.timerAlertText = "";
 
+quizJS.unencrypted = false;
+
 /**
 * Aktiviert alle <button> mit der Klasse "quizButton" für das Quiz.
 * Wenn fragen <input> fokussiert ist, kann mit Enter die Antwort abgeschickt werden.
@@ -79,6 +81,16 @@ $(document).ready(function() {
 quizJS.getVisibleQuestionsAnswered = function() {
     return $('.question:visible').filter('.answered').length
         == $('.question:visible').length;
+};
+
+
+/**
+ * Enables or disables encryption of given answers.
+ * If disabled you can give the correct answers in HTML without MD5 hashing.
+ * @param {*} bool whether encryption should be activated or not.
+ */
+quizJS.setEncrypted = function(bool) {
+    quizJS.unencrypted = !bool;
 };
 
 
@@ -432,7 +444,7 @@ quizJS.getCorrectForRadio = function(labels, c, colorLabels, force) {
     var numberofchecked = 0;
     labels.each(function(i) {
         var input = $(this).find('input');
-        var correctAnswer = quizJS.contains(c, quizJS.encryptMD5(input.val()));
+        var correctAnswer = quizJS.contains(c, quizJS.encryptIfSet(input.val(), labels.eq(0).closest('.question')));
 
         if(input.is(':checked')) {
             numberofchecked++;
@@ -476,7 +488,7 @@ quizJS.getCorrectForRadio = function(labels, c, colorLabels, force) {
 quizJS.getCorrectForText = function(labels, c, force) {
     var correct = true;
     var ans = labels.children('input').val().trim();
-    ans = quizJS.encryptMD5(ans);
+    ans = quizJS.encryptIfSet(ans, labels.eq(0).closest('.question'));
     if(!quizJS.contains(c, ans)) {
         correct = false;
     }
@@ -509,7 +521,7 @@ quizJS.getCorrectFillBlank = function(labels, answers, force) {
 
         // alle richtigen antworten zu der ID
         var cor = quizJS.elementsToTextArray(answers.filter("#" + id));
-        var ans = quizJS.encryptMD5(input.val().trim());
+        var ans = quizJS.encryptIfSet(input.val().trim(), labels.eq(0).closest('.question'));
 
         // nicht ausgefüllt
         if(input.val().length == 0 && !force) {
@@ -549,7 +561,7 @@ quizJS.getCorrectFillBlankChoice = function(labels, answers, force) {
 
         // alle richtigen antworten zu der ID
         var cor = quizJS.elementsToTextArray(answers.filter("#" + id));
-        var ans = quizJS.encryptMD5(select.val());
+        var ans = quizJS.encryptIfSet(select.val(), labels.eq(0).closest('.question'));
 
         // antwort richtig
         if(quizJS.contains(cor, ans) || cor.length == 0) {
@@ -577,7 +589,7 @@ quizJS.getCorrectErrorText = function(buttons, c, force) {
     var correct = true;
 
     buttons.each(function(i, e) {
-        var ans = quizJS.encryptMD5($(this).text());
+        var ans = quizJS.encryptIfSet($(this).text(), buttons.eq(0).closest('.question'));
 
         var act = $(this).is(".act");
 
@@ -623,7 +635,7 @@ quizJS.getCorrectClassification = function(dests, answers, force) {
         // alle richtigen antworten zu der ID
         var cor = quizJS.elementsToTextArray(answers.filter("#" + id));
 
-        var ans = quizJS.encryptMD5(dest.children().attr("id"));
+        var ans = quizJS.encryptIfSet(dest.children().attr("id"), dests.eq(0).closest('.question'));
 
         // antwort richtig
         if(quizJS.contains(cor, ans) || cor.length == 0) {
@@ -660,12 +672,12 @@ quizJS.getCorrectOrder = function(objects, answers, force) {
         // correct position is same or next active index
 
         // same position
-        if(quizJS.encryptMD5("" + index) == cor) {
+        if(quizJS.encryptIfSet("" + index, objects.eq(0).closest('.question')) == cor) {
             $(this).addClass("right");
             $(this).addClass("right_icon");
         }
         // antwort richtig
-        else if(quizJS.encryptMD5("" + (index + 1)) == cor) {
+        else if(quizJS.encryptIfSet("" + (index + 1), objects.eq(0).closest('.question')) == cor) {
             index++;
             $(this).addClass("right");
             $(this).addClass("right_icon");
@@ -706,7 +718,7 @@ quizJS.getCorrectMatrixChoice = function(rows, answers, force) {
 
         inputs.each(function(ii, ee) {
             var ans = $(rows.find(".antwort,.answer").get(ii)).attr("id");
-            ans = quizJS.encryptMD5(ans);
+            ans = quizJS.encryptIfSet(ans, rows.eq(0).closest('.question'));
 
             // ausgewählt und richtig oder nicht ausgewählt und nicht richtig (insg richtig)
             if(($(ee).is(":checked") && quizJS.contains(cor, ans))
@@ -747,7 +759,7 @@ quizJS.getCorrectHotspot = function(div, hss, answer, force) {
     }
     else {
         var ans = hss.filter('.act').attr('id');
-        ans = quizJS.encryptMD5(ans);
+        ans = quizJS.encryptIfSet(ans, div);
 
         var correct = ans == answer.html();
         var cl = "cor";
@@ -796,7 +808,7 @@ quizJS.getCorrectPetri = function(div, places, answers, force) {
 
         places.each(function(i, e) {
             var ans = $(this).attr('id');
-            ans = quizJS.encryptMD5(ans);
+            ans = quizJS.encryptIfSet(ans, div);
 
             // markiert und richtig
             if(($(this).is(".act") && quizJS.contains(c, ans))
@@ -1411,7 +1423,7 @@ quizJS.findCorrectsHotspot = function(div) {
         // bisher nicht korrekt
         if(hs.find('.cor').length == 0) {
             var id = hs.attr("id");
-            var enc = quizJS.encryptMD5(id);
+            var enc = quizJS.encryptIfSet(id, div);
 
             ans.each(function(ii, ee) {
                 // korrekte antwort
@@ -2575,6 +2587,10 @@ quizJS.initTouchToMouse = function(element) {
 *  MD5 Part                                                             *
 *                                                                       *
 * ******************************************************************** */
+
+quizJS.encryptIfSet = function(str, question) {
+    return (quizJS.unencrypted || question.is('.unencrypted')) ? str : quizJS.encryptMD5(str);
+}
 
 quizJS.encryptMD5 = function(str) {
     //  discuss at: http://phpjs.org/functions/md5/

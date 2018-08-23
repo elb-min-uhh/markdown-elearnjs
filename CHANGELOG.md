@@ -1,3 +1,9 @@
+## 1.2.13
+* Updated elearn.js v1.0.5
+* Updated quiz.js
+* Fixed PDF Export error when using `addTranslation` on `eLearnJS` in the document
+## 1.2.12
+* Updated elearn.js (develop version)
 ## 1.2.11
 * Added missing files from elearn.js
 ## 1.2.10
