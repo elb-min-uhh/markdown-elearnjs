@@ -1,3 +1,5 @@
+## 1.3.4
+* Updated dependencies
 ## 1.3.3
 * Update clickimage.js to support new `data-pins` syntax
 ## 1.3.2
