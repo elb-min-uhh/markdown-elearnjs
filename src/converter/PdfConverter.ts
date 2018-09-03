@@ -153,10 +153,12 @@ class PdfConverter extends AConverter implements IConverter {
             }
 
             self.toHtml(markdown, <ConversionObject>options).then((html) => {
-                HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toFile(file, (err, result) => {
-                    if(err) rej(err);
-                    res(result ? result.filename : "unknown filename");
-                });
+                self.canFileBeOpened(file).then(() => {
+                    HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toFile(file, (err, result) => {
+                        if(err) rej(err);
+                        res(result ? result.filename : "unknown filename");
+                    });
+                }).catch((err) => { rej(err); });
             }, (err) => { rej(err); });
         });
 

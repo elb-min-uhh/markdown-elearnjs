@@ -1,5 +1,6 @@
 "use strict";
 
+import fs from "fs";
 import ConversionObject from "../objects/export/ConversionObject";
 import ConverterSettingsObject from "../objects/settings/ConverterSettingsObject";
 import IConverter from "./IConverter";
@@ -29,6 +30,39 @@ abstract class AConverter implements IConverter {
         Object.keys(options).forEach((key) => {
             this.setOption(key, options[key]);
         });
+    }
+
+    /**
+     * Checks if the file can be opened in writing mode. Can be used to
+     * check if a file is opened in another process before trying to overwrite
+     * it.
+     *
+     * @param file a pathlike parameter declaring the file to check.
+     *
+     * @return a promise resolved if it can be opened.
+     * Rejected with the error if not.
+     */
+    protected canFileBeOpened(file: fs.PathLike) {
+        let ret = new Promise<void>((res, rej) => {
+            fs.open(file, 'r+', (error, fd) => {
+                if(fd !== undefined) {
+                    try {
+                        fs.closeSync(fd);
+                    }
+                    catch(err) {
+                        console.error(err);
+                    }
+                }
+                if(!error || error.code === "ENOENT") {
+                    res();
+                }
+                else {
+                    rej(error);
+                }
+            });
+        });
+
+        return ret;
     }
 
 }
