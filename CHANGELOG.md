@@ -1,4 +1,5 @@
 ## 1.3.4
+* Added busy file check on `PDFConverter.toFile`
 * Updated dependencies
 ## 1.3.3
 * Update clickimage.js to support new `data-pins` syntax
