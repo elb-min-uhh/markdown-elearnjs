@@ -112,8 +112,6 @@ describe('PDF Converter Setup', () => {
         html.then((text) => {
             try {
                 assert.ok(text.indexOf('quiz.css') >= 0);
-                assert.ok(text.indexOf(footer) >= 0);
-                assert.ok(text.indexOf(header) >= 0);
             }
             catch(err) {
                 done(err); return;
@@ -355,29 +353,6 @@ describe('PDF conversion', () => {
                     automaticExtensionDetection: true,
                 })).then(() => {
                     done();
-                }, (err) => {
-                    done(err);
-                });
-        }).slow(40000).timeout(60000);
-
-        it('should create a stream', (done) => {
-            let inBuf = fs.readFileSync(
-                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
-                { encoding: 'utf8' });
-            let data = inBuf.toString();
-
-            // create output folder
-            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
-
-            // convert the file
-            pdfConverter.toStream(data,
-                path.join(__dirname, pathToTestAssets, `inputFiles`),
-                {
-                    language: "de",
-                    automaticExtensionDetection: true,
-                }).then(() => {
-                    done();
-                    return;
                 }, (err) => {
                     done(err);
                 });

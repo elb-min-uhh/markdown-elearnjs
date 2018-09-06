@@ -6,6 +6,10 @@
 * v1.0.0 17/09/25 cc-by-sa
 */
 
+* {
+    -webkit-print-color-adjust: exact;
+}
+
 body {
     font-size: 12px;
     background: 0;
