@@ -42,8 +42,8 @@ anything else but the files linked in here to convert this .md to HTML or PDF.
 
 # Template elearn.js <!--hide-in-overview-->
 
-**Name des Autors**    
-Institution des Autors     
+**Name des Autors**  
+Institution des Autors  
 cc by-sa | 2015
 
 ![Titelbild](images/illu-concept.png)
@@ -69,7 +69,7 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 ### Überschrift dritter Ordung <!--no-section-->
 
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
+Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
 
 #### Und hier ist die vierte Ordnung
 
@@ -95,13 +95,44 @@ Beispiel:
 <button onclick="eLearnJS.setLanguage('en')">Englisch/English</button>
 
 
+#### Eigene Übersetzungen einfügen
+
+Um eigene Übersetzungen hinzuzufügen kann man die Funktion `addTranslation` oder
+`addTranslations` verwenden. Hier ein Beispiel:
+
+    eLearnJS.addTranslation("de", { "loading": "Lädt..." });
+    eLearnJS.addTranslation("en", { "loading": "Loading..." });
+
+oder
+
+    eLearnJS.addTranslations({
+        "de": { "loading": "Lädt..." },
+        "en": { "loading": "Loading..." },
+    });
+
+Beide Blöcke tun dasselbe.
+
+<script>
+eLearnJS.addTranslation("de", { "loading": "Lädt..." });
+eLearnJS.addTranslation("en", { "loading": "Loading..." });
+</script>
+
+Beispiel mit
+<span lang-code="loading"></span>
+Anzeige (nur während des Ladevorgangs):
+
+<button onclick="$('#lang-loading').show(); eLearnJS.setLanguage('de', function() { $('#lang-loading').hide(); })">Deutsch/German</button>
+<button onclick="$('#lang-loading').show(); eLearnJS.setLanguage('en', function() { $('#lang-loading').hide(); })">Englisch/English</button>
+<div id="lang-loading" style="display: none;" lang-code="loading"></div>
+
+
 ### Bilder
 
 Bilder können als einzelne Abbildungen oder als Galerien eingebunden werden.Für die Galerien wird das elearn.js benötigt. es bietet verschiedene Varianten. Das erste Beispiel zeigt eine Slideshow mit Vorschau und Loop-Funktion.
 
 <div class="slider preview-nav loop">
 <ul class="img-gallery" id="x" style="list-style:none;">
-<li><img src="images/md-illu_1.png" alt="md-produktion" /><p>Markdown ist kinderleicht zu erlernen.</p></li>
+<li><img src="images/md-illu_1.png" alt="md-produktion" /><p>Markdown ist <b>kinderleicht</b> zu erlernen.</p></li>
 <li><img src="images/md-illu_2.png" alt="Components" /><p>Zusammenspiel der Komponenten bei der Produktion von digitalen Skripten mit Markdown.</p></li>
 <li><img src="images/md-illu_3.png" alt="Future" /><p>Die Zukunft von Markdown als Autorensprache.</p></li>
 <li><img src="images/md-illu_4.png" alt="Media" /><p>Markdown kann viele verschiedene Medientypen in Html einfügen.</p></li>
@@ -199,6 +230,35 @@ welches MathJax wiederum als _escape_ für das darauffolgende `$` sieht.
 
 ### Textblöcke
 
+#### Hervorgehobene Blöcke
+
+Es existieren verschieden Blöcke, welche bestimmten Text
+hervorheben können.
+
+<blockquote class="task">
+    <p>
+        Überschrift
+        <br>
+        Dies ist ein Aufgabenblock.
+    </p>
+</blockquote>
+
+<blockquote class="hint">
+    <p>
+        Überschrift
+        <br>
+        Dies ist ein Hinweisblock.
+    </p>
+</blockquote>
+
+<blockquote class="links">
+    <p>
+        Überschrift
+        <br>
+        Dies ist ein Block für Links.
+    </p>
+</blockquote>
+
 #### Informationen per Mouseover/Klick
 
 Bei solchen Blöcken werden zusätzliche
@@ -225,7 +285,7 @@ Der folgende Block ist mit einem Knopf aus- und einklappbar.
     Hier steht ein Beispieltext.
 </div>
 
-Das entscheidende hierbei sind die Attribute.  
+Das entscheidende hierbei sind die Attribute.
 Dabei wird dem ganzen ein __name__ gegeben, der in
 dem Knopf immer eingesetzt wird. Zustäzlich werden
 die Wörter für __show__ und __hide__ angegeben.
@@ -306,35 +366,21 @@ interaktive Grafiken zu erstellen. Hier ein Beispiel:
 
 <div class="clickimage">
     <div class="imagebox invert">
-        <img src="images/schiff.jpg" alt="Schiff" onload="clickimagePins(this,[[10,10,'right'],[50,60,'left'],[42,25],[80,80,'top']])">
+        <img src="images/schiff.jpg" alt="Schiff" data-pins="10,10,'right'; 50,60,'left'; 42,25; 80,80,'top'">
     </div>
     <div class="pininfo">
         <div>
             <h3><span class="highlight">Aufgabe 1</span> Wie lauten die Bestandteile des Kopfes?</h3>
-            <p class="task">
-            Wie jedes Insekt hat auch eine Biene insgesamt 6 Beine. Die Biene
-            benutzt ihre Beine nicht nur zum Laufen, sondern auch zur Körperpflege
-            und beim Transport der Pollen zum Stock. Jedes Bein ist in fünf Glieder
-            unterteilt. Vom Körper aus betrachtet nennt man sie Hüfte (Coxa),
-            Schenkelring (Trochanter), Schenkel (Femur), Schiene (Tibia) und Fuß
-            (Tarsus). Der Fuß ist widerum in 4 kleinere Glieder unterteilt. Das
-            letzte Fußglied trägt eine Kralle und Haftlappen, mit denen sich
-            Bienen auch auf sehr glatten Oberflächen, wie zum Beispiel Glas
-            festhalten können.</p>
-            <p class="hint">Hinweis<br>Wie jedes Insekt hat auch eine Biene
-            insgesamt 6 Beine. Die Biene benutzt ihre Beine nicht nur zum
-            Laufen, sondern auch zur Körperpflege und beim Transport der Pollen
-            zum Stock.</p>
-            <ul class="links">
-                <li>
-                <a href="https://de.wikipedia.org/wiki/The_Bird_and_the_Bee">https://de.wikipedia.org/wiki/The_Bird_and_the_Bee</a>
-                <br>Dies ist eine Link-Beschreibung, die weitere Informationen zu der zugehörigen URL liefert
-                </li>
-                <li>
-                <a href="https://de.wikipedia.org/wiki/The_Bird_and_the_Bee">https://de.wikipedia.org/wiki/The_Bird_and_the_Bee</a>
-                <br>Dies ist eine Link-Beschreibung, die weitere Informationen zu der zugehörigen URL liefert
-                </li>
-            </ul>
+            <blockquote class="task"><p>Wie jedes Insekt hat auch eine Biene insgesamt 6 Beine. Die Biene benutzt ihre Beine nicht nur zum Laufen, sondern auch zur Körperpflege und beim Transport der Pollen zum Stock. Jedes Bein ist in fünf Glieder unterteilt. Vom Körper aus betrachtet nennt man sie Hüfte (Coxa), Schenkelring (Trochanter), Schenkel (Femur), Schiene (Tibia) und Fuß (Tarsus). Der Fuß ist widerum in 4 kleinere Glieder unterteilt. Das letzte Fußglied trägt eine Kralle und Haftlappen, mit denen sich Bienen auch auf sehr glatten Oberflächen, wie zum Beispiel Glas festhalten können.</p></blockquote>
+            <blockquote class="hint"><p>Hinweis<br>Wie jedes Insekt hat auch eine Biene insgesamt 6 Beine. Die Biene benutzt ihre Beine nicht nur zum Laufen, sondern auch zur Körperpflege und beim Transport der Pollen zum Stock.</p></blockquote>
+            <blockquote class="links">
+                <p>
+                    <ul class="links">
+                        <li><a href="https://de.wikipedia.org/wiki/The_Bird_and_the_Bee">https://de.wikipedia.org/wiki/The_Bird_and_the_Bee</a><br>Dies ist eine Link-Beschreibung, die weitere Informationen zu der zugehörigen URL liefert</li>
+                        <li><a href="https://de.wikipedia.org/wiki/The_Bird_and_the_Bee">https://de.wikipedia.org/wiki/The_Bird_and_the_Bee</a><br>Dies ist eine Link-Beschreibung, die weitere Informationen zu der zugehörigen URL liefert</li>
+                    </ul>
+                </p>
+            </blockquote>
         </div>
         <div>
             <h3><span class="highlight">Aufgabe 2</span> Wie lauten die Bestandteile des Rumpfes?</h3>

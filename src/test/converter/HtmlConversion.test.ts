@@ -287,31 +287,36 @@ describe('HTML conversion', () => {
                     exportAssets: true,
                 }).then((filename) => {
                     // check the output result
-                    AssertExtensions.assertFilesEqual(
-                        path.join(__dirname, pathToTestAssets, "export", "out.html"),
-                        path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleToFile.html`));
+                    try {
+                        AssertExtensions.assertFilesEqual(
+                            path.join(__dirname, pathToTestAssets, "export", "out.html"),
+                            path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleToFile.html`));
 
-                    // check for all the js files, assume everything worked then
-                    AssertExtensions.assertFilesEqual(
-                        path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearn.js"),
-                        path.join(__dirname, pathToAssets, "assets", "js", "elearn.js"));
-                    AssertExtensions.assertFilesEqual(
-                        path.join(__dirname, pathToTestAssets, "export", "assets", "js", "quiz.js"),
-                        path.join(__dirname, pathToAssets, "extensions", "quiz", "assets", "js", "quiz.js"));
-                    AssertExtensions.assertFilesEqual(
-                        path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearnvideo.js"),
-                        path.join(__dirname, pathToAssets, "extensions", "elearnvideo", "assets", "js", "elearnvideo.js"));
-                    AssertExtensions.assertFilesEqual(
-                        path.join(__dirname, pathToTestAssets, "export", "assets", "js", "clickimage.js"),
-                        path.join(__dirname, pathToAssets, "extensions", "clickimage", "assets", "js", "clickimage.js"));
-                    AssertExtensions.assertFilesEqual(
-                        path.join(__dirname, pathToTestAssets, "export", "assets", "js", "timeslider.js"),
-                        path.join(__dirname, pathToAssets, "extensions", "timeslider", "assets", "js", "timeslider.js"));
-                    AssertExtensions.assertFilesEqual(
-                        path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Icons.woff"),
-                        path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
+                        // check for all the js files, assume everything worked then
+                        AssertExtensions.assertFilesEqual(
+                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearn.js"),
+                            path.join(__dirname, pathToAssets, "assets", "js", "elearn.js"));
+                        AssertExtensions.assertFilesEqual(
+                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "quiz.js"),
+                            path.join(__dirname, pathToAssets, "extensions", "quiz", "assets", "js", "quiz.js"));
+                        AssertExtensions.assertFilesEqual(
+                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearnvideo.js"),
+                            path.join(__dirname, pathToAssets, "extensions", "elearnvideo", "assets", "js", "elearnvideo.js"));
+                        AssertExtensions.assertFilesEqual(
+                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "clickimage.js"),
+                            path.join(__dirname, pathToAssets, "extensions", "clickimage", "assets", "js", "clickimage.js"));
+                        AssertExtensions.assertFilesEqual(
+                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "timeslider.js"),
+                            path.join(__dirname, pathToAssets, "extensions", "timeslider", "assets", "js", "timeslider.js"));
+                        AssertExtensions.assertFilesEqual(
+                            path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Icons.woff"),
+                            path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
 
-                    done();
+                        done();
+                    }
+                    catch(err) {
+                        done(err);
+                    }
                 }, (err) => {
                     done(err);
                 });
