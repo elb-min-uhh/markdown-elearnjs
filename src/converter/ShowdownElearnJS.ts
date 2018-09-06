@@ -99,9 +99,9 @@ const replaceSectionSyntax: FilterExtension = {
             });
             // replace all following
             text = text.replace(sectionRegExp, (wholeMatch, wrap, heading, addition) => {
-                return `</section>${parseSection(conv, wholeMatch, wrap, heading, addition)}`;
+                return `\n</section>\n${parseSection(conv, wholeMatch, wrap, heading, addition)}`;
             });
-            text += "</section>";
+            text += "\n</section>\n";
         }
 
         return text;
@@ -112,7 +112,7 @@ const pdfSectionSyntax: FilterExtension = {
     type: 'lang',
     filter: (text: string, converter: Showdown.Converter) => {
         const conv = converter;
-        let replacement = converter.getOption('newPageOnSection') ? '<div style="page-break-before: always;">' : '';
+        let replacement = converter.getOption('newPageOnSection') ? '<div style="page-break-before: always;"></div>\n' : '';
 
         let match = text.match(firstSectionRegExp);
         if(match && match.length) {
@@ -122,11 +122,10 @@ const pdfSectionSyntax: FilterExtension = {
             });
             // replace all following
             text = text.replace(sectionRegExp, (wholeMatch, wrap, heading, addition) => {
-                return `</section>${replacement}${parseSection(conv, wholeMatch, wrap, heading, addition)}`;
+                return `\n</section>\n${replacement}${parseSection(conv, wholeMatch, wrap, heading, addition)}`;
             });
-            text += "</section>";
+            text += "\n</section>\n";
         }
-
         return text;
     },
 };
@@ -315,7 +314,7 @@ const parseSection = (converter: Showdown.Converter, wholeMatch: string, wrap: s
         descrIndex++;
     }
 
-    return `<section markdown="1" name="${heading}"${clazz}${desc}>\n`;
+    return `\n<section markdown="1" name="${heading}"${clazz}${desc}>\n`;
 };
 
 const parseMetaData = (text: string) => {

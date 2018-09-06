@@ -1,3 +1,5 @@
+## 1.3.5
+* Fixed incorrect paragraph creation and clean up
 ## 1.3.4
 * Added busy file check on `PDFConverter.toFile`
 * Updated dependencies
