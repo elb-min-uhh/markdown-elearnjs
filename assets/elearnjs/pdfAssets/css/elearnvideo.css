@@ -5,21 +5,20 @@
 */
 
 /* For _no video in pdf_ message only */
+
 .elearnjs-video {
-    padding: 10px 15px;
     min-height: 25px;
     min-width: 50px;
-    background: #000;
+    background: #888;
     color: white;
-    line-height: initial;
 }
 
-.elearnjs-video > video {
+.elearnjs-video>video {
     display: initial;
     line-height: initial;
 }
 
-.elearnjs-video > :not(video) {
+.elearnjs-video> :not(video) {
     display: none;
 }
 
