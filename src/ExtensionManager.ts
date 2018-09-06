@@ -221,17 +221,21 @@ class ExtensionManager {
     private static getClickImagePDFAssetString() {
         return `<link rel="stylesheet" type="text/css"
                     href="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/clickimage/assets/css/clickimage.css`).replace(/\\/g, "/")}" />
+                <link rel="stylesheet" type="text/css"
+                    href="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/pdfAssets/css/clickimage.css`).replace(/\\/g, "/")}" />
                 <script type="text/javascript"
-                    src="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/pdfAssets/js/clickimage.js`).replace(/\\/g, "/")}"></script>`;
+                    src="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/clickimage/assets/js/clickimage.js`).replace(/\\/g, "/")}"></script>`;
     }
 
     private static getTimeSliderPDFAssetString() {
         return `<link rel="stylesheet" type="text/css"
                     href="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/timeslider/assets/css/timeslider.css`).replace(/\\/g, "/")}" />
+                <link rel="stylesheet" type="text/css"
+                    href="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/pdfAssets/css/timeslider.css`).replace(/\\/g, "/")}" />
                 <script type="text/javascript"
                     src="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/timeslider/assets/js/moment.js`).replace(/\\/g, "/")}"></script>
                 <script type="text/javascript"
-                    src="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/pdfAssets/js/timeslider.js`).replace(/\\/g, "/")}"></script>`;
+                    src="file:///${path.resolve(`${__dirname}/${assetsPath}/elearnjs/extensions/timeslider/assets/js/timeslider.js`).replace(/\\/g, "/")}"></script>`;
     }
 
     /**
