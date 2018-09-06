@@ -1,3 +1,5 @@
+## 1.3.6
+* Updated elearn.js css to fix a webkit rendering problem with the overview
 ## 1.3.5
 * Fixed incorrect paragraph creation and clean up
 ## 1.3.4
