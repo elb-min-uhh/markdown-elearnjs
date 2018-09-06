@@ -11,11 +11,16 @@ body {
     background: 0;
 }
 
+section {
+    page-break-before: avoid !important;
+}
+
 .slider {
     max-height: none !important;
     height: auto !important;
     background: 0 !important;
 }
+
 ul.img-gallery {
     font-size: 10pt;
     padding: 0 20%;
@@ -26,6 +31,7 @@ ul.img-gallery {
     width: auto !important;
     transform: none !important;
 }
+
 ul.img-gallery li {
     max-height: none !important;
     width: auto !important;
@@ -33,12 +39,15 @@ ul.img-gallery li {
     max-width: 100% !important;
     margin: 25px 0;
 }
+
 ul.img-gallery li.loop_clone {
     display: none !important;
 }
+
 ul.img-gallery li img {
     margin-bottom: 0 !important;
 }
+
 ul.img-gallery li p {
     display: block !important;
     white-space: normal !important;
@@ -46,7 +55,9 @@ ul.img-gallery li p {
     text-align: center !important;
     margin-bottom: 2em !important;
 }
-.slider-description, .preview-con {
+
+.slider-description,
+.preview-con {
     display: none !important;
 }
 

@@ -1,3 +1,5 @@
+## 1.3.7
+* Updated elearn.js css to improve prints
 ## 1.3.6
 * Updated elearn.js css to fix a webkit rendering problem with the overview
 ## 1.3.5
