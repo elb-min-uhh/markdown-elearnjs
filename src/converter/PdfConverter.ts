@@ -175,7 +175,7 @@ class PdfConverter extends AConverter implements IConverter {
 
         let html = await self.toHtml(markdown, <ConversionObject>options);
 
-        const browser = await Puppeteer.launch();
+        const browser = await this.getPuppeteerBrowser();
         const page = await browser.newPage();
         const tmpFile = path.join(rootPath, `.tmpPdfExport_${new Date().getTime()}.html`);
 
@@ -194,7 +194,6 @@ class PdfConverter extends AConverter implements IConverter {
             }
 
             buffer = await page.pdf(opts);
-
             await browser.close();
 
             // remove tmp file
@@ -205,6 +204,21 @@ class PdfConverter extends AConverter implements IConverter {
         }
 
         return buffer;
+    }
+
+    /**
+     * Starts a puppeteer browser instance. Will use the
+     * PDFSettingsObject.chromePath as `executablePath` if set.
+     *
+     * @return instance of Puppeteer.Browser
+     */
+    private async getPuppeteerBrowser() {
+        let options: Puppeteer.LaunchOptions = {};
+        if(this.getOption('chromePath') !== undefined) {
+            options.executablePath = this.getOption('chromePath');
+        }
+        const browser = await Puppeteer.launch(options);
+        return browser;
     }
 
     /**
