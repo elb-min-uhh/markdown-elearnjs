@@ -31,6 +31,11 @@ class PdfSettingsObject extends ConverterSettingsObject {
      * absolute path to a styling css file
      */
     public customStyleFile?: string;
+    /**
+     * absulute path to the chrome executable.
+     * See https://github.com/GoogleChrome/puppeteer#default-runtime-settings
+     */
+    public chromePath?: string;
 
     /**
      * An Object containing options for the PdfConverter
