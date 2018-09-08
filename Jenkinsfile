@@ -8,6 +8,8 @@ node {
             try {
                 checkout scm
                 sh "npm install"
+                // remove bundled chromium to use `chromium-browser` in CI
+                sh "rm -r node_modules/puppeteer/.local-chromium/"
                 sh "npm run compile"
                 if(currentBuild.result != "SUCCESS") throw new Exception();
             }
