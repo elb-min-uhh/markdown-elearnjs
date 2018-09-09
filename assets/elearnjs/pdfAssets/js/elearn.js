@@ -2,7 +2,7 @@
 * Basic script containing only necessary elements
 */
 
-const eLearnJS = eLearnJS || {};
+var eLearnJS = eLearnJS || {};
 
 $(document).ready(function() {
     eLearnJS.createContentOverview();

@@ -1,0 +1,7 @@
+div.timeslider div.infobox>div.hidden {
+    display: block !important;
+}
+
+div.timeslider div.pagination.active {
+    display: none !important;
+}

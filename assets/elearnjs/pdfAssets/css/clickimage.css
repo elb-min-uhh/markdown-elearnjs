@@ -1,0 +1,12 @@
+div.clickimage .pininfo div.inactive {
+    display: block !important;
+}
+
+div.clickimage .infobox,
+div.clickimage .pagination.active {
+    display: none !important;
+}
+
+div.clickimage .imagebox {
+    display: inline-block;
+}

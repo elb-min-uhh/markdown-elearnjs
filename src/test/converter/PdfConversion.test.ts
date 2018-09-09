@@ -3,6 +3,7 @@
 import assert from 'assert';
 import * as fs from "fs";
 import path from 'path';
+import Puppeteer from 'puppeteer';
 import rimraf from 'rimraf';
 import { PdfConverter } from '../../main';
 import PromiseCounter from '../../util/PromiseCounter';
@@ -112,8 +113,6 @@ describe('PDF Converter Setup', () => {
         html.then((text) => {
             try {
                 assert.ok(text.indexOf('quiz.css') >= 0);
-                assert.ok(text.indexOf(footer) >= 0);
-                assert.ok(text.indexOf(header) >= 0);
             }
             catch(err) {
                 done(err); return;
@@ -260,6 +259,44 @@ describe('PDF conversion', () => {
 
     describe('with the template', () => {
 
+        let puppeteerAvailable = false;
+
+        before(async function() {
+            this.slow(120000);
+            this.timeout(240000);
+
+            let optionList = [
+                {}, // bundled version
+                { executablePath: "chrome" }, // globally available chrome
+                { executablePath: "chromium-browser" }, // globally available chromium
+            ];
+
+            let selectedOptions;
+
+            // check for all predefined option lists if one of it is possible
+            // if so, set pdfConverter accordingly and puppeteerAvailable to true
+            for(let options of optionList) {
+                try {
+                    let browser = await Puppeteer.launch(options);
+                    browser.close();
+                    selectedOptions = options;
+                    break;
+                }
+                catch(err) {
+                    // ignore errors
+                }
+            }
+
+            if(selectedOptions) {
+                puppeteerAvailable = true;
+                pdfConverter.setOption("chromePath", selectedOptions.executablePath);
+            }
+
+            if(puppeteerAvailable) {
+                console.log("Found available puppeteer config:", selectedOptions);
+            }
+        });
+
         it('should create the correct document with extensions', (done) => {
             fs.readFile(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8', (error, data) => {
                 if(error) {
@@ -283,7 +320,12 @@ describe('PDF conversion', () => {
             });
         });
 
-        it('should create the correct file', (done) => {
+        it('should create the correct file', function(done) {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -309,7 +351,12 @@ describe('PDF conversion', () => {
                 });
         }).slow(40000).timeout(60000);
 
-        it('should not create the file, no path given', (done) => {
+        it('should not create the file, no path given', function(done) {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -333,7 +380,12 @@ describe('PDF conversion', () => {
                 });
         }).slow(40000).timeout(60000);
 
-        it('should not create the file, file exists already', (done) => {
+        it('should not create the file, file exists already', function(done) {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -360,30 +412,12 @@ describe('PDF conversion', () => {
                 });
         }).slow(40000).timeout(60000);
 
-        it('should create a stream', (done) => {
-            let inBuf = fs.readFileSync(
-                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
-                { encoding: 'utf8' });
-            let data = inBuf.toString();
+        it('should create a buffer', function(done) {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
 
-            // create output folder
-            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
-
-            // convert the file
-            pdfConverter.toStream(data,
-                path.join(__dirname, pathToTestAssets, `inputFiles`),
-                {
-                    language: "de",
-                    automaticExtensionDetection: true,
-                }).then(() => {
-                    done();
-                    return;
-                }, (err) => {
-                    done(err);
-                });
-        }).slow(40000).timeout(60000);
-
-        it('should create a buffer', (done) => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });

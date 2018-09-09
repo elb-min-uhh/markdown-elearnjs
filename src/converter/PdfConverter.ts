@@ -1,8 +1,8 @@
 "use strict";
 
 import * as fs from 'fs';
-import * as HtmlPdf from 'html-pdf';
 import * as path from 'path';
+import Puppeteer from 'puppeteer';
 import * as Showdown from "showdown";
 import ExtensionManager from '../ExtensionManager';
 import FileManager from '../FileManager';
@@ -140,57 +140,22 @@ class PdfConverter extends AConverter implements IConverter {
      *
      * @return {Promise<string>} - will resolve with the path when done. (err) when an error occurred.
      */
-    public toFile(markdown: string, file: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
+    public async toFile(markdown: string, file: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
-        let opts = new PdfExportOptionObject(options);
+        if(!file) {
+            throw new Error("No output path given.");
+        }
+        if(fs.existsSync(file) && !forceOverwrite) {
+            throw new Error("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
+        }
 
-        let ret = new Promise<string>((res, rej) => {
-            if(!file) {
-                return rej("No output path given.");
-            }
-            if(fs.existsSync(file) && !forceOverwrite) {
-                return rej("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
-            }
+        // will throw an error if cannot be opened
+        await self.tryFileOpen(file);
 
-            self.toHtml(markdown, <ConversionObject>options).then((html) => {
-                self.canFileBeOpened(file).then(() => {
-                    HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toFile(file, (err, result) => {
-                        if(err) rej(err);
-                        res(result ? result.filename : "unknown filename");
-                    });
-                }).catch((err) => { rej(err); });
-            }, (err) => { rej(err); });
-        });
+        let buffer = await self.toBuffer(markdown, rootPath, options);
+        fs.writeFileSync(file, buffer);
 
-        return ret;
-    }
-
-    /**
-     * Converts given markdown to a pdf file stream.
-     * Certain options will specify the output.
-     *
-     * @param markdown: string - the markdown code
-     * @param file: string - the output file path (including file name)
-     * @param rootPath: string - the root path for relative paths in the file.
-     * @param {PdfExportOptionObject} options: optional options
-     * @param forceOverwrite: bool - if an existing file should be overwritten.
-     *
-     * @return Promise: (stream) - will resolve when done. (err) when an error occurred.
-     */
-    public toStream(markdown: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
-        const self = this;
-        let opts = new PdfExportOptionObject(options);
-
-        let ret = new Promise((res, rej) => {
-            self.toHtml(markdown, <ConversionObject>options).then((html) => {
-                HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toStream((err, stream) => {
-                    if(err) rej(err);
-                    res(stream);
-                });
-            }, (err) => { rej(err); });
-        });
-
-        return ret;
+        return file;
     }
 
     /**
@@ -201,24 +166,59 @@ class PdfConverter extends AConverter implements IConverter {
      * @param file: string - the output file path (including file name)
      * @param rootPath: string - the root path for relative paths in the file.
      * @param {PdfExportOptionObject} options: optional options
-     * @param forceOverwrite: bool - if an existing file should be overwritten.
      *
      * @return Promise: (stream) - will resolve when done. (err) when an error occurred.
      */
-    public toBuffer(markdown: string, rootPath: string, options?: PdfExportOptionObject, forceOverwrite?: boolean) {
+    public async toBuffer(markdown: string, rootPath: string, options?: PdfExportOptionObject) {
         const self = this;
-        let opts = new PdfExportOptionObject(options);
+        let opts = self.getPdfOutputOptions();
 
-        let ret = new Promise((res, rej) => {
-            self.toHtml(markdown, <ConversionObject>options).then((html) => {
-                HtmlPdf.create(html, self.getPdfOutputOptions(rootPath, opts.renderDelay)).toBuffer((err, buffer) => {
-                    if(err) rej(err);
-                    res(buffer);
+        let html = await self.toHtml(markdown, <ConversionObject>options);
+
+        const browser = await this.getPuppeteerBrowser();
+        const page = await browser.newPage();
+        const tmpFile = path.join(rootPath, `.tmpPdfExport_${new Date().getTime()}.html`);
+
+        fs.writeFileSync(tmpFile, html, "UTF8");
+
+        let buffer;
+        try {
+            // goto root path
+            await page.goto('file:///' + tmpFile.replace('\\', '/'));
+
+            // render delay
+            if(options && options.renderDelay) {
+                await new Promise((res, rej) => {
+                    setTimeout(res, options.renderDelay);
                 });
-            }, (err) => { rej(err); });
-        });
+            }
 
-        return ret;
+            buffer = await page.pdf(opts);
+            await browser.close();
+
+            // remove tmp file
+            fs.unlinkSync(tmpFile);
+        } catch(err) {
+            // remove tmp file
+            fs.unlinkSync(tmpFile);
+        }
+
+        return buffer;
+    }
+
+    /**
+     * Starts a puppeteer browser instance. Will use the
+     * PDFSettingsObject.chromePath as `executablePath` if set.
+     *
+     * @return instance of Puppeteer.Browser
+     */
+    private async getPuppeteerBrowser() {
+        let options: Puppeteer.LaunchOptions = {};
+        if(this.getOption('chromePath') !== undefined) {
+            options.executablePath = this.getOption('chromePath');
+        }
+        const browser = await Puppeteer.launch(options);
+        return browser;
     }
 
     /**
@@ -236,11 +236,6 @@ class PdfConverter extends AConverter implements IConverter {
         let opts: InclusionObject = new InclusionObject(options);
 
         let zoom = `<style>html {zoom: ${self.converter.getOption('contentZoom')}}</style>`;
-        // header and footer
-        let header = self.converter.getOption('customHeader');
-        if(!header) header = self.getDefaultHeader();
-        let footer = self.converter.getOption('customFooter');
-        if(!footer) footer = self.getDefaultFooter();
 
         let customStyleFile = self.converter.getOption('customStyleFile');
         let customStyle = "";
@@ -259,8 +254,6 @@ class PdfConverter extends AConverter implements IConverter {
             })
             .replace(/\$\$zoom\$\$/, () => zoom)
             .replace(/\$\$custom_style\$\$/, () => customStyle)
-            .replace(/\$\$header\$\$/, () => header)
-            .replace(/\$\$footer\$\$/, () => footer)
             .replace(/\$\$body\$\$/, () => html)
             .replace(/\$\$language\$\$/, () => {
                 if(opts.language && opts.language !== "de") {
@@ -281,41 +274,116 @@ class PdfConverter extends AConverter implements IConverter {
      *                 included assets.
      * @param renderDelay (optional) delay of rendering by the package in ms.
      */
-    private getPdfOutputOptions(rootPath: string, renderDelay?: number): HtmlPdf.CreateOptions {
+    private getPdfOutputOptions(): Puppeteer.PDFOptions {
         const self = this;
 
-        if(!renderDelay) renderDelay = 0;
+        // header and footer
+        let header = self.converter.getOption('customHeader');
+        if(!header) header = self.getDefaultHeader();
+        let footer = self.converter.getOption('customFooter');
+        if(!footer) footer = self.getDefaultFooter();
 
-        let opts = {
-            // USE OPTIONS HERE
+        header = this.wrapHeaderFooter(header);
+        footer = this.wrapHeaderFooter(footer);
+
+        // legacy support
+        header = this.convertKeywords(header);
+        footer = this.convertKeywords(footer);
+
+        let opts: Puppeteer.PDFOptions = {
             format: <"A4">"A4",
-            border: {
+            margin: {
                 top: "18mm",            // default is 0, units: mm, cm, in, px
                 right: "23mm",
-                bottom: "18mm",
+                bottom: "25mm",
                 left: "23mm",
             },
-            header: {
-                height: self.converter.getOption('headerHeight'),
-            },
-            footer: {
-                height: self.converter.getOption('footerHeight'),
-            },
-            renderDelay,
-            base: "file:///" + rootPath.replace(/\\/g, "/") + "/",
+            displayHeaderFooter: true,
+            headerTemplate: header,
+            footerTemplate: footer,
         };
+
+        opts.margin = this.calculateMargins(opts.margin!,
+            self.converter.getOption('headerHeight'),
+            self.converter.getOption('footerHeight'));
 
         return opts;
     }
 
+    private wrapHeaderFooter(html: string) {
+        return `<div style="position: relative; box-sizing: border-box; font-size: 7pt; width: 100%;">${html}</div>`;
+    }
+
+    private convertKeywords(html: string) {
+        html = html.replace(/\{\{page\}\}/g, '<span class="pageNumber"></span>');
+        html = html.replace(/\{\{pages\}\}/g, '<span class="totalPages"></span>');
+        return html;
+    }
+
     private getDefaultHeader() {
-        return ``;
+        return `<div></div>`;
     }
 
     private getDefaultFooter() {
-        return `<div id="pageFooter" style="font-family: Arial, Verdana, sans-serif; color: #666; position: absolute; height: 100%; width: 100%;">
-            <span style="position: absolute; bottom: 0; right: 0">{{page}}</span>
-        </div>`;
+        return `<div style="color: #666; text-align: right;
+            padding: 0 16mm 12mm;">{{page}}</div>`;
+    }
+
+    /**
+     * Calculates the new page margins based on original margins and the
+     * given headerHeight and footerHeight.
+     *
+     * @param margin the Puppeteer.PDFOptions.margin object.
+     * @param headerHeight the header height string with units "px", "in", "cm" or "mm"
+     * @param footerHeight the footer height string with units "px", "in", "cm" or "mm"
+     */
+    private calculateMargins(margin: {
+        top?: string;
+        right?: string | undefined;
+        bottom?: string;
+        left?: string | undefined;
+    }, headerHeight?: string, footerHeight?: string) {
+        if(headerHeight) {
+            try {
+                let headerMM = this.convertUnitsToMMFloat(headerHeight);
+                let topMM = this.convertUnitsToMMFloat(margin.top || "0mm");
+                if(headerMM !== undefined && topMM !== undefined)
+                    margin.top = (headerMM + topMM) + "mm";
+            } catch(err) {
+                // ignore
+            }
+        }
+        if(footerHeight) {
+            try {
+                let footerMM = this.convertUnitsToMMFloat(footerHeight);
+                let bottomMM = this.convertUnitsToMMFloat(margin.bottom || "0mm");
+                if(footerMM !== undefined && bottomMM !== undefined)
+                    margin.bottom = (footerMM + bottomMM) + "mm";
+            } catch(err) {
+                // ignore
+            }
+        }
+        return margin;
+    }
+
+    private convertUnitsToMMFloat(value: string) {
+        let mm;
+        if(value.match(/\d+(\.\d+)?px/)) {
+            let px = parseFloat(value.replace(/\D+$/, ''));
+            mm = px * 0.264583;
+        }
+        else if(value.match(/\d+(\.\d+)?in/)) {
+            let inch = parseFloat(value.replace(/\D+$/, ''));
+            mm = inch * 25.4;
+        }
+        else if(value.match(/\d+(\.\d+)?cm/)) {
+            let cm = parseFloat(value.replace(/\D+$/, ''));
+            mm = cm * 10;
+        }
+        else if(value.match(/\d+(\.\d+)?mm/)) {
+            mm = parseFloat(value.replace(/\D+$/, ''));
+        }
+        return mm;
     }
 }
 
