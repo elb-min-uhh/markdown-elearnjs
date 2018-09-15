@@ -26,14 +26,14 @@
   "dependencies": {
     "ncp": "^2.0.0",
     "path": "^0.12.7",
-    "puppeteer": "^1.7.0",
+    "puppeteer": "^1.8.0",
     "showdown": "^1.8.6"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.5",
     "@types/ncp": "^2.0.1",
     "@types/node": "^10.9.4",
-    "@types/puppeteer": "^1.6.3",
+    "@types/puppeteer": "^1.6.4",
     "@types/rimraf": "^2.0.2",
     "mocha": "^5.2.0",
     "mocha-multi": "^1.0.1",
