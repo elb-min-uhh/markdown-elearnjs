@@ -334,6 +334,11 @@ describe('PDF conversion', () => {
             // create output folder
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
+            // set options
+            pdfConverter.setOptions({
+                headerHeight: "0cm",
+            });
+
             // convert the file
             pdfConverter.toFile(data,
                 path.join(__dirname, pathToTestAssets, "export", "out.pdf"),
@@ -425,6 +430,46 @@ describe('PDF conversion', () => {
 
             // create output folder
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // set some options
+            pdfConverter.setOptions({
+                headerHeight: "2in",
+                footerHeight: "10px",
+            });
+
+            // convert the file
+            pdfConverter.toBuffer(data,
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                }).then(() => {
+                    done();
+                    return;
+                }, (err) => {
+                    done(err);
+                });
+        }).slow(40000).timeout(60000);
+
+        it('should create a buffer with incorrect footerHeight', function(done) {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // set some options
+            pdfConverter.setOptions({
+                headerHeight: undefined,
+                footerHeight: "10pxls",
+            });
 
             // convert the file
             pdfConverter.toBuffer(data,
