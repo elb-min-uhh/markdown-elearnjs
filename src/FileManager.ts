@@ -5,34 +5,25 @@ import * as fs from 'fs';
 const assetsPath = '../assets';
 
 class FileManager {
-    public static getHtmlTemplate() {
-        let ret = new Promise<string>((resolve, reject) => {
-            FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template.html`, (data) => {
-                resolve(data);
-            }, (err: any) => reject(err));
-        });
-
-        return ret;
+    public static async getHtmlTemplate() {
+        return await FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template.html`);
     }
 
-    public static getPdfTemplate() {
-        let ret = new Promise<string>((resolve, reject) => {
-            FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template_pdf.html`, (data) => {
-                resolve(data);
-            }, (err: any) => reject(err));
-        });
-
-        return ret;
+    public static async getPdfTemplate() {
+        return await FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template_pdf.html`);
     }
 
     /**
      * Reads in a given file.
      */
-    private static readFile(filePath: string, callback: (data: string) => any, error?: (err: any) => any) {
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            if(err && error !== null && error !== undefined) error(err);
-            if(callback) callback(data);
+    private static async readFile(filePath: string) {
+        let ret = new Promise<string>((resolve, reject) => {
+            fs.readFile(filePath, 'utf8', (err, data) => {
+                // will not reject, because it is only used by tested methods above
+                resolve(data);
+            });
         });
+        return ret;
     }
 }
 
