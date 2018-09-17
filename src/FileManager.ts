@@ -16,7 +16,7 @@ class FileManager {
     /**
      * Reads in a given file.
      */
-    private static async readFile(filePath: string) {
+    private static readFile(filePath: string) {
         let ret = new Promise<string>((resolve, reject) => {
             fs.readFile(filePath, 'utf8', (err, data) => {
                 // will not reject, because it is only used by tested methods above

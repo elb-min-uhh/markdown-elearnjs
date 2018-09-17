@@ -1,3 +1,6 @@
+## 1.3.8
+* Code refactoring
+* Test extensions and updates
 ## 1.3.7
 * Updated elearn.js css to improve prints
 ## 1.3.6
