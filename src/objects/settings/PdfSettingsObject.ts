@@ -62,7 +62,10 @@ class PdfSettingsObject extends ConverterSettingsObject {
             "customFooter",
             "headerHeight",
             "footerHeight",
-            "customStyleFile"];
+            "customStyleFile",
+            "chromePath",
+            "puppeteerOptions",
+        ];
 
         if(options) {
             Object.keys(options).forEach((key) => {
