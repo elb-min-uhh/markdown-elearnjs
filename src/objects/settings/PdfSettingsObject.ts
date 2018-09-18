@@ -39,10 +39,10 @@ class PdfSettingsObject extends ConverterSettingsObject {
     public chromePath?: string;
     /**
      * Options used to launch puppeteer.
-     * See https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
+     * See https://pptr.dev/#?product=Puppeteer&version=v1.8.0&show=api-puppeteerlaunchoptions
      *
      * The `Puppeteer.LaunchOptions.executablePath` might be overwritten by
-     * the option `chomePath` if set.
+     * the option `chromePath` if set.
      */
     public puppeteerOptions?: Puppeteer.LaunchOptions;
 
