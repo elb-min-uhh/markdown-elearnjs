@@ -24,6 +24,7 @@
   "repository": "https://github.com/elb-min-uhh/markdown-elearnjs",
   "license": "MIT",
   "dependencies": {
+    "@types/puppeteer": "^1.6.4",
     "ncp": "^2.0.0",
     "path": "^0.12.7",
     "puppeteer": "^1.8.0",
@@ -33,7 +34,6 @@
     "@types/mocha": "^5.2.5",
     "@types/ncp": "^2.0.1",
     "@types/node": "^10.9.4",
-    "@types/puppeteer": "^1.6.4",
     "@types/rimraf": "^2.0.2",
     "mocha": "^5.2.0",
     "mocha-multi": "^1.0.1",

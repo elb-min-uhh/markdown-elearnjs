@@ -213,7 +213,7 @@ class PdfConverter extends AConverter implements IConverter {
      * @return instance of Puppeteer.Browser
      */
     private async getPuppeteerBrowser() {
-        let options: Puppeteer.LaunchOptions = {};
+        let options: Puppeteer.LaunchOptions = this.getOption('puppeteerOptions') || {};
         if(this.getOption('chromePath') !== undefined) {
             options.executablePath = this.getOption('chromePath');
         }

@@ -1,5 +1,6 @@
 "use strinct";
 
+import Puppeteer from 'puppeteer';
 import ConverterSettingsObject from "./ConverterSettingsObject";
 
 class PdfSettingsObject extends ConverterSettingsObject {
@@ -32,10 +33,18 @@ class PdfSettingsObject extends ConverterSettingsObject {
      */
     public customStyleFile?: string;
     /**
-     * absulute path to the chrome executable.
+     * absolute path to the chrome executable.
      * See https://github.com/GoogleChrome/puppeteer#default-runtime-settings
      */
     public chromePath?: string;
+    /**
+     * Options used to launch puppeteer.
+     * See https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions
+     *
+     * The `Puppeteer.LaunchOptions.executablePath` might be overwritten by
+     * the option `chomePath` if set.
+     */
+    public puppeteerOptions?: Puppeteer.LaunchOptions;
 
     /**
      * An Object containing options for the PdfConverter

@@ -289,7 +289,7 @@ describe('PDF conversion', () => {
 
             if(selectedOptions) {
                 puppeteerAvailable = true;
-                pdfConverter.setOption("chromePath", selectedOptions.executablePath);
+                pdfConverter.setOption("puppeteerOptions", selectedOptions);
             }
 
             if(puppeteerAvailable) {
