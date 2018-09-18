@@ -1,4 +1,7 @@
-## 1.3.8
+## 1.4.0
+* Switched to `Puppeteer` (Chromium) replacing `html-pdf` (PhantomJS) as
+PDF Converter
+    * extended PDFConverter to support `Puppeteer` specific options
 * Code refactoring
 * Test extensions and updates
 ## 1.3.7
