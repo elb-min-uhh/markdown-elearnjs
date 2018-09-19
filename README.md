@@ -53,11 +53,6 @@ pdfConverter.toFile(markdown, filePath, rootPath).then((filename) => {
     console.log(filename);
 }, err => console.error(err));
 
-// get a stream
-pdfConverter.toStream(markdown, rootPath).then((stream) => {
-    // do something with the stream
-}, err => console.error(err));
-
 //get a buffer
 pdfConverter.toBuffer(markdown, rootPath).then((buffer) => {
     // do something with the buffer
@@ -84,8 +79,7 @@ _extraction of linked files_. For more information on this check the
 
 * All platforms:
     * PDF output might be slow
-        * Chrome/Chromium is being started for each conversion process
-        * For multiple PDF exports it might get faster
+        * consider keeping Chrome alive for multiple PDF exports (check settings)
 
 ## Credits
 
