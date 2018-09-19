@@ -18,21 +18,6 @@ import * as elearnExtension from './ShowdownElearnJS';
 
 const assetsPath = '../../assets';
 
-const defaults: { [key: string]: any } = {
-    newSectionOnHeading: true,
-    headingDepth: 3,
-    useSubSections: true,
-    subSectionLevel: 3,
-    subsubSectionLevel: 4,
-    newPageOnSection: true,
-    contentZoom: 1,
-    customHeader: undefined,
-    headerHeight: "0",
-    customFooter: undefined,
-    footerHeight: "17mm",
-    customStyleFile: undefined,
-};
-
 class PdfConverter extends AConverter implements IConverter {
 
     protected converter: IShowdownConverter;
@@ -53,6 +38,7 @@ class PdfConverter extends AConverter implements IConverter {
         });
 
         // set export defaults
+        let defaults = new PdfSettingsObject();
         Object.keys(defaults).forEach((key) => {
             this.converter.setOption(key, defaults[key]);
         });

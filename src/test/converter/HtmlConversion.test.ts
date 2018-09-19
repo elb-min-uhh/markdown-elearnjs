@@ -50,19 +50,31 @@ const exampleImprint2 =
 
 describe('HTML Converter Setup', () => {
 
+    it('creates a HtmlConverter with default settings', () => {
+
+        let conv = new HtmlConverter();
+
+        // assert defaults are set
+        assert.equal(conv.getOption("newSectionOnHeading"), true);
+        assert.equal(conv.getOption("headingDepth"), 3);
+        assert.equal(conv.getOption("useSubSections"), true);
+        assert.equal(conv.getOption("subSectionLevel"), 3);
+        assert.equal(conv.getOption("subsubSectionLevel"), 4);
+    });
+
     it('should create an HtmlConverter with correct settings', () => {
         let conv = new HtmlConverter({
             headingDepth: 2,
             newSectionOnHeading: false,
             useSubSections: false,
-            subSectionLevel: 4,
+            // keep default subSectionLevel
             subsubSectionLevel: 5,
         });
 
         assert.equal(conv.getOption("headingDepth"), 2);
         assert.equal(conv.getOption("newSectionOnHeading"), false);
         assert.equal(conv.getOption("useSubSections"), false);
-        assert.equal(conv.getOption("subSectionLevel"), 4);
+        assert.equal(conv.getOption("subSectionLevel"), 3);
         assert.equal(conv.getOption("subsubSectionLevel"), 5);
     });
 

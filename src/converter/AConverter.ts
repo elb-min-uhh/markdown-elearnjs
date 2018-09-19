@@ -32,7 +32,7 @@ abstract class AConverter implements IConverter {
 
         Object.keys(checkedObject).forEach((key) => {
             // always check if the option is in the input object
-            // this way no other option keys are set to default again.
+            // this way no other option keys are set to default again
             if(inputKeys.indexOf(key) >= 0)
                 this.setOption(key, checkedObject[key]);
         });

@@ -32,6 +32,26 @@ const exampleImprint =
 
 describe('PDF Converter Setup', () => {
 
+    it('creates a PdfConverter with default settings', () => {
+
+        let conv = new PdfConverter();
+
+        // assert defaults are set
+        assert.equal(conv.getOption("newSectionOnHeading"), true);
+        assert.equal(conv.getOption("headingDepth"), 3);
+        assert.equal(conv.getOption("useSubSections"), true);
+        assert.equal(conv.getOption("subSectionLevel"), 3);
+        assert.equal(conv.getOption("subsubSectionLevel"), 4);
+
+        assert.equal(conv.getOption("newPageOnSection"), true);
+        assert.equal(conv.getOption("contentZoom"), 1);
+        assert.equal(conv.getOption("customHeader"), undefined);
+        assert.equal(conv.getOption("customFooter"), undefined);
+        assert.equal(conv.getOption("headerHeight"), "0");
+        assert.equal(conv.getOption("footerHeight"), "17mm");
+        assert.equal(conv.getOption("customStyleFile"), undefined);
+    });
+
     it('should create an PdfConverter with correct settings', () => {
         let conv = new PdfConverter({
             headingDepth: 2,
@@ -43,7 +63,7 @@ describe('PDF Converter Setup', () => {
             contentZoom: 2,
             customFooter: "testfooter",
             customHeader: "testheader",
-            footerHeight: "20mm",
+            // keep default footer
             headerHeight: "20mm",
             customStyleFile: "somefile",
             newPageOnSection: false,
@@ -58,7 +78,7 @@ describe('PDF Converter Setup', () => {
         assert.equal(conv.getOption("contentZoom"), 2);
         assert.equal(conv.getOption("customFooter"), "testfooter");
         assert.equal(conv.getOption("customHeader"), "testheader");
-        assert.equal(conv.getOption("footerHeight"), "20mm");
+        assert.equal(conv.getOption("footerHeight"), "17mm");
         assert.equal(conv.getOption("headerHeight"), "20mm");
         assert.equal(conv.getOption("customStyleFile"), "somefile");
         assert.equal(conv.getOption("newPageOnSection"), false);

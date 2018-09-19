@@ -18,14 +18,6 @@ import IConverter from './IConverter';
 import IShowdownConverter from './IShowdownConverter';
 import * as elearnExtension from './ShowdownElearnJS';
 
-const defaults: { [key: string]: any } = {
-    newSectionOnHeading: true,
-    headingDepth: 3,
-    useSubSections: true,
-    subSectionLevel: 3,
-    subsubSectionLevel: 4,
-};
-
 class HtmlConverter extends AConverter implements IConverter {
 
     protected converter: IShowdownConverter;
@@ -56,10 +48,12 @@ class HtmlConverter extends AConverter implements IConverter {
         elearnExtension.elearnImprint();
 
         // set export defaults
+        let defaults = new ConverterSettingsObject();
         Object.keys(defaults).forEach((key) => {
             this.converter.setOption(key, defaults[key]);
         });
 
+        // overwrite defaults with given options
         if(options) {
             this.setOptions(options);
         }
