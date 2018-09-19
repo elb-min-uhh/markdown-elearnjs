@@ -6,7 +6,7 @@ import path from "path";
 /**
  *  basic file uri, does not allow ?par... at the end
  */
-const fileUriRegExp = /(['"])file:\/{3}(\/?(?:[\w\d:\. %-]+\/?)+)\1/g;
+const fileUriRegExp = /(['"])file:\/{3}(.+?)\1/g;
 
 class AssertExtensions {
 
