@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import Puppeteer from 'puppeteer';
 import * as Showdown from "showdown";
+import _ from 'underscore';
 import ExtensionManager from '../ExtensionManager';
 import FileManager from '../FileManager';
 import ConversionObject from '../objects/export/ConversionObject';
@@ -21,6 +22,8 @@ const assetsPath = '../../assets';
 class PdfConverter extends AConverter implements IConverter {
 
     protected converter: IShowdownConverter;
+    private browser?: Puppeteer.Browser;
+    private browserUsage = 0;
 
     /**
      * Creates an HtmlConverter with specific options.
@@ -61,6 +64,17 @@ class PdfConverter extends AConverter implements IConverter {
                 opts.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
         }
         return opts;
+    }
+
+    public setOption(opt: string, val: any) {
+        // reset browser, if browser specific options change
+        if((opt === "chromePath" && this.getOption("chromePath") !== val)
+            || (opt === "puppeteerOptions" && !_.isEqual(this.getOption("puppeteerOptions"), val))
+            || (opt === "keepChromeAlive" && val === false)) {
+            this.closeGlobalBrowser().then();
+        }
+
+        super.setOption(opt, val);
     }
 
     /**
@@ -154,6 +168,11 @@ class PdfConverter extends AConverter implements IConverter {
      * Converts given markdown to a pdf file buffer.
      * Certain options will specify the output.
      *
+     * This will instatiate a chromium browser instance if not present already.
+     * Changing the converter options with `setOption` or `setOptions`
+     * as well as starting another conversion process,
+     * before resolving of this function, might lead to unwanted behavior.
+     *
      * @param markdown: string - the markdown code
      * @param file: string - the output file path (including file name)
      * @param rootPath: string - the root path for relative paths in the file.
@@ -167,7 +186,17 @@ class PdfConverter extends AConverter implements IConverter {
 
         let html = await self.toHtml(markdown, <ConversionObject>options);
 
-        const browser = await this.getPuppeteerBrowser();
+        let browser = self.browser;
+        // init browser if not initiated
+        if(browser === undefined) {
+            browser = await self.initBrowser();
+        }
+        // usage of global browser
+        else {
+            // add global lock
+            self.browserUsage++;
+        }
+
         const page = await browser.newPage();
         const tmpFile = path.join(rootPath, `.tmpPdfExport_${new Date().getTime()}.html`);
 
@@ -186,13 +215,25 @@ class PdfConverter extends AConverter implements IConverter {
             }
 
             buffer = await page.pdf(opts);
-            await browser.close();
+            // close the page only if the browser is not closed anyway
+            // to prevent race conditions: page.close() / browser.close() might
+            // concurr even though await is given
+            if(self.getOption("keepChromeAlive")
+                && (self.browser === browser
+                    || self.browser === undefined)) {
+                await page.close();
+            }
+
+            // remove global lock
+            if(browser === self.browser) self.browserUsage--;
+            await self.updateBrowserWithLocalInstance(browser);
 
             // remove tmp file
             fs.unlinkSync(tmpFile);
         } catch(err) {
             // remove tmp file
             fs.unlinkSync(tmpFile);
+            throw err;
         }
 
         return buffer;
@@ -204,13 +245,68 @@ class PdfConverter extends AConverter implements IConverter {
      *
      * @return instance of Puppeteer.Browser
      */
-    private async getPuppeteerBrowser() {
+    private async initBrowser() {
         let options: Puppeteer.LaunchOptions = this.getOption('puppeteerOptions') || {};
         if(this.getOption('chromePath') !== undefined) {
             options.executablePath = this.getOption('chromePath');
         }
+
         const browser = await Puppeteer.launch(options);
+
+        let id = (await browser.process()).pid;
+        console.log("markdown-elearnjs: Initialized new chromium browser. Process ID", id);
+
         return browser;
+    }
+
+    /**
+     * Closes the current browser instance and resets variables.
+     * Resolves when done.
+     */
+    private async closeGlobalBrowser() {
+        if(this.browser === undefined || this.browserUsage > 0) return;
+
+        let promise = this.closeBrowser(this.browser);
+        this.browser = undefined;
+        await promise;
+    }
+
+    /**
+     * Closes the given browser instance.
+     * Resolves when done.
+     */
+    private async closeBrowser(browser: Puppeteer.Browser) {
+        if(!browser || (browser === this.browser && this.browserUsage > 0)) return;
+
+        let id = (await browser.process()).pid;
+        await browser.close();
+
+        console.log("markdown-elearnjs: Closed chromium browser successfully. Process ID", id);
+    }
+
+    /**
+     * This will set the given instance as globally used instance
+     * if `keepChromeAlive` is set and no global instance is set.
+     *
+     * A only locally used instance will be closed.
+     *
+     * A global instance will be closed if `keepChromeAlive` is not set.
+     *
+     * @param browser A Puppeteer browser instance to set as global if necessary
+     */
+    private async updateBrowserWithLocalInstance(browser: Puppeteer.Browser) {
+        const self = this;
+
+        // save or close browser
+        if(self.getOption("keepChromeAlive") && self.browser === undefined)
+            self.browser = browser;
+
+        // close only locally used instances
+        if(self.browser !== browser) await self.closeBrowser(browser);
+
+        // do not keep global instance
+        if(!self.getOption("keepChromeAlive"))
+            await self.closeGlobalBrowser();
     }
 
     /**

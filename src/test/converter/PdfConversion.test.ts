@@ -50,6 +50,9 @@ describe('PDF Converter Setup', () => {
         assert.equal(conv.getOption("headerHeight"), "0");
         assert.equal(conv.getOption("footerHeight"), "17mm");
         assert.equal(conv.getOption("customStyleFile"), undefined);
+        assert.equal(conv.getOption("chromePath"), undefined);
+        assert.equal(conv.getOption("puppeteerOptions"), undefined);
+        assert.equal(conv.getOption("keepChromeAlive"), false);
     });
 
     it('should create an PdfConverter with correct settings', () => {
@@ -67,6 +70,9 @@ describe('PDF Converter Setup', () => {
             headerHeight: "20mm",
             customStyleFile: "somefile",
             newPageOnSection: false,
+            // keep default chromePath
+            // keep default puppeteerOptions
+            // keep default keepChromeAlive
         });
 
         assert.equal(conv.getOption("headingDepth"), 2);
@@ -82,6 +88,9 @@ describe('PDF Converter Setup', () => {
         assert.equal(conv.getOption("headerHeight"), "20mm");
         assert.equal(conv.getOption("customStyleFile"), "somefile");
         assert.equal(conv.getOption("newPageOnSection"), false);
+        assert.equal(conv.getOption("chromePath"), undefined);
+        assert.equal(conv.getOption("puppeteerOptions"), undefined);
+        assert.equal(conv.getOption("keepChromeAlive"), false);
     });
 
     it('should update settings in PdfConverter', () => {
@@ -294,11 +303,35 @@ describe('PDF conversion', () => {
             });
         });
 
+        it('creates the correct document with extensions from template', (done) => {
+            fs.readFile(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8', (error, data) => {
+                if(error) {
+                    done(error);
+                    return;
+                }
+                pdfConverter.toHtml(data, {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                }).then((text) => {
+                    text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+                    AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExamplePdf.html`))
+                        .then(() => {
+                            done();
+                        }, (err) => {
+                            done(err);
+                        });
+                }, (err) => {
+                    done(err);
+                });
+            });
+        });
+
     });
 
-    describe('with the template', () => {
+    describe('with puppeteer', () => {
 
         let puppeteerAvailable = false;
+        let puppeteerOptions: Puppeteer.LaunchOptions;
 
         before(async function() {
             this.slow(120000);
@@ -328,7 +361,9 @@ describe('PDF conversion', () => {
 
             if(selectedOptions) {
                 puppeteerAvailable = true;
-                pdfConverter.setOption("puppeteerOptions", selectedOptions);
+                puppeteerOptions = selectedOptions;
+                // has to be set to false in the end, so the process stops
+                pdfConverter.setOption("keepChromeAlive", true);
             }
 
             if(puppeteerAvailable) {
@@ -336,28 +371,118 @@ describe('PDF conversion', () => {
             }
         });
 
-        it('should create the correct document with extensions', (done) => {
-            fs.readFile(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8', (error, data) => {
-                if(error) {
-                    done(error);
-                    return;
-                }
-                pdfConverter.toHtml(data, {
-                    language: "de",
-                    automaticExtensionDetection: true,
-                }).then((text) => {
-                    text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
-                    AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExamplePdf.html`))
-                        .then(() => {
-                            done();
-                        }, (err) => {
-                            done(err);
-                        });
-                }, (err) => {
-                    done(err);
-                });
-            });
+        after(() => {
+            // close chromium
+            pdfConverter.setOption("keepChromeAlive", false);
         });
+
+        beforeEach(() => {
+            // reset default options before every test
+            if(puppeteerAvailable) {
+                pdfConverter.setOption("puppeteerOptions", puppeteerOptions);
+            }
+        });
+
+        it('restarts puppeteer correctly', async function() {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
+            let corruptConfig = {
+                executablePath: "-//notexistent",
+            };
+
+            try {
+                // set tested working config
+                pdfConverter.setOption("puppeteerOptions", puppeteerOptions);
+                await assert.doesNotReject(pdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+
+                // try definetely wrong config
+                pdfConverter.setOption("puppeteerOptions", corruptConfig);
+                await assert.rejects(pdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+
+                // try tested working config again, check reset
+                pdfConverter.setOption("puppeteerOptions", puppeteerOptions);
+                await assert.doesNotReject(pdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+            } catch(err) {
+                return err;
+            }
+
+            return;
+        }).slow(40000).timeout(60000);
+
+        it('handles multiple parallel calls correctly', async function() {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
+            let newPdfConverter = new PdfConverter({
+                puppeteerOptions,
+                keepChromeAlive: true,
+            });
+
+            // multiple starts should create multiple local instances
+            // might corrupt if global instance is not used correctly
+            let p1 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
+            let p2 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
+            let p3 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
+
+            await assert.doesNotReject(p1);
+            await assert.doesNotReject(p2);
+            await assert.doesNotReject(p3);
+
+            // assert one global instance is set. others are destroyed.
+
+            // multiple starts should use global instance
+            // might corrupt if global instance is not used correctly
+            p1 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
+            p2 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
+            p3 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
+
+            await assert.doesNotReject(p1);
+            await assert.doesNotReject(p2);
+            await assert.doesNotReject(p3);
+
+            // close instance
+            newPdfConverter.setOption("keepChromeAlive", false);
+        }).slow(40000).timeout(60000);
+
+
+        it('handles parallel keepChromeAlive reset correctly', async function() {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
+            let newPdfConverter = new PdfConverter({
+                puppeteerOptions,
+                keepChromeAlive: true,
+            });
+
+            // multiple starts should create multiple local instances
+            // might corrupt if global instance is not used correctly
+            await newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
+
+            // assert one global instance is set.
+
+            // multiple starts should use global instance
+            // might corrupt if global instance is not used correctly
+            let p1 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`), { renderDelay: 2000 });
+            let p2 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`), { renderDelay: 2000 });
+            let p3 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`), { renderDelay: 2000 });
+
+            // wait until processes are most likely started
+            // should be deactivated while the render delay is active
+            setTimeout(() => {
+                newPdfConverter.setOption("keepChromeAlive", false);
+            }, 1000);
+
+            await assert.doesNotReject(p1);
+            await assert.doesNotReject(p2);
+            await assert.doesNotReject(p3);
+        }).slow(40000).timeout(60000);
 
         it('should create the correct file', function(done) {
             if(!puppeteerAvailable) {

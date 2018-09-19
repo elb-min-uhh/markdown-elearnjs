@@ -45,6 +45,12 @@ class PdfSettingsObject extends ConverterSettingsObject {
      * the option `chromePath` if set.
      */
     public puppeteerOptions?: Puppeteer.LaunchOptions;
+    /**
+     * If set to true, the chrome browser process used in the `PdfConverter`
+     * will be kept running until the option is set to false again.
+     * Otherwise the browser will close automatically after conversion.
+     */
+    public keepChromeAlive?: boolean = false;
 
     /**
      * An Object containing options for the PdfConverter
@@ -65,6 +71,7 @@ class PdfSettingsObject extends ConverterSettingsObject {
             "customStyleFile",
             "chromePath",
             "puppeteerOptions",
+            "keepChromeAlive",
         ];
 
         if(options) {
