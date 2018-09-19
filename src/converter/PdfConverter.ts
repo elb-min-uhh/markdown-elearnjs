@@ -82,9 +82,15 @@ class PdfConverter extends AConverter implements IConverter {
      * @param options: Object - same as in the constructor
      */
     public setOptions(options: PdfSettingsObject) {
-        options = new PdfSettingsObject(options);
-        Object.keys(options).forEach((key) => {
-            this.setOption(key, options[key]);
+        let checkedObject = new PdfSettingsObject(options);
+
+        let inputKeys = Object.keys(options);
+
+        Object.keys(checkedObject).forEach((key) => {
+            // always check if the option is in the input object
+            // this way no other option keys are set to default again.
+            if(inputKeys.indexOf(key) >= 0)
+                this.setOption(key, checkedObject[key]);
         });
     }
 

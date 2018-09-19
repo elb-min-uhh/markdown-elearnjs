@@ -26,9 +26,15 @@ abstract class AConverter implements IConverter {
     }
 
     public setOptions(options: ConverterSettingsObject) {
-        options = new ConverterSettingsObject(options);
-        Object.keys(options).forEach((key) => {
-            this.setOption(key, options[key]);
+        let checkedObject = new ConverterSettingsObject(options);
+
+        let inputKeys = Object.keys(options);
+
+        Object.keys(checkedObject).forEach((key) => {
+            // always check if the option is in the input object
+            // this way no other option keys are set to default again.
+            if(inputKeys.indexOf(key) >= 0)
+                this.setOption(key, checkedObject[key]);
         });
     }
 

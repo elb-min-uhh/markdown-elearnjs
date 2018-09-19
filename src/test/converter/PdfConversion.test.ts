@@ -96,6 +96,25 @@ describe('PDF Converter Setup', () => {
         assert.equal(conv.getOption("headerHeight"), "20mm");
         assert.equal(conv.getOption("customStyleFile"), "somefile");
         assert.equal(conv.getOption("newPageOnSection"), false);
+
+        // update only one setting
+        conv.setOptions({
+            contentZoom: 1.5,
+        });
+
+        assert.equal(conv.getOption("headingDepth"), 2);
+        assert.equal(conv.getOption("newSectionOnHeading"), false);
+        assert.equal(conv.getOption("useSubSections"), false);
+        assert.equal(conv.getOption("subSectionLevel"), 4);
+        assert.equal(conv.getOption("subsubSectionLevel"), 5);
+
+        assert.equal(conv.getOption("contentZoom"), 1.5);
+        assert.equal(conv.getOption("customFooter"), "testfooter");
+        assert.equal(conv.getOption("customHeader"), "testheader");
+        assert.equal(conv.getOption("footerHeight"), "20mm");
+        assert.equal(conv.getOption("headerHeight"), "20mm");
+        assert.equal(conv.getOption("customStyleFile"), "somefile");
+        assert.equal(conv.getOption("newPageOnSection"), false);
     });
 
     it('inserts the correct settings', (done) => {

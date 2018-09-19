@@ -1,3 +1,7 @@
+## 1.4.2
+* Fixed a problem with `setOptions` resetting values to default
+## 1.4.1
+* Fixed a problem with new PdfSettingsObject keys being omitted
 ## 1.4.0
 * Switched to `Puppeteer` (Chromium) replacing `html-pdf` (PhantomJS) as
 PDF Converter

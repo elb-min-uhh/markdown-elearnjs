@@ -88,6 +88,16 @@ describe('HTML Converter Setup', () => {
         assert.equal(conv.getOption("useSubSections"), false);
         assert.equal(conv.getOption("subSectionLevel"), 4);
         assert.equal(conv.getOption("subsubSectionLevel"), 5);
+
+        conv.setOptions({
+            subSectionLevel: 3,
+        });
+
+        assert.equal(conv.getOption("headingDepth"), 2);
+        assert.equal(conv.getOption("newSectionOnHeading"), false);
+        assert.equal(conv.getOption("useSubSections"), false);
+        assert.equal(conv.getOption("subSectionLevel"), 3);
+        assert.equal(conv.getOption("subsubSectionLevel"), 5);
     });
 
     it('creates correct subsections', (done) => {
