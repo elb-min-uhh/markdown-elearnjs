@@ -1,4 +1,8 @@
 ## 1.4.2
+* Chromium instance can be kept alive, to not restart on every conversion
+    * with `PdfConverter.setOption("keepChromeAlive", true)`
+    * needs to be reset to `false`, otherwise the chrome instance will not
+    terminate
 * Fixed a problem with `setOptions` resetting values to default
 ## 1.4.1
 * Fixed a problem with new PdfSettingsObject keys being omitted
