@@ -393,28 +393,22 @@ describe('PDF conversion', () => {
                 executablePath: "-//notexistent",
             };
 
-            try {
-                // set tested working config
-                pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
-                await assert.doesNotReject(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
-                assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
+            // set tested working config
+            pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
+            await assert.doesNotReject(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+            assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
 
-                // try definitely wrong config
-                pdfConverterKeptAlive.setOption("puppeteerOptions", corruptConfig);
+            // try definitely wrong config
+            pdfConverterKeptAlive.setOption("puppeteerOptions", corruptConfig);
 
-                // assert global instance is not set anymore
-                assert.ok(!pdfConverterKeptAlive.hasBrowserInstance());
-                await assert.rejects(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+            // assert global instance is not set anymore
+            assert.ok(!pdfConverterKeptAlive.hasBrowserInstance());
+            await assert.rejects(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
 
-                // try tested working config again, check reset
-                pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
-                await assert.doesNotReject(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
-                assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
-            } catch(err) {
-                return err;
-            }
-
-            return;
+            // try tested working config again, check reset
+            pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
+            await assert.doesNotReject(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+            assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
         }).slow(40000).timeout(60000);
 
         it('handles multiple parallel calls correctly', async function() {
@@ -489,6 +483,8 @@ describe('PDF conversion', () => {
             // should be deactivated while the render delay is active
             setTimeout(() => {
                 newPdfConverter.setOption("keepChromeAlive", false);
+                // browser seems to have been closed already
+                assert.ok(!newPdfConverter.hasBrowserInstance());
             }, 1000);
 
             await assert.doesNotReject(p1);
@@ -508,35 +504,35 @@ describe('PDF conversion', () => {
                 executablePath: "-//notexistent",
             };
 
-            try {
-                // set tested working config
-                pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
-                await assert.doesNotReject(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+            // set tested working config
+            pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
+            await assert.doesNotReject(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
 
-                // assert global instance set
-                assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
+            // assert global instance set
+            assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
 
-                let p1 = pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`), { renderDelay: 5000 });
+            // start conversion 1
+            let p1 = pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`), { renderDelay: 5000 });
 
-                // wait until process is most likely started
-                // should be updated while the render delay is active
-                setTimeout(() => {
-                    pdfConverterKeptAlive.setOption("puppeteerOptions", corruptConfig);
-                }, 1000);
+            // wait one second
+            await new Promise((res, rej) => {
+                setTimeout(res, 1000);
+            });
 
-                // instance should not be closed by now
-                assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
+            // reset config to corrupt one
+            pdfConverterKeptAlive.setOption("puppeteerOptions", corruptConfig);
+            // browser seems to have been closed already
+            assert.ok(!pdfConverterKeptAlive.hasBrowserInstance());
 
-                await assert.doesNotReject(p1);
+            // try definitely wrong config, before p1 has resolved
+            // rejects only if restarted correctly
+            let p2 = pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
 
-                // instance should be closed now, due to options change
-                assert.ok(!pdfConverterKeptAlive.hasBrowserInstance());
+            await assert.rejects(p2);
+            await assert.doesNotReject(p1);
 
-                // try definitely wrong config, rejects only if restarted correctly
-                await assert.rejects(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
-            } catch(err) {
-                return err;
-            }
+            // instance should be closed now, due to corrupt restart of p2
+            assert.ok(!pdfConverterKeptAlive.hasBrowserInstance());
         }).slow(40000).timeout(60000);
 
         it('creates multiple local instances without `keepChromeAlive`', async function() {

@@ -24,8 +24,8 @@ class PdfConverter extends AConverter implements IConverter {
     protected converter: IShowdownConverter;
     private browser?: Puppeteer.Browser;
     private browserPromise?: Promise<Puppeteer.Browser>;
-    private browserLocks = 0;
-    private restartBrowser = false;
+    // Browser pid -> locks
+    private browserLocks: { [key: number]: number } = {};
 
     /**
      * Creates an HtmlConverter with specific options.
@@ -73,7 +73,6 @@ class PdfConverter extends AConverter implements IConverter {
         if((opt === "chromePath" && this.getOption("chromePath") !== val)
             || (opt === "puppeteerOptions" && !_.isEqual(this.getOption("puppeteerOptions"), val))
             || (opt === "keepChromeAlive" && val === false)) {
-            this.restartBrowser = true;
             this.closeGlobalBrowser().then();
         }
 
@@ -190,9 +189,9 @@ class PdfConverter extends AConverter implements IConverter {
         let html = await self.toHtml(markdown, <ConversionObject>options);
 
         let browser = await self.getBrowserInstance();
-
-        // add global lock
-        if(browser === self.browser) self.browserLocks++;
+        let browserPid = (await browser.process()).pid;
+        // add lock
+        self.lockBrowser(browserPid);
 
         const page = await browser.newPage();
         const tmpFile = path.join(rootPath, `.tmpPdfExport_${new Date().getTime()}_${Math.floor(Math.random() * 10000)}.html`);
@@ -215,22 +214,19 @@ class PdfConverter extends AConverter implements IConverter {
             // close the page only if the browser is not closed anyway
             // to prevent race conditions: page.close() / browser.close() might
             // concur even though await is given
-            if(self.getOption("keepChromeAlive")
-                && (self.browser === browser
-                    || self.browser === undefined)) {
+            if(self.getOption("keepChromeAlive") && self.isGlobalBrowser(browser)) {
                 await page.close();
             }
 
-            // remove global lock
-            if(browser === self.browser) self.browserLocks--;
+            // remove lock
+            self.unlockBrowser(browserPid);
 
             // close local browser
-            if(browser !== self.browser) {
+            if(!self.isGlobalBrowser(browser)) {
                 await self.closeBrowser(browser);
             }
-            // close browser
-            else if(!self.getOption("keepChromeAlive")
-                || self.restartBrowser) {
+            // close global browser
+            else if(!self.getOption("keepChromeAlive")) {
                 await self.closeGlobalBrowser();
             }
 
@@ -316,7 +312,7 @@ class PdfConverter extends AConverter implements IConverter {
             // update global instance
             if(self.getOption("keepChromeAlive")
                 && self.browser === undefined
-                && !self.restartBrowser) {
+                && self.browserPromise === promise) {
                 self.browser = browser;
             }
 
@@ -330,20 +326,27 @@ class PdfConverter extends AConverter implements IConverter {
     }
 
     /**
+     * Checks if the given browser references the global browser.
+     * @param browser the browser to check
+     *
+     * @return true if the reference is equal to the global browser
+     */
+    private isGlobalBrowser(browser: Puppeteer.Browser) {
+        return browser === this.browser;
+    }
+
+    /**
      * Closes the current browser instance and resets variables.
      * Resolves when done.
      */
     private async closeGlobalBrowser() {
-        // reset restart only if no browser is available or starting
-        if(!this.hasBrowserInstance()) this.restartBrowser = false;
-        // no longer publish starting browser
-        this.browserPromise = undefined;
-        if(this.browser === undefined || this.browserLocks > 0) return;
+        let browser = this.browser; // keep locally for later closing
 
-        let promise = this.closeBrowser(this.browser);
+        // remove global references
         this.browser = undefined;
-        this.restartBrowser = false;
-        await promise;
+        this.browserPromise = undefined;
+
+        if(browser !== undefined) await this.closeBrowser(browser);
     }
 
     /**
@@ -351,13 +354,45 @@ class PdfConverter extends AConverter implements IConverter {
      * Resolves when done.
      */
     private async closeBrowser(browser: Puppeteer.Browser) {
+        if(this.isGlobalBrowser(browser)) throw new Error("Cannot close global browser with `closeBrowser`. Please use `closeGlobalBrowser`.");
+
         let id = (await browser.process()).pid;
 
         // check lock right before closing
-        if(!browser || (browser === this.browser && this.browserLocks > 0)) return;
-        await browser.close();
+        if(browser !== undefined && !this.isLocked(id)) {
+            await browser.close();
+            console.log("markdown-elearnjs: Closed chromium browser successfully. Process ID", id);
+        }
+    }
 
-        console.log("markdown-elearnjs: Closed chromium browser successfully. Process ID", id);
+    /**
+     * Adds a lock for a specific process id (browser.process().pid)
+     * @param pid the id of the browsers process.
+     */
+    private lockBrowser(pid: number) {
+        if(this.browserLocks[pid] === undefined) {
+            this.browserLocks[pid] = 0;
+        }
+        this.browserLocks[pid]++;
+    }
+
+    /**
+     * Removes a lock for a specific process id (browser.process().pid)
+     * @param pid the id of the browsers process.
+     */
+    private unlockBrowser(pid: number) {
+        this.browserLocks[pid]--;
+        if(this.browserLocks[pid] === 0) {
+            delete this.browserLocks[pid];
+        }
+    }
+
+    /**
+     * Returns if the browser process is locked or not.
+     * @param pid the id of the browsers process.
+     */
+    private isLocked(pid: number) {
+        return this.browserLocks[pid] !== undefined;
     }
 
     /**

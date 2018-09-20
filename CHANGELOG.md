@@ -1,3 +1,8 @@
+## 1.4.6
+* PDF Conversion:
+    * use individual browser locking to close browsers seemingly instant
+    * updating options or setting `keepChromeAlive` to false works now
+    parallel to conversions in process
 ## 1.4.5
 * PDF Conversion:
     * improve browser restarting on parallel settings change
