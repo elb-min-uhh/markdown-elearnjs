@@ -6,20 +6,17 @@ import * as fs from "fs";
 class AssertExtensions {
 
     public static assertTextFileEqual(text: string, file: fs.PathLike) {
-        let ret = new Promise((res, rej) => {
-            fs.readFile(file, 'utf8', (err, data) => {
-                if(err) {
-                    rej(err);
-                }
-                text = text.replace(/\r/g, "").replace(/[ \t]*\n/g, "\n").replace(/[ \t\r\n]*$/g, "").trim();
-                data = data.replace(/\r/g, "").replace(/[ \t]*\n/g, "\n").replace(/[ \t\r\n]*$/g, "").trim();
+        let data = fs.readFileSync(file, 'utf8');
 
-                let difference = "";
+        text = text.replace(/\r/g, "").replace(/[ \t]*\n/g, "\n").replace(/[ \t\r\n]*$/g, "").trim();
+        data = data.replace(/\r/g, "").replace(/[ \t]*\n/g, "\n").replace(/[ \t\r\n]*$/g, "").trim();
 
-                // char compare to find difference
-                for(let i = 0; i < text.length; i++) {
-                    if(text.charAt(i) !== data.charAt(i)) {
-                        difference = `Differs at ${i} with
+        let difference = "";
+
+        // char compare to find difference
+        for(let i = 0; i < text.length; i++) {
+            if(text.charAt(i) !== data.charAt(i)) {
+                difference = `Differs at ${i} with
 Generated:
 ----------
 ${text.substr(i - 10, 150)}
@@ -29,21 +26,15 @@ From File:
 ----------
 ${data.substr(i - 10, 150)}
 ----------\n`;
-                        break;
-                    }
-                }
+                break;
+            }
+        }
 
-                let correct = text.localeCompare(data) === 0;
+        let correct = text.localeCompare(data) === 0;
 
-                if(correct) {
-                    res();
-                }
-                else {
-                    rej(difference);
-                }
-            });
-        });
-        return ret;
+        if(!correct) {
+            throw new Error(difference);
+        }
     }
 
     public static assertTextFilesEqual(file1: fs.PathLike, file2: fs.PathLike) {

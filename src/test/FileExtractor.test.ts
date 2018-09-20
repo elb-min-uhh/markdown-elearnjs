@@ -10,30 +10,26 @@ import PromiseCounter from '../util/PromiseCounter';
 
 const pathToTestAssets = '../../testAssets/';
 
-afterEach((done) => {
-    let promises: Promise<any>[] = [];
-
-    // remove all folders that might have been created
-    let foldersToRemove = ["export"];
-
-    foldersToRemove.forEach((folder) => {
-        let promise = new Promise((res, rej) => {
-            rimraf(path.join(__dirname, pathToTestAssets, folder), (err) => {
-                if(err) rej(err);
-                else res();
-            });
-        });
-        promises.push(promise);
-    });
-
-    new PromiseCounter(promises, 15000).then(() => {
-        done();
-    }, (err) => {
-        done(err);
-    });
-});
-
 describe("FileExtractor", () => {
+
+    afterEach(async () => {
+        let promises: Promise<any>[] = [];
+
+        // remove all folders that might have been created
+        let foldersToRemove = ["export"];
+
+        foldersToRemove.forEach((folder) => {
+            let promise = new Promise((res, rej) => {
+                rimraf(path.join(__dirname, pathToTestAssets, folder), (err) => {
+                    if(err) rej(err);
+                    else res();
+                });
+            });
+            promises.push(promise);
+        });
+
+        await new PromiseCounter(promises, 15000);
+    });
 
     describe("Positive Tests", () => {
 

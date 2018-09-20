@@ -188,7 +188,7 @@ describe('PDF conversion', () => {
         pdfConverterKeptAlive.setOption("keepChromeAlive", false);
     });
 
-    afterEach((done) => {
+    afterEach(async () => {
         let promises: Promise<any>[] = [];
 
         // remove all folders that might have been created
@@ -204,67 +204,39 @@ describe('PDF conversion', () => {
             promises.push(promise);
         });
 
-        new PromiseCounter(promises, 15000).then(() => {
-            done();
-        }, (err) => {
-            done(err);
-        });
+        await new PromiseCounter(promises, 15000);
     });
 
     describe('With small example codes', () => {
 
         // basic body only test
-        it('should create a valid pdf body', (done) => {
+        it('should create a valid pdf body', async () => {
             let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
-            html.then((text) => {
-                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
-                AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfBody.html`))
-                    .then(() => {
-                        done();
-                    }, (err) => {
-                        done(err);
-                    });
-            }, (err) => {
-                done(err);
-            });
+            let text = await html;
+            text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfBody.html`));
         });
 
         // basic body only test with toPdfHtml
-        it('should create a valid pdf body with toPdfHtml', (done) => {
+        it('should create a valid pdf body with toPdfHtml', async () => {
             let html = pdfConverterKeptAlive.toPdfHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
-            html.then((text) => {
-                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
-                AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfBody.html`))
-                    .then(() => {
-                        done();
-                    }, (err) => {
-                        done(err);
-                    });
-            }, (err) => {
-                done(err);
-            });
+            let text = await html;
+            text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfBody.html`));
         });
 
         // basic full document test
-        it('should create a valid pdf document without autodetection', (done) => {
+        it('should create a valid pdf document without autodetection', async () => {
             let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 language: "de",
             });
-            html.then((text) => {
-                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
-                AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`))
-                    .then(() => {
-                        done();
-                    }, (err) => {
-                        done(err);
-                    });
-            }, (err) => {
-                done(err);
-            });
+            let text = await html;
+            text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`));
         });
 
         // basic full document test
-        it('should create a valid pdf document', (done) => {
+        it('should create a valid pdf document', async () => {
             let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 automaticExtensionDetection: true,
                 language: "de",
@@ -273,22 +245,14 @@ describe('PDF conversion', () => {
                 includeClickImage: false,
                 includeTimeSlider: false,
             });
-            html.then((text) => {
-                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
-                AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`))
-                    .then(() => {
-                        done();
-                    }, (err) => {
-                        done(err);
-                    });
-            }, (err) => {
-                done(err);
-            });
+            let text = await html;
+            text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFull.html`));
         });
 
 
         // basic full document test with english language selection
-        it('should create a valid pdf document with english language', (done) => {
+        it('should create a valid pdf document with english language', async () => {
             let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 automaticExtensionDetection: true,
                 language: "en",
@@ -297,40 +261,19 @@ describe('PDF conversion', () => {
                 includeClickImage: false,
                 includeTimeSlider: false,
             });
-            html.then((text) => {
-                text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
-                AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFullEnglish.html`))
-                    .then(() => {
-                        done();
-                    }, (err) => {
-                        done(err);
-                    });
-            }, (err) => {
-                done(err);
-            });
+            let text = await html;
+            text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfFullEnglish.html`));
         });
 
-        it('creates the correct document with extensions from template', (done) => {
-            fs.readFile(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8', (error, data) => {
-                if(error) {
-                    done(error);
-                    return;
-                }
-                pdfConverterKeptAlive.toHtml(data, {
-                    language: "de",
-                    automaticExtensionDetection: true,
-                }).then((text) => {
-                    text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
-                    AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExamplePdf.html`))
-                        .then(() => {
-                            done();
-                        }, (err) => {
-                            done(err);
-                        });
-                }, (err) => {
-                    done(err);
-                });
+        it('creates the correct document with extensions from template', async () => {
+            let data = fs.readFileSync(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8');
+            let text = await pdfConverterKeptAlive.toHtml(data, {
+                language: "de",
+                automaticExtensionDetection: true,
             });
+            text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExamplePdf.html`));
         });
 
     });

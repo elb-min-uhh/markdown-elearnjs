@@ -48,8 +48,8 @@ abstract class AConverter implements IConverter {
      * @return a promise resolved if it can be opened.
      * Rejected with the error if not.
      */
-    protected tryFileOpen(file: fs.PathLike) {
-        let ret = new Promise<void>((res, rej) => {
+    protected async tryFileOpen(file: fs.PathLike) {
+        await new Promise<void>((res, rej) => {
             fs.open(file, 'r+', (error, fd) => {
                 if(fd !== undefined) {
                     try {
@@ -67,8 +67,6 @@ abstract class AConverter implements IConverter {
                 }
             });
         });
-
-        return ret;
     }
 
 }

@@ -92,29 +92,24 @@ class ExtensionManager {
      * @return Promise<ExtensionObject>: including which extensions where found
      * and explicitly which were not found (true/false)
      */
-    public static scanMarkdownForAll(markdown: string, markdownConverter?: IConverter) {
-        let ret = new Promise<ExtensionObject>((res, rej) => {
-            // define converter
-            if(!ExtensionManager.htmlConverter)
-                ExtensionManager.htmlConverter = new HtmlConverter(new ConverterSettingsObject());
+    public static async scanMarkdownForAll(markdown: string, markdownConverter?: IConverter) {
+        // define converter
+        if(!ExtensionManager.htmlConverter)
+            ExtensionManager.htmlConverter = new HtmlConverter(new ConverterSettingsObject());
 
-            let converter: IConverter = ExtensionManager.htmlConverter;
-            if(markdownConverter
-                && (markdownConverter instanceof HtmlConverter
-                    || markdownConverter instanceof PdfConverter)) {
-                converter = <IConverter>markdownConverter;
-            }
+        let converter: IConverter = ExtensionManager.htmlConverter;
+        if(markdownConverter
+            && (markdownConverter instanceof HtmlConverter
+                || markdownConverter instanceof PdfConverter)) {
+            converter = <IConverter>markdownConverter;
+        }
 
-            let opts = new ConversionObject();
-            opts.bodyOnly = true;
+        let opts = new ConversionObject();
+        opts.bodyOnly = true;
 
-            // convert and then scan
-            converter.toHtml(markdown, opts).then((html) => {
-                res(ExtensionManager.scanHtmlForAll(html));
-            }, rej);
-        });
-
-        return ret;
+        // convert and then scan
+        let html = await converter.toHtml(markdown, opts);
+        return ExtensionManager.scanHtmlForAll(html);
     }
 
     // Asset Strings for a HTML Export
@@ -140,7 +135,7 @@ class ExtensionManager {
      * @param dirPath: string - the path to write the `assets` folder to.
      * @param {ExtensionObject} opts optional options
      */
-    public static exportAssets(dirPath: string, opts: ExtensionObject) {
+    public static async exportAssets(dirPath: string, opts: ExtensionObject) {
         let outPath = path.resolve(dirPath + "/assets/");
         let folders = [path.resolve(`${__dirname}/${assetsPath}/elearnjs/assets/`)];
 
@@ -149,10 +144,7 @@ class ExtensionManager {
         if(opts.includeClickImage) folders.push(ExtensionManager.getClickImageAssetDir());
         if(opts.includeTimeSlider) folders.push(ExtensionManager.getTimeSliderAssetDir());
 
-        let ret = new Promise((res, rej) => {
-            ExtensionManager.writeFolders(folders, outPath, res, rej);
-        });
-        return ret;
+        return ExtensionManager.writeFolders(folders, outPath);
     }
 
     // Locations to copy from
@@ -241,21 +233,19 @@ class ExtensionManager {
     /**
      * Copies/writes a list of folders by their absolute paths to the outPath
      */
-    private static writeFolders(folders: string[], outPath: string, callback: () => any, error?: (err: any) => any) {
+    private static async writeFolders(folders: string[], outPath: string) {
         if(!folders || !folders.length) {
-            if(callback) callback();
             return;
         }
         // get first folder + remove from array
-        let inPath = folders.shift();
-        ncp(inPath!, outPath, (err: any) => {
-            if(err) {
-                if(error) error(err);
-                return;
-            }
-
-            ExtensionManager.writeFolders(folders, outPath, callback, error);
-        });
+        for(let inPath of folders) {
+            await new Promise((res, rej) => {
+                ncp(inPath!, outPath, (err: any) => {
+                    if(err) rej(err);
+                    else res();
+                });
+            });
+        }
     }
 }
 

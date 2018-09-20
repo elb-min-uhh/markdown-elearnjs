@@ -73,34 +73,28 @@ class HtmlConverter extends AConverter implements IConverter {
         return opts;
     }
 
-    public toHtml(markdown: string, options?: ConversionObject) {
+    public async toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
         let opts = new ConversionObject(options);
 
-        let ret = new Promise<string>((res, rej) => {
-            let html = self.converter.makeHtml(markdown);// conversion
+        let html = self.converter.makeHtml(markdown);// conversion
 
-            if(opts.bodyOnly) {
-                res(html);
-                return;
-            }
+        if(opts.bodyOnly) {
+            return html;
+        }
 
-            // create meta and imprint
-            let meta = elearnExtension.parseMetaData(markdown);
-            let imprint = "";
-            // create imprint only if explicitally inserted in markdown
-            if(markdown.match(/(?:(?:^|\n)(```+|~~~+)imprint\s*?\n([\s\S]*?)\n\1|(?:^|\n)(<!--+)imprint\s*?\n([\s\S]*?)\n-->)/g)) {
-                imprint = self.imprintConverter.makeHtml(markdown);
-            }
+        // create meta and imprint
+        let meta = elearnExtension.parseMetaData(markdown);
+        let imprint = "";
+        // create imprint only if explicitally inserted in markdown
+        if(markdown.match(/(?:(?:^|\n)(```+|~~~+)imprint\s*?\n([\s\S]*?)\n\1|(?:^|\n)(<!--+)imprint\s*?\n([\s\S]*?)\n-->)/g)) {
+            imprint = self.imprintConverter.makeHtml(markdown);
+        }
 
-            FileManager.getHtmlTemplate().then((data) => {
-                // scan for extensions if necessary
-                opts = Object.assign(opts, HtmlConverter.fillExtensionOptions(html, opts));
-                res(self.getHTMLFileContent(data, html, meta, imprint, opts));
-            }, (err) => { rej(err); });
-        });
-
-        return ret;
+        let data = await FileManager.getHtmlTemplate();
+        // scan for extensions if necessary
+        opts = Object.assign(opts, HtmlConverter.fillExtensionOptions(html, opts));
+        return self.getHTMLFileContent(data, html, meta, imprint, opts);
     }
 
     /**

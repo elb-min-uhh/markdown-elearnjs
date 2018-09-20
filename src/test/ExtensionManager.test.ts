@@ -16,7 +16,7 @@ const pathToAssets = '../../assets/elearnjs/';
 
 
 describe('Extension Manager', () => {
-    afterEach((done) => {
+    afterEach(async () => {
         let promises: Promise<any>[] = [];
 
         // remove all folders that might have been created
@@ -32,11 +32,7 @@ describe('Extension Manager', () => {
             promises.push(promise);
         });
 
-        new PromiseCounter(promises, 15000).then(() => {
-            done();
-        }, (err) => {
-            done(err);
-        });
+        await new PromiseCounter(promises, 15000);
     });
 
     // basic body only test
@@ -67,43 +63,40 @@ describe('Extension Manager', () => {
     });
 
     // basic body only test
-    it('should export selected assets correctly', (done) => {
+    it('should export selected assets correctly', async () => {
 
         // create output folder
         fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
         // export assets
-        ExtensionManager.exportAssets(
+        await ExtensionManager.exportAssets(
             path.join(__dirname, pathToTestAssets, "export"), {
                 includeQuiz: true,
                 includeClickImage: true,
-            }).then(() => {
-                AssertExtensions.assertFilesEqual(
-                    path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearn.js"),
-                    path.join(__dirname, pathToAssets, "assets", "js", "elearn.js"));
-                AssertExtensions.assertFilesEqual(
-                    path.join(__dirname, pathToTestAssets, "export", "assets", "js", "quiz.js"),
-                    path.join(__dirname, pathToAssets, "extensions", "quiz", "assets", "js", "quiz.js"));
-
-                assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearnvideo.js")));
-
-                AssertExtensions.assertFilesEqual(
-                    path.join(__dirname, pathToTestAssets, "export", "assets", "js", "clickimage.js"),
-                    path.join(__dirname, pathToAssets, "extensions", "clickimage", "assets", "js", "clickimage.js"));
-
-                assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js", "timeslider.js")));
-
-                AssertExtensions.assertFilesEqual(
-                    path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Icons.woff"),
-                    path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
-
-                AssertExtensions.assertFilesEqual(
-                    path.join(__dirname, pathToTestAssets, "export", "assets", "lang", "elearnjs-en.js"),
-                    path.join(__dirname, pathToAssets, "assets", "lang", "elearnjs-en.js"));
-                done();
-            }, (err) => {
-                done(err);
             });
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearn.js"),
+            path.join(__dirname, pathToAssets, "assets", "js", "elearn.js"));
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "quiz.js"),
+            path.join(__dirname, pathToAssets, "extensions", "quiz", "assets", "js", "quiz.js"));
+
+        assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearnvideo.js")));
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "clickimage.js"),
+            path.join(__dirname, pathToAssets, "extensions", "clickimage", "assets", "js", "clickimage.js"));
+
+        assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js", "timeslider.js")));
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Icons.woff"),
+            path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "lang", "elearnjs-en.js"),
+            path.join(__dirname, pathToAssets, "assets", "lang", "elearnjs-en.js"));
     });
 
     it('detects no extensions in basic html', () => {

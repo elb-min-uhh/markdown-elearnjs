@@ -96,29 +96,23 @@ class PdfConverter extends AConverter implements IConverter {
         });
     }
 
-    public toHtml(markdown: string, options?: ConversionObject) {
+    public async toHtml(markdown: string, options?: ConversionObject) {
         const self = this;
         let opts = new ConversionObject(options);
 
-        let ret = new Promise<string>((res, rej) => {
-            let html = self.converter.makeHtml(markdown);// conversion
+        let html = self.converter.makeHtml(markdown);// conversion
 
-            if(opts.bodyOnly) {
-                res(html);
-                return;
-            }
+        if(opts.bodyOnly) {
+            return html;
+        }
 
-            // create meta and imprint
-            let meta = elearnExtension.parseMetaData(markdown);
+        // create meta and imprint
+        let meta = elearnExtension.parseMetaData(markdown);
 
-            FileManager.getPdfTemplate().then((data) => {
-                // scan for extensions if necessary
-                opts = Object.assign(opts, PdfConverter.fillExtensionOptions(html, opts));
-                res(self.getPDFFileContent(data, html, meta, opts));
-            }, (err) => { rej(err); });
-        });
-
-        return ret;
+        let data = await FileManager.getPdfTemplate();
+        // scan for extensions if necessary
+        opts = Object.assign(opts, PdfConverter.fillExtensionOptions(html, opts));
+        return self.getPDFFileContent(data, html, meta, opts);
     }
 
     /**
