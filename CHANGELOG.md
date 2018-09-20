@@ -1,3 +1,7 @@
+## 1.4.7
+* PDF Conversion:
+    * implementation of more atomic locks, by wrapping the browser
+    * receiving the instance and locking it should not get interrupted
 ## 1.4.6
 * PDF Conversion:
     * use individual browser locking to close browsers seemingly instant

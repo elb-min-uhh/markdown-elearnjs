@@ -13,6 +13,7 @@ import PdfExportOptionObject from '../objects/export/PdfExportOptionObject';
 import ExtensionObject from '../objects/ExtensionObject';
 import PdfSettingsObject from '../objects/settings/PdfSettingsObject';
 import AConverter from './AConverter';
+import IBrowser from './IBrowser';
 import IConverter from './IConverter';
 import IShowdownConverter from './IShowdownConverter';
 import * as elearnExtension from './ShowdownElearnJS';
@@ -22,10 +23,8 @@ const assetsPath = '../../assets';
 class PdfConverter extends AConverter implements IConverter {
 
     protected converter: IShowdownConverter;
-    private browser?: Puppeteer.Browser;
-    private browserPromise?: Promise<Puppeteer.Browser>;
-    // Browser pid -> locks
-    private browserLocks: { [key: number]: number } = {};
+    private browser?: IBrowser;
+    private browserPromise?: Promise<IBrowser>;
 
     /**
      * Creates an HtmlConverter with specific options.
@@ -183,9 +182,8 @@ class PdfConverter extends AConverter implements IConverter {
         let html = await self.toHtml(markdown, <ConversionObject>options);
 
         let browser = await self.getBrowserInstance();
-        let browserPid = (await browser.process()).pid;
         // add lock
-        self.lockBrowser(browserPid);
+        self.lockBrowser(browser);
 
         const page = await browser.newPage();
         const tmpFile = path.join(rootPath, `.tmpPdfExport_${new Date().getTime()}_${Math.floor(Math.random() * 10000)}.html`);
@@ -213,7 +211,7 @@ class PdfConverter extends AConverter implements IConverter {
             }
 
             // remove lock
-            self.unlockBrowser(browserPid);
+            self.unlockBrowser(browser);
 
             // close local browser
             if(!self.isGlobalBrowser(browser)) {
@@ -251,18 +249,18 @@ class PdfConverter extends AConverter implements IConverter {
      * Starts a puppeteer browser instance. Will use the
      * PDFSettingsObject.chromePath as `executablePath` if set.
      *
-     * @return instance of Puppeteer.Browser
+     * @return {IBrowser} instance of IBrowser
      */
     private async initBrowser() {
         let options: Puppeteer.LaunchOptions = this.getOption('puppeteerOptions') || {};
         if(this.getOption('chromePath') !== undefined) {
             options.executablePath = this.getOption('chromePath');
         }
+        const browser: IBrowser = <IBrowser>await Puppeteer.launch(options);
 
-        const browser = await Puppeteer.launch(options);
-
-        let id = (await browser.process()).pid;
-        console.log("markdown-elearnjs: Initialized new chromium browser. Process ID", id);
+        browser.pid = (await browser.process()).pid;
+        browser.locks = 0;
+        console.log("markdown-elearnjs: Initialized new chromium browser. Process ID", browser.pid);
 
         return browser;
     }
@@ -325,7 +323,7 @@ class PdfConverter extends AConverter implements IConverter {
      *
      * @return true if the reference is equal to the global browser
      */
-    private isGlobalBrowser(browser: Puppeteer.Browser) {
+    private isGlobalBrowser(browser: IBrowser) {
         return browser === this.browser;
     }
 
@@ -347,46 +345,38 @@ class PdfConverter extends AConverter implements IConverter {
      * Closes the given browser instance.
      * Resolves when done.
      */
-    private async closeBrowser(browser: Puppeteer.Browser) {
+    private async closeBrowser(browser: IBrowser) {
         if(this.isGlobalBrowser(browser)) throw new Error("Cannot close global browser with `closeBrowser`. Please use `closeGlobalBrowser`.");
 
-        let id = (await browser.process()).pid;
-
         // check lock right before closing
-        if(browser !== undefined && !this.isLocked(id)) {
+        if(browser !== undefined && !this.isLocked(browser)) {
             await browser.close();
-            console.log("markdown-elearnjs: Closed chromium browser successfully. Process ID", id);
+            console.log("markdown-elearnjs: Closed chromium browser successfully. Process ID", browser.pid);
         }
     }
 
     /**
-     * Adds a lock for a specific process id (browser.process().pid)
+     * Adds a lock for a specific process id (IBrowser.pid)
      * @param pid the id of the browsers process.
      */
-    private lockBrowser(pid: number) {
-        if(this.browserLocks[pid] === undefined) {
-            this.browserLocks[pid] = 0;
-        }
-        this.browserLocks[pid]++;
+    private lockBrowser(browser: IBrowser) {
+        browser.locks++;
     }
 
     /**
-     * Removes a lock for a specific process id (browser.process().pid)
+     * Removes a lock for a specific process id (IBrowser.pid)
      * @param pid the id of the browsers process.
      */
-    private unlockBrowser(pid: number) {
-        this.browserLocks[pid]--;
-        if(this.browserLocks[pid] === 0) {
-            delete this.browserLocks[pid];
-        }
+    private unlockBrowser(browser: IBrowser) {
+        browser.locks--;
     }
 
     /**
      * Returns if the browser process is locked or not.
      * @param pid the id of the browsers process.
      */
-    private isLocked(pid: number) {
-        return this.browserLocks[pid] !== undefined;
+    private isLocked(browser: IBrowser) {
+        return browser.locks > 0;
     }
 
     /**
