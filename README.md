@@ -27,6 +27,18 @@ Insert this into your file
 const MarkdownElearnJS = require('markdown-elearnjs');
 ```
 
+or you can import the components you need directly
+
+```typescript
+import {
+    HtmlConverter,
+    PdfConverter,
+    ExtensionManager,
+    FileExtractor,
+    FileExtractorObject
+} from 'markdown-elearnjs';
+```
+
 ### Conversion
 
 To convert some markdown code to Html you can simply use
