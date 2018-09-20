@@ -175,10 +175,17 @@ describe('PDF Converter Setup', () => {
 
 describe('PDF conversion', () => {
 
-    let pdfConverter: PdfConverter;
+    let pdfConverterKeptAlive: PdfConverter;
 
     before(() => {
-        pdfConverter = new PdfConverter();
+        pdfConverterKeptAlive = new PdfConverter({
+            keepChromeAlive: true,
+        });
+    });
+
+    after(() => {
+        // close chromium
+        pdfConverterKeptAlive.setOption("keepChromeAlive", false);
     });
 
     afterEach((done) => {
@@ -208,7 +215,7 @@ describe('PDF conversion', () => {
 
         // basic body only test
         it('should create a valid pdf body', (done) => {
-            let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
+            let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
             html.then((text) => {
                 text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfBody.html`))
@@ -224,7 +231,7 @@ describe('PDF conversion', () => {
 
         // basic body only test with toPdfHtml
         it('should create a valid pdf body with toPdfHtml', (done) => {
-            let html = pdfConverter.toPdfHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
+            let html = pdfConverterKeptAlive.toPdfHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
             html.then((text) => {
                 text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
                 AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToPdfBody.html`))
@@ -240,7 +247,7 @@ describe('PDF conversion', () => {
 
         // basic full document test
         it('should create a valid pdf document without autodetection', (done) => {
-            let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
+            let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 language: "de",
             });
             html.then((text) => {
@@ -258,7 +265,7 @@ describe('PDF conversion', () => {
 
         // basic full document test
         it('should create a valid pdf document', (done) => {
-            let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
+            let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 automaticExtensionDetection: true,
                 language: "de",
                 includeQuiz: false,
@@ -282,7 +289,7 @@ describe('PDF conversion', () => {
 
         // basic full document test with english language selection
         it('should create a valid pdf document with english language', (done) => {
-            let html = pdfConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
+            let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 automaticExtensionDetection: true,
                 language: "en",
                 includeQuiz: false,
@@ -309,7 +316,7 @@ describe('PDF conversion', () => {
                     done(error);
                     return;
                 }
-                pdfConverter.toHtml(data, {
+                pdfConverterKeptAlive.toHtml(data, {
                     language: "de",
                     automaticExtensionDetection: true,
                 }).then((text) => {
@@ -362,8 +369,6 @@ describe('PDF conversion', () => {
             if(selectedOptions) {
                 puppeteerAvailable = true;
                 puppeteerOptions = selectedOptions;
-                // has to be set to false in the end, so the process stops
-                pdfConverter.setOption("keepChromeAlive", true);
             }
 
             if(puppeteerAvailable) {
@@ -371,15 +376,10 @@ describe('PDF conversion', () => {
             }
         });
 
-        after(() => {
-            // close chromium
-            pdfConverter.setOption("keepChromeAlive", false);
-        });
-
         beforeEach(() => {
             // reset default options before every test
             if(puppeteerAvailable) {
-                pdfConverter.setOption("puppeteerOptions", puppeteerOptions);
+                pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
             }
         });
 
@@ -395,16 +395,21 @@ describe('PDF conversion', () => {
 
             try {
                 // set tested working config
-                pdfConverter.setOption("puppeteerOptions", puppeteerOptions);
-                await assert.doesNotReject(pdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+                pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
+                await assert.doesNotReject(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+                assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
 
-                // try definetely wrong config
-                pdfConverter.setOption("puppeteerOptions", corruptConfig);
-                await assert.rejects(pdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+                // try definitely wrong config
+                pdfConverterKeptAlive.setOption("puppeteerOptions", corruptConfig);
+
+                // assert global instance is not set anymore
+                assert.ok(!pdfConverterKeptAlive.hasBrowserInstance());
+                await assert.rejects(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
 
                 // try tested working config again, check reset
-                pdfConverter.setOption("puppeteerOptions", puppeteerOptions);
-                await assert.doesNotReject(pdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+                pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
+                await assert.doesNotReject(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+                assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
             } catch(err) {
                 return err;
             }
@@ -423,7 +428,9 @@ describe('PDF conversion', () => {
                 keepChromeAlive: true,
             });
 
-            // multiple starts should create multiple local instances
+            assert.ok(!newPdfConverter.hasBrowserInstance());
+
+            // multiple starts should use one global instances
             // might corrupt if global instance is not used correctly
             let p1 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
             let p2 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
@@ -433,7 +440,8 @@ describe('PDF conversion', () => {
             await assert.doesNotReject(p2);
             await assert.doesNotReject(p3);
 
-            // assert one global instance is set. others are destroyed.
+            // assert one global instance is set.
+            assert.ok(newPdfConverter.hasBrowserInstance());
 
             // multiple starts should use global instance
             // might corrupt if global instance is not used correctly
@@ -445,8 +453,11 @@ describe('PDF conversion', () => {
             await assert.doesNotReject(p2);
             await assert.doesNotReject(p3);
 
+            assert.ok(newPdfConverter.hasBrowserInstance());
+
             // close instance
             newPdfConverter.setOption("keepChromeAlive", false);
+            assert.ok(!newPdfConverter.hasBrowserInstance());
         }).slow(40000).timeout(60000);
 
 
@@ -466,6 +477,7 @@ describe('PDF conversion', () => {
             await newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
 
             // assert one global instance is set.
+            assert.ok(newPdfConverter.hasBrowserInstance());
 
             // multiple starts should use global instance
             // might corrupt if global instance is not used correctly
@@ -482,6 +494,49 @@ describe('PDF conversion', () => {
             await assert.doesNotReject(p1);
             await assert.doesNotReject(p2);
             await assert.doesNotReject(p3);
+
+            assert.ok(!newPdfConverter.hasBrowserInstance());
+        }).slow(40000).timeout(60000);
+
+        it('restarts after parallel `puppeteerOptions` change', async function() {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
+            let corruptConfig = {
+                executablePath: "-//notexistent",
+            };
+
+            try {
+                // set tested working config
+                pdfConverterKeptAlive.setOption("puppeteerOptions", puppeteerOptions);
+                await assert.doesNotReject(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+
+                // assert global instance set
+                assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
+
+                let p1 = pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`), { renderDelay: 5000 });
+
+                // wait until process is most likely started
+                // should be updated while the render delay is active
+                setTimeout(() => {
+                    pdfConverterKeptAlive.setOption("puppeteerOptions", corruptConfig);
+                }, 1000);
+
+                // instance should not be closed by now
+                assert.ok(pdfConverterKeptAlive.hasBrowserInstance());
+
+                await assert.doesNotReject(p1);
+
+                // instance should be closed now, due to options change
+                assert.ok(!pdfConverterKeptAlive.hasBrowserInstance());
+
+                // try definitely wrong config, rejects only if restarted correctly
+                await assert.rejects(pdfConverterKeptAlive.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`)));
+            } catch(err) {
+                return err;
+            }
         }).slow(40000).timeout(60000);
 
         it('should create the correct file', function(done) {
@@ -499,12 +554,12 @@ describe('PDF conversion', () => {
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
             // set options
-            pdfConverter.setOptions({
+            pdfConverterKeptAlive.setOptions({
                 headerHeight: "0cm",
             });
 
             // convert the file
-            pdfConverter.toFile(data,
+            pdfConverterKeptAlive.toFile(data,
                 path.join(__dirname, pathToTestAssets, "export", "out.pdf"),
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
@@ -535,7 +590,7 @@ describe('PDF conversion', () => {
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
             // convert the file
-            assert.rejects(pdfConverter.toFile(data,
+            assert.rejects(pdfConverterKeptAlive.toFile(data,
                 undefined!,
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
@@ -568,7 +623,7 @@ describe('PDF conversion', () => {
             fs.closeSync(file);
 
             // convert the file
-            assert.rejects(pdfConverter.toFile(data,
+            assert.rejects(pdfConverterKeptAlive.toFile(data,
                 path.join(__dirname, pathToTestAssets, "export", "dummy"),
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
@@ -596,13 +651,13 @@ describe('PDF conversion', () => {
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
             // set some options
-            pdfConverter.setOptions({
+            pdfConverterKeptAlive.setOptions({
                 headerHeight: "2in",
                 footerHeight: "10px",
             });
 
             // convert the file
-            pdfConverter.toBuffer(data,
+            pdfConverterKeptAlive.toBuffer(data,
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
@@ -630,13 +685,13 @@ describe('PDF conversion', () => {
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
             // set some options
-            pdfConverter.setOptions({
+            pdfConverterKeptAlive.setOptions({
                 headerHeight: undefined,
                 footerHeight: "10pxls",
             });
 
             // convert the file
-            pdfConverter.toBuffer(data,
+            pdfConverterKeptAlive.toBuffer(data,
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
