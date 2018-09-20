@@ -2,6 +2,7 @@
 * Better usage of global Chromium instance
     * only one at a time for parallel started processes
     * correct restart of browser on parallel options change
+* Fixed a problem in with certain test cases not terminating
 ## 1.4.2
 * Chromium instance can be kept alive, to not restart on every conversion
     * with `PdfConverter.setOption("keepChromeAlive", true)`
