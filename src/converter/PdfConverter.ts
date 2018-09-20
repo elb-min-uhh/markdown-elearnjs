@@ -195,7 +195,7 @@ class PdfConverter extends AConverter implements IConverter {
         if(browser === self.browser) self.browserLocks++;
 
         const page = await browser.newPage();
-        const tmpFile = path.join(rootPath, `.tmpPdfExport_${new Date().getTime()}.html`);
+        const tmpFile = path.join(rootPath, `.tmpPdfExport_${new Date().getTime()}_${Math.floor(Math.random() * 10000)}.html`);
 
         fs.writeFileSync(tmpFile, html, "UTF8");
 
