@@ -539,6 +539,31 @@ describe('PDF conversion', () => {
             }
         }).slow(40000).timeout(60000);
 
+        it('creates multiple local instances without `keepChromeAlive`', async function() {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
+            let newPdfConverter = new PdfConverter({
+                puppeteerOptions,
+            });
+
+            assert.ok(!newPdfConverter.hasBrowserInstance());
+
+            // multiple starts should use one global instances
+            // might corrupt if global instance is not used correctly
+            let p1 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
+            let p2 = newPdfConverter.toBuffer(exampleMarkdown, path.join(__dirname, pathToTestAssets, `inputFiles`));
+
+            assert.ok(!newPdfConverter.hasBrowserInstance());
+
+            await assert.doesNotReject(p1);
+            await assert.doesNotReject(p2);
+
+            assert.ok(!newPdfConverter.hasBrowserInstance());
+        }).slow(40000).timeout(60000);
+
         it('should create the correct file', function(done) {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
