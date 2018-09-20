@@ -1,3 +1,7 @@
+## 1.4.4
+* PDF Conversion:
+    * reduce risk of tmp file name collision by including random number
+    * add test without `keepChromeAlive` flag
 ## 1.4.3
 * Better usage of global Chromium instance
     * only one at a time for parallel started processes
