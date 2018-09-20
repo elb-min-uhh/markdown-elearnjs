@@ -1,3 +1,6 @@
+## 1.4.5
+* PDF Conversion:
+    * improve browser restarting on parallel settings change
 ## 1.4.4
 * PDF Conversion:
     * reduce risk of tmp file name collision by including random number

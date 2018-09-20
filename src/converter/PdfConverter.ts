@@ -314,7 +314,9 @@ class PdfConverter extends AConverter implements IConverter {
             }
 
             // update global instance
-            if(self.getOption("keepChromeAlive") && self.browser === undefined) {
+            if(self.getOption("keepChromeAlive")
+                && self.browser === undefined
+                && !self.restartBrowser) {
                 self.browser = browser;
             }
 
@@ -332,7 +334,10 @@ class PdfConverter extends AConverter implements IConverter {
      * Resolves when done.
      */
     private async closeGlobalBrowser() {
+        // reset restart only if no browser is available or starting
         if(!this.hasBrowserInstance()) this.restartBrowser = false;
+        // no longer publish starting browser
+        this.browserPromise = undefined;
         if(this.browser === undefined || this.browserLocks > 0) return;
 
         let promise = this.closeBrowser(this.browser);
