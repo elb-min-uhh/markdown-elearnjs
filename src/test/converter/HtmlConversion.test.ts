@@ -33,8 +33,6 @@ const exampleImprint =
     Universität Hamburg
 -->`;
 
-
-
 const exampleMeta2 =
     `---
     Title: Test
@@ -153,9 +151,15 @@ describe('HTML conversion', () => {
     });
 
     describe('With small example codes', () => {
-
         // basic body only test
         it('should create a valid html body', async () => {
+            let html = htmlConverter.toHtml(exampleMarkdown, { bodyOnly: true });
+            let text = await html;
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlBody.html`));
+        });
+
+        // basic body only test
+        it('should create a valid html body with meta and imprint left out', async () => {
             let html = htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
             let text = await html;
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlBody.html`));
@@ -163,9 +167,23 @@ describe('HTML conversion', () => {
 
         // basic full document test
         it('should create a valid html document', async () => {
-            let html = htmlConverter.toHtml(exampleMeta2 + "\n" + exampleImprint2 + "\n" + exampleMarkdown);
+            let html = htmlConverter.toHtml(exampleMarkdown);
             let text = await html;
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlFull.html`));
+        });
+
+        // basic full document test
+        it('should create a valid html document with meta and imprint', async () => {
+            let html = htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown);
+            let text = await html;
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlFullImprintMeta.html`));
+        });
+
+        // basic full document test
+        it('should create a valid html document with meta and imprint (different syntax)', async () => {
+            let html = htmlConverter.toHtml(exampleMeta2 + "\n" + exampleImprint2 + "\n" + exampleMarkdown);
+            let text = await html;
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlFullImprintMeta.html`));
         });
 
         // basic full document with export ready links
@@ -215,7 +233,7 @@ describe('HTML conversion', () => {
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleExtensions.html`));
         });
 
-        it('should create the correct file with extension export', (done) => {
+        it('should create the correct file with extension export', async () => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -225,51 +243,42 @@ describe('HTML conversion', () => {
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
             // convert the file
-            htmlConverter.toFile(data,
+            await htmlConverter.toFile(data,
                 path.join(__dirname, pathToTestAssets, "export", "out.html"),
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
                     automaticExtensionDetection: true,
                     exportAssets: true,
-                }).then((filename) => {
-                    // check the output result
-                    try {
-                        AssertExtensions.assertFilesEqual(
-                            path.join(__dirname, pathToTestAssets, "export", "out.html"),
-                            path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleToFile.html`));
-
-                        // check for all the js files, assume everything worked then
-                        AssertExtensions.assertFilesEqual(
-                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearn.js"),
-                            path.join(__dirname, pathToAssets, "assets", "js", "elearn.js"));
-                        AssertExtensions.assertFilesEqual(
-                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "quiz.js"),
-                            path.join(__dirname, pathToAssets, "extensions", "quiz", "assets", "js", "quiz.js"));
-                        AssertExtensions.assertFilesEqual(
-                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearnvideo.js"),
-                            path.join(__dirname, pathToAssets, "extensions", "elearnvideo", "assets", "js", "elearnvideo.js"));
-                        AssertExtensions.assertFilesEqual(
-                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "clickimage.js"),
-                            path.join(__dirname, pathToAssets, "extensions", "clickimage", "assets", "js", "clickimage.js"));
-                        AssertExtensions.assertFilesEqual(
-                            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "timeslider.js"),
-                            path.join(__dirname, pathToAssets, "extensions", "timeslider", "assets", "js", "timeslider.js"));
-                        AssertExtensions.assertFilesEqual(
-                            path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Icons.woff"),
-                            path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
-
-                        done();
-                    }
-                    catch(err) {
-                        done(err);
-                    }
-                }, (err) => {
-                    done(err);
                 });
+
+
+            AssertExtensions.assertFilesEqual(
+                path.join(__dirname, pathToTestAssets, "export", "out.html"),
+                path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleToFile.html`));
+
+            // check for all the js files, assume everything worked then
+            AssertExtensions.assertFilesEqual(
+                path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearn.js"),
+                path.join(__dirname, pathToAssets, "assets", "js", "elearn.js"));
+            AssertExtensions.assertFilesEqual(
+                path.join(__dirname, pathToTestAssets, "export", "assets", "js", "quiz.js"),
+                path.join(__dirname, pathToAssets, "extensions", "quiz", "assets", "js", "quiz.js"));
+            AssertExtensions.assertFilesEqual(
+                path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearnvideo.js"),
+                path.join(__dirname, pathToAssets, "extensions", "elearnvideo", "assets", "js", "elearnvideo.js"));
+            AssertExtensions.assertFilesEqual(
+                path.join(__dirname, pathToTestAssets, "export", "assets", "js", "clickimage.js"),
+                path.join(__dirname, pathToAssets, "extensions", "clickimage", "assets", "js", "clickimage.js"));
+            AssertExtensions.assertFilesEqual(
+                path.join(__dirname, pathToTestAssets, "export", "assets", "js", "timeslider.js"),
+                path.join(__dirname, pathToAssets, "extensions", "timeslider", "assets", "js", "timeslider.js"));
+            AssertExtensions.assertFilesEqual(
+                path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Icons.woff"),
+                path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
         }).slow(500);
 
-        it('should create the correct file with linked file export', (done) => {
+        it('should create the correct file with linked file export', async () => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -279,34 +288,30 @@ describe('HTML conversion', () => {
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
             // convert the file
-            htmlConverter.toFile(data,
+            await htmlConverter.toFile(data,
                 path.join(__dirname, pathToTestAssets, "export", "out.html"),
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
                     automaticExtensionDetection: true,
                     exportLinkedFiles: true,
-                }).then((filename) => {
-                    // check the output result
-                    AssertExtensions.assertFilesEqual(
-                        path.join(__dirname, pathToTestAssets, "export", "out.html"),
-                        path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleExtensions.html`));
-
-                    // check for all the js files, assume everything worked then
-                    AssertExtensions.assertFilesEqual(
-                        path.join(__dirname, pathToTestAssets, "export", "assets", "img", "illu-concept.png"),
-                        path.join(__dirname, pathToTestAssets, "inputFiles", "images", "illu-concept.png"));
-
-                    // no exported assets
-                    assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js")));
-
-                    done();
-                }, (err) => {
-                    done(err);
                 });
+
+            // check the output result
+            AssertExtensions.assertFilesEqual(
+                path.join(__dirname, pathToTestAssets, "export", "out.html"),
+                path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleExtensions.html`));
+
+            // check for all the js files, assume everything worked then
+            AssertExtensions.assertFilesEqual(
+                path.join(__dirname, pathToTestAssets, "export", "assets", "img", "illu-concept.png"),
+                path.join(__dirname, pathToTestAssets, "inputFiles", "images", "illu-concept.png"));
+
+            // no exported assets
+            assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js")));
         }).slow(250);
 
-        it('should not create the file, no path given', (done) => {
+        it('should not create the file, no path given', async () => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -316,21 +321,17 @@ describe('HTML conversion', () => {
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
             // convert the file
-            assert.rejects(htmlConverter.toFile(data,
+            await assert.rejects(htmlConverter.toFile(data,
                 undefined!,
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
                     automaticExtensionDetection: true,
                     renderDelay: 5000,
-                })).then(() => {
-                    done();
-                }, (err) => {
-                    done(err);
-                });
+                }));
         }).slow(20000).timeout(30000);
 
-        it('should not create the file, file exists already', (done) => {
+        it('should not create the file, file exists already', async () => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -344,18 +345,34 @@ describe('HTML conversion', () => {
             fs.closeSync(file);
 
             // convert the file
-            assert.rejects(htmlConverter.toFile(data,
+            await assert.rejects(htmlConverter.toFile(data,
                 path.join(__dirname, pathToTestAssets, "export", "dummy"),
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
                     automaticExtensionDetection: true,
-                })).then(() => {
-                    done();
-                }, (err) => {
-                    done(err);
-                });
+                }));
         }).slow(20000).timeout(30000);
 
+        it('should create the file, overwrite existing file', async () => {
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+            // create dummy
+            let file = fs.openSync(path.join(__dirname, pathToTestAssets, "export", "dummy"), "w+");
+            fs.closeSync(file);
+
+            // convert the file
+            await assert.doesNotReject(htmlConverter.toFile(data,
+                path.join(__dirname, pathToTestAssets, "export", "dummy"),
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                }, true));
+        }).slow(20000).timeout(30000);
     });
 });

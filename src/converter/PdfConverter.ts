@@ -163,10 +163,10 @@ class PdfConverter extends AConverter implements IConverter {
      * Converts given markdown to a pdf file buffer.
      * Certain options will specify the output.
      *
-     * This will instatiate a chromium browser instance if not present already.
-     * Changing the converter options with `setOption` or `setOptions`
-     * as well as starting another conversion process,
-     * before resolving of this function, might lead to unwanted behavior.
+     * This will instantiate a chromium browser instance if not present already.
+     * Changing the converter options with `setOption` or `setOptions`,
+     * as well as starting another conversion process before resolving of this
+     * function, might lead to unwanted behavior.
      *
      * @param markdown: string - the markdown code
      * @param file: string - the output file path (including file name)

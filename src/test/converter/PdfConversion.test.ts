@@ -503,7 +503,7 @@ describe('PDF conversion', () => {
             assert.ok(!newPdfConverter.hasBrowserInstance());
         }).slow(40000).timeout(60000);
 
-        it('should create the correct file', function(done) {
+        it('should create the correct file', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();
@@ -523,23 +523,19 @@ describe('PDF conversion', () => {
             });
 
             // convert the file
-            pdfConverterKeptAlive.toFile(data,
+            await pdfConverterKeptAlive.toFile(data,
                 path.join(__dirname, pathToTestAssets, "export", "out.pdf"),
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
                     automaticExtensionDetection: true,
                     renderDelay: 5000,
-                }).then((filename) => {
-                    assert.ok(fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "out.pdf")));
-                    done();
-                    return;
-                }, (err) => {
-                    done(err);
                 });
+
+            assert.ok(fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "out.pdf")));
         }).slow(40000).timeout(60000);
 
-        it('should not create the file, no path given', function(done) {
+        it('should not create the file, no path given', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();
@@ -554,21 +550,17 @@ describe('PDF conversion', () => {
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
             // convert the file
-            assert.rejects(pdfConverterKeptAlive.toFile(data,
+            await assert.rejects(pdfConverterKeptAlive.toFile(data,
                 undefined!,
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
                     automaticExtensionDetection: true,
                     renderDelay: 5000,
-                })).then(() => {
-                    done();
-                }, (err) => {
-                    done(err);
-                });
+                }));
         }).slow(40000).timeout(60000);
 
-        it('should not create the file, file exists already', function(done) {
+        it('should not create the file, file exists already', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();
@@ -587,20 +579,44 @@ describe('PDF conversion', () => {
             fs.closeSync(file);
 
             // convert the file
-            assert.rejects(pdfConverterKeptAlive.toFile(data,
+            await assert.rejects(pdfConverterKeptAlive.toFile(data,
                 path.join(__dirname, pathToTestAssets, "export", "dummy"),
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
                     automaticExtensionDetection: true,
-                })).then(() => {
-                    done();
-                }, (err) => {
-                    done(err);
-                });
+                }));
         }).slow(40000).timeout(60000);
 
-        it('should create a buffer', function(done) {
+        it('should create the file, overwrite existing file', async function() {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // create dummy
+            let file = fs.openSync(path.join(__dirname, pathToTestAssets, "export", "dummy"), "w+");
+            fs.closeSync(file);
+
+            // convert the file
+            await assert.doesNotReject(pdfConverterKeptAlive.toFile(data,
+                path.join(__dirname, pathToTestAssets, "export", "dummy"),
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                }, true));
+        }).slow(40000).timeout(60000);
+
+        it('should create a buffer', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();
@@ -621,20 +637,15 @@ describe('PDF conversion', () => {
             });
 
             // convert the file
-            pdfConverterKeptAlive.toBuffer(data,
+            await pdfConverterKeptAlive.toBuffer(data,
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
                     automaticExtensionDetection: true,
-                }).then(() => {
-                    done();
-                    return;
-                }, (err) => {
-                    done(err);
                 });
         }).slow(40000).timeout(60000);
 
-        it('should create a buffer with incorrect footerHeight', function(done) {
+        it('should create a buffer with incorrect footerHeight', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();
@@ -655,16 +666,11 @@ describe('PDF conversion', () => {
             });
 
             // convert the file
-            pdfConverterKeptAlive.toBuffer(data,
+            await pdfConverterKeptAlive.toBuffer(data,
                 path.join(__dirname, pathToTestAssets, `inputFiles`),
                 {
                     language: "de",
                     automaticExtensionDetection: true,
-                }).then(() => {
-                    done();
-                    return;
-                }, (err) => {
-                    done(err);
                 });
         }).slow(40000).timeout(60000);
     });

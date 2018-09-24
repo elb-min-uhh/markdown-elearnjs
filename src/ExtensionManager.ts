@@ -234,9 +234,6 @@ class ExtensionManager {
      * Copies/writes a list of folders by their absolute paths to the outPath
      */
     private static async writeFolders(folders: string[], outPath: string) {
-        if(!folders || !folders.length) {
-            return;
-        }
         // get first folder + remove from array
         for(let inPath of folders) {
             await new Promise((res, rej) => {

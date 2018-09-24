@@ -59,18 +59,25 @@ class HtmlConverter extends AConverter implements IConverter {
         }
     }
 
-    private static fillExtensionOptions(html: string, opts: ExtensionObject) {
-        if(opts.automaticExtensionDetection) {
+    /**
+     * Based on the `automaticDetection` it will create a
+     * ExtensionObject which states, which extension to include.
+     * @param html The HTML to scan if
+     * @param opts
+     */
+    private static fillExtensionOptions(html: string, opts: ExtensionObject, automaticDetection?: boolean) {
+        let includes: ExtensionObject = new ExtensionObject(opts);
+        if(automaticDetection) {
             if(opts.includeQuiz === undefined)
-                opts.includeQuiz = ExtensionManager.scanForQuiz(html);
+                includes.includeQuiz = ExtensionManager.scanForQuiz(html);
             if(opts.includeElearnVideo === undefined)
-                opts.includeElearnVideo = ExtensionManager.scanForVideo(html);
+                includes.includeElearnVideo = ExtensionManager.scanForVideo(html);
             if(opts.includeClickImage === undefined)
-                opts.includeClickImage = ExtensionManager.scanForClickImage(html);
+                includes.includeClickImage = ExtensionManager.scanForClickImage(html);
             if(opts.includeTimeSlider === undefined)
-                opts.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
+                includes.includeTimeSlider = ExtensionManager.scanForTimeSlider(html);
         }
-        return opts;
+        return includes;
     }
 
     public async toHtml(markdown: string, options?: ConversionObject) {
@@ -93,7 +100,7 @@ class HtmlConverter extends AConverter implements IConverter {
 
         let data = await FileManager.getHtmlTemplate();
         // scan for extensions if necessary
-        opts = Object.assign(opts, HtmlConverter.fillExtensionOptions(html, opts));
+        opts = Object.assign(opts, HtmlConverter.fillExtensionOptions(html, opts, opts.automaticExtensionDetection));
         return self.getHTMLFileContent(data, html, meta, imprint, opts);
     }
 
@@ -109,55 +116,54 @@ class HtmlConverter extends AConverter implements IConverter {
      *
      * @return {Promise<string>} - will resolve with the path when done. (err) when an error occurred.
      */
-    public toFile(markdown: string, file: string, rootPath: string, options?: HtmlExportOptionObject, forceOverwrite?: boolean) {
+    public async toFile(markdown: string, file: string, rootPath: string, options?: HtmlExportOptionObject, forceOverwrite?: boolean) {
         const self = this;
 
         let opts = new HtmlExportOptionObject(options);
 
-        return new Promise<string>((res, rej) => {
-            if(!file) {
-                return rej("No output path given.");
-            }
-            if(fs.existsSync(file) && !forceOverwrite) {
-                return rej("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
-            }
+        if(!file) {
+            throw new Error("No output path given.");
+        }
+        if(fs.existsSync(file) && !forceOverwrite) {
+            throw new Error("File already exists. Set `forceOverwrite` to true if you really want to overwrite the file.");
+        }
+        // will throw an error if cannot be opened
+        await self.tryFileOpen(file);
 
-            self.toHtml(markdown, opts).then((html) => {
-                let filesToExport: FileMoveObject[] = [];
-                // find files to export and change links
-                if(opts.exportLinkedFiles) {
-                    let fileExtractorObject;
+        let html = await self.toHtml(markdown, opts);
 
-                    fileExtractorObject = FileExtractor.replaceAllLinks(html);
-                    html = fileExtractorObject.html;
-                    filesToExport = filesToExport.concat(fileExtractorObject.files);
-                }
+        let filesToExport: FileMoveObject[] = [];
+        // find files to export and change links
+        if(opts.exportLinkedFiles) {
+            let fileExtractorObject = FileExtractor.replaceAllLinks(html);
+            html = fileExtractorObject.html;
+            filesToExport = filesToExport.concat(fileExtractorObject.files);
+        }
 
-                // scan for extensions if necessary
-                opts = Object.assign(opts, HtmlConverter.fillExtensionOptions(html, opts));
+        // scan for extensions if necessary
+        opts = Object.assign(opts, HtmlConverter.fillExtensionOptions(html, opts, opts.automaticExtensionDetection));
 
-                let promises: Promise<any>[] = [];
+        let promises: Promise<any>[] = [];
 
-                // write actual html file
-                let writePromise = new Promise((resolve, reject) => {
-                    fs.writeFile(file, html, (err) => {
-                        if(err) reject(err);
-                        else resolve();
-                    });
-                });
-                promises.push(writePromise);
-                // export assets
-                if(opts.exportAssets)
-                    promises.push(ExtensionManager.exportAssets(path.dirname(file), <ExtensionObject>opts));
-                // export linked files
-                if(opts.exportLinkedFiles)
-                    promises.push(FileExtractor.extractAll(filesToExport, rootPath, path.dirname(file), 30000));
-
-                // actual finish condition
-                let donePromise = new PromiseCounter(promises, 30000);
-                donePromise.then(() => { res(file); }, rej);
-            }, (err) => { rej(err); });
+        // write actual html file
+        let writePromise = new Promise((resolve, reject) => {
+            fs.writeFile(file, html, (err) => {
+                if(err) reject(err);
+                else resolve();
+            });
         });
+        promises.push(writePromise);
+        // export assets
+        if(opts.exportAssets)
+            promises.push(ExtensionManager.exportAssets(path.dirname(file), <ExtensionObject>opts));
+        // export linked files
+        if(opts.exportLinkedFiles)
+            promises.push(FileExtractor.extractAll(filesToExport, rootPath, path.dirname(file), 30000));
+
+        // actual finish condition
+        await new PromiseCounter(promises, 30000);
+
+        return file;
     }
 
     /**
