@@ -1,3 +1,7 @@
+## 1.4.9
+* PDF Conversion:
+    * removed PDF specific `elearn.js`
+    * will run with actual `elearn.js` instead and a few CSS changes
 ## 1.4.8
 * Updated elearn.js to v1.0.6
     * fixing back-button problems

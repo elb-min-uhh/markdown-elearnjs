@@ -19,6 +19,8 @@ section {
     page-break-before: avoid !important;
 }
 
+/* Slider */
+
 .slider {
     max-height: none !important;
     height: auto !important;
@@ -64,6 +66,76 @@ ul.img-gallery li p {
 .preview-con {
     display: none !important;
 }
+
+/* Hover info */
+
+.hover-info .title {
+    background: inherit !important;
+    color: inherit !important;
+    padding: inherit !important;
+}
+
+.hover-info .icon-info {
+    display: none;
+}
+
+.hover-info .hover-info-block.hide {
+    display: inline !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    background: inherit !important;
+    color: inherit !important;
+    margin: 0 !important;
+    padding: inherit !important;
+}
+
+.hover-info>div.hover-info-block:before {
+    content: "(";
+}
+
+.hover-info>div.hover-info-block:after {
+    content: ")";
+}
+
+/* Hideable */
+
+.hideable-container button {
+    display: none;
+}
+
+.hideable {
+    display: block !important;
+}
+
+/* Tabbed boxes */
+
+.tabs {
+    display: none;
+}
+
+.tabbed-box {
+    padding: 1em;
+}
+
+.tabbed-box>.tab {
+    display: block !important;
+    margin-bottom: 1em;
+}
+
+.tabbed-box>.tab:last-of-type {
+    margin-bottom: 0;
+}
+
+.tab:before {
+    content: attr(name);
+    display: block;
+    font-weight: bold;
+}
+
+/* MathJax */
 
 .MathJax {
     font-size: 20pt !important;
