@@ -1,3 +1,6 @@
+## 1.4.8
+* Updated elearn.js to v1.0.6
+    * fixing back-button problems
 ## 1.4.7
 * PDF Conversion:
     * implementation of more atomic locks, by wrapping the browser

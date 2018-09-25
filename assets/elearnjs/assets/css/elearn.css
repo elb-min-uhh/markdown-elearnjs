@@ -4,7 +4,7 @@
 * Created by Michael Heinecke
 * Improved by Arne Westphal
 * eLearning-office MIN, Universität Hamburg
-* v1.0.5 18/08/23 cc-by-sa
+* v1.0.6 18/09/25 cc-by-sa
 */
 /* Color Variables */
 /* Greys */
@@ -121,6 +121,7 @@ video {
 }
 
 .back-enabled #btnBackCon {
+  display: block;
   float: left;
   overflow-y: auto;
   margin-left: 20px;
