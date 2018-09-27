@@ -1,3 +1,7 @@
+## 1.5.0
+* General:
+    * Option for removing comments in output (`removeComments`)
+    * Syntax for always hidden comments (`<!--hide ...-->)
 ## 1.4.9
 * PDF Conversion:
     * removed PDF specific `elearn.js`
