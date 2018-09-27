@@ -30,6 +30,7 @@ const exampleMeta =
 const exampleImprint =
     `<!--imprint
     #### elearn.js Template
+    <!-- not hidden comment -->
     Universität Hamburg
 -->`;
 
@@ -42,6 +43,7 @@ const exampleMeta2 =
 const exampleImprint2 =
     `\`\`\`imprint
     #### elearn.js Template
+    <!-- not hidden comment -->
     Universität Hamburg
 \`\`\``;
 
@@ -208,6 +210,16 @@ describe('HTML conversion', () => {
             let text = await htmlConverter.toHtml(data, { language: "de" });
             text = FileExtractor.replaceAllLinks(text).html;
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExample.html`));
+        });
+
+        it('should create the correct document with comment removal', async () => {
+            let data = fs.readFileSync(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8');
+            let text = await htmlConverter.toHtml(data, {
+                language: "de",
+                removeComments: true,
+            });
+            text = FileExtractor.replaceAllLinks(text).html;
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleNoComments.html`));
         });
 
         it('should create the correct document with extensions', async () => {

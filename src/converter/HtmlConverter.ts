@@ -84,7 +84,11 @@ class HtmlConverter extends AConverter implements IConverter {
         const self = this;
         let opts = new ConversionObject(options);
 
-        let html = self.converter.makeHtml(markdown);// conversion
+        // update converter settings from options
+        self.converter.setOption("removeComments", opts.removeComments);
+        self.imprintConverter.setOption("removeComments", opts.removeComments);
+
+        let html = self.converter.makeHtml(markdown); // conversion
 
         if(opts.bodyOnly) {
             return html;
@@ -93,7 +97,7 @@ class HtmlConverter extends AConverter implements IConverter {
         // create meta and imprint
         let meta = elearnExtension.parseMetaData(markdown);
         let imprint = "";
-        // create imprint only if explicitally inserted in markdown
+        // create imprint only if explicitly inserted in markdown
         if(markdown.match(/(?:(?:^|\n)(```+|~~~+)imprint\s*?\n([\s\S]*?)\n\1|(?:^|\n)(<!--+)imprint\s*?\n([\s\S]*?)\n-->)/g)) {
             imprint = self.imprintConverter.makeHtml(markdown);
         }

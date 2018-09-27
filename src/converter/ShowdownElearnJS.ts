@@ -8,6 +8,9 @@ const indentionRegExp = /(?:^|\n)([ \t]*)(?!(?:\n|$))/g;
 // original markdown
 const inlineHeadingRegExp = /^(#{1,6})(?!#)(?!<!--no-section-->)[ \t]*(.+?)[ \t]*#*$/gm;
 
+// general html
+const commentRegExp = /[ \t]*<!---*?\s*?[\s\S]*?--+>/g;
+
 // elearn.js syntax extensions
 const sectionRegExp = /(\|{3,5})(?!\|)((?:\\\||(?!\1).)*?)\1(.*)\n/g;
 const firstSectionRegExp = new RegExp(sectionRegExp, "");
@@ -20,6 +23,7 @@ const hideInOverviewRegExp = /\s*<!--hide-in-overview-->/g;
 const noSectionRegExp = /\s*<!--no-section-->/g;
 const secDescriptionRegExp = /[ \t]*<!--desc[ \t]+(.*?)[ \t]*-->/g;
 const secDescriptionReplacementRegExp = /desc="elearnjs-section-description-(\d+)"/g;
+const hiddenComment = /[ \t]*<!--hide\s+?[\s\S]*?--+>/g;
 
 const escapeSectionName = (name: string) => {
     // there should be no single \, since they have to be escaped in markdown
@@ -250,18 +254,37 @@ const cleanMarkdownAttribute: FilterExtension = {
     },
 };
 
+const cleanHiddenComments: FilterExtension = {
+    type: 'lang',
+    filter: (text: string, converter: Showdown.Converter) => {
+        return text.replace(hiddenComment, "");
+    },
+};
+
+const cleanHtmlComments: FilterExtension = {
+    type: 'output',
+    filter: (text: string, converter: Showdown.Converter) => {
+        if(converter.getOption('removeComments')) {
+            text = text.replace(commentRegExp, "");
+        }
+        return text;
+    },
+};
+
 const elearnHtmlBody = () => {
     return [
         addSectionOnHeading,
         cleanNoSectionComment,
         cleanHideInOverviewComment,
         cleanSectionDescriptionComment,
+        cleanHiddenComments,
         replaceSectionSyntax,
         insertSectionDescription,
         removeMetaBlock,
         removeImprintBlock,
         cleanEmptyParagraphs,
         cleanMarkdownAttribute,
+        cleanHtmlComments,
     ];
 };
 
@@ -271,17 +294,23 @@ const elearnPdfBody = () => {
         cleanNoSectionComment,
         cleanHideInOverviewComment,
         cleanSectionDescriptionComment,
+        cleanHiddenComments,
         pdfSectionSyntax,
         insertSectionDescription,
         removeMetaBlock,
         removeImprintBlock,
         cleanEmptyParagraphs,
         cleanMarkdownAttribute,
+        cleanHtmlComments,
     ];
 };
 
 const elearnImprint = () => {
-    return [parseImprint];
+    return [
+        parseImprint,
+        cleanHiddenComments,
+        cleanHtmlComments,
+    ];
 };
 
 const parseSection = (converter: Showdown.Converter, wholeMatch: string, wrap: string, heading: string, addition: string) => {

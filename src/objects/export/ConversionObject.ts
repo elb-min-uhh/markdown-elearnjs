@@ -16,6 +16,11 @@ class ConversionObject extends InclusionObject {
      * Default: false
      */
     public automaticExtensionDetection?: boolean = false;
+    /**
+     * Whether to remove all HTML comments from the conversion output.
+     * Default: false - no removal.
+     */
+    public removeComments?: boolean = false;
 
     /**
      * An Object containing options for the general conversions
@@ -26,7 +31,11 @@ class ConversionObject extends InclusionObject {
     constructor(options?: ConversionObject) {
         super(options);
 
-        const keys = ["bodyOnly", "automaticExtensionDetection"];
+        const keys = [
+            "bodyOnly",
+            "automaticExtensionDetection",
+            "removeComments",
+        ];
 
         if(options) {
             Object.keys(options).forEach((key) => {

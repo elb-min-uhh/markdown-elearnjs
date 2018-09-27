@@ -99,7 +99,10 @@ class PdfConverter extends AConverter implements IConverter {
         const self = this;
         let opts = new ConversionObject(options);
 
-        let html = self.converter.makeHtml(markdown);// conversion
+        // update converter settings from options
+        self.converter.setOption("removeComments", opts.removeComments);
+
+        let html = self.converter.makeHtml(markdown); // conversion
 
         if(opts.bodyOnly) {
             return html;

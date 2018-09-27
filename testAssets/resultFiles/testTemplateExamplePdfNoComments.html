@@ -2,10 +2,17 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
-        <link rel="stylesheet" type="text/css" href="assets/css/elearn.css">
+        <link rel="stylesheet" type="text/css" href="../../assets/elearnjs/assets/css/elearn.css">
 
-        <script type="text/javascript" src="assets/js/min.js"></script>
-        <script type="text/javascript" src="assets/js/elearn.js"></script>
+        <!-- For overwriting styles only -->
+        <link rel="stylesheet" type="text/css" href="../../assets/elearnjs/pdfAssets/css/elearn.css">
+
+        <script type="text/javascript" src="../../assets/elearnjs/assets/js/min.js"></script>
+        <script type="text/javascript" src="../../assets/elearnjs/assets/js/elearn.js"></script>
+        <script>$(document).ready(eLearnJS.toggleAllSections);</script>
+
+
+
 
 
 
@@ -30,45 +37,23 @@
                 });
             </script>
             <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js"></script>
+        <style>html {zoom: 1}</style>
 </head>
 <body>
-    <div id="wrap">
-        <!-- Page Imprint -->
-        <div class="lb-wrap" id="info">
-            <div class="lightbox">
-                <div class="info-wrapper">
-                    <h4 id="elearnjstemplate">elearn.js Template</h4>
-<!-- not hidden comment -->
-<p>Universität Hamburg</p>
-<p><small>
-    Das <span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">elearn.js Template</span>
-    von <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Universität Hamburg</span>
-    ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
-    Creative Commons Namensnennung</a> - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz
-</small></p>
-                </div>
-            </div>
-        </div>
-        <div class="page">
-            <!--
-This template is written for the `atom-elearnjs` package. You do not need
-anything else but the files linked in here to convert this .md to HTML or PDF.
--->
+
 <section name="Template elearn.js" class="hide-in-overview"><h1 id="templateelearnjs">Template elearn.js</h1>
 <p><strong>Name des Autors</strong><br />
 Institution des Autors<br />
 cc by-sa | 2015</p>
-<p><img src="assets/img/illu-concept.png" alt="Titelbild" /></p></section>
+<p><img src="images/illu-concept.png" alt="Titelbild" /></p></section>
+<div style="page-break-before: always;"></div>
 <section name="Inhaltsverzeichnis" class="hide-in-overview"><h2 id="inhaltsverzeichnis">Inhaltsverzeichnis</h2>
-<!-- Zusatz class="kachel" ändert die Darstellung -->
-<!-- Zusatz class="hide-read" verhindert die Anzeige gelesener Sections -->
+
+
 <div id="content-overview" class="kachel">
-    <!--
-        Hier wird automatisch ein Inhaltsverzeichnis
-        eingefügt, wenn das div#content-overview vorhanden
-        ist.
-    -->
+
 </div></section>
+<div style="page-break-before: always;"></div>
 <section name="Überschrift 2. Ordnung" desc="Beispielbeschreibung für einen kleinen <em>Textblock</em>. <br /> Sollte nicht zu lang sein."><h2 id="berschrift2ordnung">Überschrift 2. Ordnung</h2>
 <blockquote>
   <p>Dies ist nur eine Template-Datei. Eine Erklärung und Dokumentation finden Sie im <a href="www.uni-hamburg.de">Whitepaper „Digitale Skripte“</a>.</p>
@@ -80,6 +65,7 @@ cc by-sa | 2015</p>
 <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
 <h5 id="wennmannocheinefnfteebenebraucht">Wenn man noch eine fünfte Ebene braucht</h5>
 <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p></section>
+<div style="page-break-before: always;"></div>
 <section name="Sprache" class="sub"><h3 id="sprache">Sprache</h3>
 <p>Die Sprache des <em>elearn.js</em> lässt sich anpassen.
 Hierzu kann man beliebigen Elementen das Attribut <code>lang</code> ergänzen, was
@@ -114,15 +100,16 @@ Anzeige (nur während des Ladevorgangs):</p>
 <p><button onclick="$('#lang-loading').show(); eLearnJS.setLanguage('de', function() { $('#lang-loading').hide(); })">Deutsch/German</button>
 <button onclick="$('#lang-loading').show(); eLearnJS.setLanguage('en', function() { $('#lang-loading').hide(); })">Englisch/English</button></p>
 <div id="lang-loading" style="display: none;" lang-code="loading"></div></section>
+<div style="page-break-before: always;"></div>
 <section name="Bilder" class="sub"><h3 id="bilder">Bilder</h3>
 <p>Bilder können als einzelne Abbildungen oder als Galerien eingebunden werden.Für die Galerien wird das elearn.js benötigt. es bietet verschiedene Varianten. Das erste Beispiel zeigt eine Slideshow mit Vorschau und Loop-Funktion.</p>
 <div class="slider preview-nav loop">
 <ul class="img-gallery" id="x" style="list-style:none;">
-<li><img src="assets/img/md-illu_1.png" alt="md-produktion" /><p>Markdown ist <b>kinderleicht</b> zu erlernen.</p></li>
-<li><img src="assets/img/md-illu_2.png" alt="Components" /><p>Zusammenspiel der Komponenten bei der Produktion von digitalen Skripten mit Markdown.</p></li>
-<li><img src="assets/img/md-illu_3.png" alt="Future" /><p>Die Zukunft von Markdown als Autorensprache.</p></li>
-<li><img src="assets/img/md-illu_4.png" alt="Media" /><p>Markdown kann viele verschiedene Medientypen in Html einfügen.</p></li>
-<li><img src="assets/img/md-illu_5.png" alt="Hello" /><p>Versuche auch mal, ein Markdown-Dokument zu erstellen. Ist gar nicht schwer!</p></li>
+<li><img src="images/md-illu_1.png" alt="md-produktion" /><p>Markdown ist <b>kinderleicht</b> zu erlernen.</p></li>
+<li><img src="images/md-illu_2.png" alt="Components" /><p>Zusammenspiel der Komponenten bei der Produktion von digitalen Skripten mit Markdown.</p></li>
+<li><img src="images/md-illu_3.png" alt="Future" /><p>Die Zukunft von Markdown als Autorensprache.</p></li>
+<li><img src="images/md-illu_4.png" alt="Media" /><p>Markdown kann viele verschiedene Medientypen in Html einfügen.</p></li>
+<li><img src="images/md-illu_5.png" alt="Hello" /><p>Versuche auch mal, ein Markdown-Dokument zu erstellen. Ist gar nicht schwer!</p></li>
 </ul>
 </div>
 <p>Die Galerie kann mit oder ohne Vorschaubilder sowie mit oder ohne Loop genutzt werden. Hierzu existieren verschiedene Klassen, die dem Slider zugeordnet werden können. Das sieht folgendermaßen aus:</p>
@@ -137,6 +124,7 @@ Anzeige (nur während des Ladevorgangs):</p>
 <li><code>&lt;ul class="img-gallery fixed-size"&gt;</code> ist eine Galerie mit der Höhe des größten Bildes.</li>
 <li><code>&lt;ul class="img-gallery fixed-size" style="max-height: 400px"&gt;</code> ist eine Galerie mit der Höhe von 400px.</li>
 </ul></section>
+<div style="page-break-before: always;"></div>
 <section name="Medieneinbindung" class="sub"><h3 id="medieneinbindung">Medieneinbindung</h3>
 <p>Hier sollen vor allem Video und Audio-Einbindung demonstriert werden. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.</p>
 <h4 id="videosalsasset">Videos als Asset</h4>
@@ -146,8 +134,8 @@ Zusätzlich enthält das Video Anmerkungen, die unter dem Video angezeigt werden
 Diese sind durch die Erweiterung
 <a href="https://github.com/elb-min-uhh/elearnvideo.js">elearnvideo.js</a> möglich.</p>
 <video class="allow_user_notes" preload="auto" controls="controls" style="max-width:100%">
-    <source src="assets/img/beispiel-video.mp4" type="video/mp4">
-    <source src="assets/img/beispiel-video.webm" type="video/webm">
+    <source src="images/beispiel-video.mp4" type="video/mp4">
+    <source src="images/beispiel-video.webm" type="video/webm">
            Dein Browser unterstützt kein HTML5-Video. Um dir das Video dennoch ansehen zu können,
            folge einfach diesem <a href="images/beispiel-video.mp4">Link</a>.
 </video>
@@ -173,10 +161,11 @@ Diese sind durch die Erweiterung
 <h4 id="audiofiles">Audio-Files</h4>
 <p>Da Audio-Dateien als mp3s in der Regel nicht so groß sind, dass ein Streaming-Server benötigt wird, können diese aus dem Assets-Ordner progressiv als Download eingebunden worden. Hier ein Beispiel:</p>
 <audio preload="auto" controls="controls">
-    <source src="assets/img/beispiel-audio.mp3" type="audio/mpeg">
+    <source src="images/beispiel-audio.mp3" type="audio/mpeg">
            Dein Browser unterstützt kein HTML5-Audio. Um dir das Audio-File dennoch anhören zu können,
            folge einfach diesem <a href="img/template-media/beispiel-audio.mp3">Link</a>.
 </audio></section>
+<div style="page-break-before: always;"></div>
 <section name="Mathematische Formeln" class="sub"><h3 id="mathematischeformeln">Mathematische Formeln</h3>
 <p>Mathematische Formeln finden in vielen Texten Verwendung, können aber nicht
 immer vernünftig dargestellt werden.</p>
@@ -196,6 +185,7 @@ Um im Text dennoch ein \$ verwenden zu können, muss dieses escaped werden.
 Hierzu schreibt man <code>\\$</code> anstatt des einfachen <code>$</code> Symbols, für jedes einzelne
 anzuzeigende Zeichen, um durch das <code>\\</code> in der Ausgabe ein <code>\</code> zu erzeugen,
 welches MathJax wiederum als <em>escape</em> für das darauffolgende <code>$</code> sieht.</p></section>
+<div style="page-break-before: always;"></div>
 <section name="Textblöcke" class="sub"><h3 id="textblcke">Textblöcke</h3>
 <h4 id="hervorgehobeneblcke">Hervorgehobene Blöcke</h4>
 <p>Es existieren verschieden Blöcke, welche bestimmten Text
@@ -263,11 +253,12 @@ Innerhalb dieses Blocks können dann beliebig viele
 haben unter dem der Tab ausgewählt werden kann.
 Innerhalb eines jeden <strong>div.tab</strong> kann dann alles
 beliebig verändert werden.</p></section>
+<div style="page-break-before: always;"></div>
 <section name="Quizfragen" class="sub"><h3 id="quizfragen">Quizfragen</h3>
 <p>Auf dieser Seite sind einige Quiz-Fragen Beispielhaft dargestellt.
 Diese Quizfragen benötigen das <a href="https://github.com/elb-min-uhh/quiz.js">quiz.js</a>.</p>
 <div class="question">
-<h4>Auf welcher Technologie basieren die digitalen Skripte? </h4> <!-- Fragentext -->
+<h4>Auf welcher Technologie basieren die digitalen Skripte? </h4>
 <div class="answers">
 <label>Lösung: <input type="text" name="q"/></label>
 </div>
@@ -303,13 +294,14 @@ In deiner Antwort ist mindestens ein Ordner, der nicht unbedingt benötigt wird.
 <a class="ans">4fc364339b2127eb81c13ab986a27085</a>
 </div>
 <p>Es existieren auch noch andere Fragetypen, diese sind in der Dokumentation vom quiz.js beschrieben.</p></section>
+<div style="page-break-before: always;"></div>
 <section name="Interaktive Grafik" class="sub"><h3 id="interaktivegrafik">Interaktive Grafik</h3>
 <p>Mit der Erweiterung
 <a href="https://github.com/elb-min-uhh/clickimage.js">clickImage.js</a> ist es möglich,
 interaktive Grafiken zu erstellen. Hier ein Beispiel:</p>
 <div class="clickimage">
     <div class="imagebox invert">
-        <img src="assets/img/schiff.jpg" alt="Schiff" data-pins="10,10,'right'; 50,60,'left'; 42,25; 80,80,'top'">
+        <img src="images/schiff.jpg" alt="Schiff" data-pins="10,10,'right'; 50,60,'left'; 42,25; 80,80,'top'">
     </div>
     <div class="pininfo">
         <div>
@@ -361,6 +353,7 @@ interaktive Grafiken zu erstellen. Hier ein Beispiel:</p>
         </div>
     </div>
 </div></section>
+<div style="page-break-before: always;"></div>
 <section name="TimeSlider" class="sub"><h3 id="timeslider">TimeSlider</h3>
 <p>Die Erweiterung <a href="https://github.com/elb-min-uhh/timeslider.js">timeSlider.js</a>
 erlaubt es, Zeitleisten zu erstellen, um sich so interaktiv über zeitlich
@@ -389,13 +382,12 @@ aufgelistete Informationen zu arbeiten.</p>
         </p>
     </div>
 </div></section>
+<div style="page-break-before: always;"></div>
 <section name="Literatur" class="sub"><h3 id="literatur">Literatur</h3>
 <p>Adapt learning community. (o. J.). Abgerufen 11. September 2015, von <a href="https://community.adaptlearning.org">https://community.adaptlearning.org</a></p>
 <p>H5P – Create, share and reuse interactive HTML5 content in your browser. (o. J.). Abgerufen 11. September 2015, von <a href="https://h5p.org">https://h5p.org</a></p>
 <p>The Ultimate List of HTML5 eLearning Authoring Tools. (o. J.). Abgerufen von <a href="http://elearningindustry.com/the-ultimate-list-of-html5-elearning-authoring-tools">http://elearningindustry.com/the-ultimate-list-of-html5-elearning-authoring-tools</a></p>
 <p>Wenz, C. (2014). JavaScript: das umfassende Handbuch  (11. Aufl). Bonn: Galileo Press.</p>
 <p>Zillgens, C. (2013). Responsive Webdesign: reaktionsfähige Websites gestalten und umsetzen. München: Hanser.</p></section>
-        </div>
-    </div>
 </body>
 </html>

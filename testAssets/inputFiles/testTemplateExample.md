@@ -28,8 +28,10 @@ anything else but the files linked in here to convert this .md to HTML or PDF.
             <script type=\"text/javascript\" src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js\"></script>"
 -->
 
-<!--imprint
+```imprint
     #### elearn.js Template
+    <!-- not hidden comment -->
+    <!--hide hidden comment only for test purposes -->
     Universität Hamburg
 
     <small>
@@ -38,7 +40,7 @@ anything else but the files linked in here to convert this .md to HTML or PDF.
         ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
         Creative Commons Namensnennung</a> - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz
     </small>
--->
+```
 
 # Template elearn.js <!--hide-in-overview-->
 
@@ -69,9 +71,11 @@ Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod 
 
 ### Überschrift dritter Ordung <!--no-section-->
 
+<!--hide hidden comment only for test purposes-->
+
 Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
 
-#### Und hier ist die vierte Ordnung
+#### Und hier ist die vierte Ordnung <!--hide hidden comment only for test purposes-->
 
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 

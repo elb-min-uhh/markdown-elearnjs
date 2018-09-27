@@ -276,6 +276,16 @@ describe('PDF conversion', () => {
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExamplePdf.html`));
         });
 
+        it('creates the correct document without comments from template', async () => {
+            let data = fs.readFileSync(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8');
+            let text = await pdfConverterKeptAlive.toHtml(data, {
+                language: "de",
+                removeComments: true,
+            });
+            text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
+            AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExamplePdfNoComments.html`));
+        });
+
     });
 
     describe('with puppeteer', () => {
