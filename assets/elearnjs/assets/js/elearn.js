@@ -1,5 +1,5 @@
 /*
-* v1.0.7 18/09/28 JavaScript eLearn.js - by Arne Westphal
+* v1.0.8 18/10/08 JavaScript eLearn.js - by Arne Westphal
 * eLearning Buero MIN-Fakultaet - Universitaet Hamburg
 * touch-script base by PADILICIOUS.COM and MACOSXAUTOMATION.COM
 * uses ResizeSensor by Marc J. Schmidt. https://github.com/marcj/css-element-queries/
@@ -8,8 +8,8 @@
 // For more intuitive usage of functions. (e.g. eLearnJS.showNext())
 var eLearnJS = eLearnJS || {};
 
-eLearnJS.VERSION_NR = "1.0.7";
-eLearnJS.VERSION_DATE = "09/2018";
+eLearnJS.VERSION_NR = "1.0.8";
+eLearnJS.VERSION_DATE = "10/2018";
 
 eLearnJS.actions = {
     CONTENT_RESIZE : "ContentResize",
@@ -498,12 +498,12 @@ eLearnJS.localizeElement = function(el, force) {
 * Passt die Navigationsleiste an die Breite des window an
 */
 eLearnJS.updateNavBarWidth = function() {
-    var headerSpace = 15.0; // standard wert
-    $('#nav-bar').children(':visible').not('#btnExp').each(function(i,e){
+    var headerSpace = 5; // standard wert
+    $('#nav-bar').children(':visible').not('#btnExp').each(function(i, e) {
         if($(this).attr("id") != undefined)
             headerSpace += $(this).outerWidth(true);
     });
-    $('#btnExp').css("width", "calc(100% - " + (headerSpace+5) + "px)");
+    $('#btnExp').css("width", "calc(100% - " + (headerSpace) + "px)");
 };
 
 
@@ -1290,6 +1290,8 @@ eLearnJS.initiateGalleries = function() {
     $('.slider').each(function() {
         var ul = $($(this).children('ul.img-gallery')[0]);
 
+        if($(this).is('.fixed-size')) ul.addClass('fixed-size');
+
         // initiate preview if activated
         if($(this).filter('.preview-nav').length > 0) {
             eLearnJS.initiateSliderPreview($(this).parent());
@@ -1411,13 +1413,14 @@ eLearnJS.loopTimeouts = {};
 */
 eLearnJS.showSlide = function(ul, slide, updatePreview, animate, duration) {
     var ul_id = $('.img-gallery').index(ul);
+    var slider = ul.parent();
 
     var slide_intended = (ul.children('li').not('.loop_clone').length + slide) % ul.children('li').not('.loop_clone').length;
     var slideChanged = false;
 
     // Falls Loop aktiviert springt es mit -1 an die letzte Stelle und mit
     // "x.length" an Stelle 0
-    if(ul.parent().filter('.loop').length > 0) {
+    if(slider.filter('.loop').length > 0) {
         if(slide <= 0 || slide >= ul.children('li').length - 1) {
             slide = eLearnJS.createLoopFor(ul, ul_id, slide);
         }
@@ -1433,30 +1436,36 @@ eLearnJS.showSlide = function(ul, slide, updatePreview, animate, duration) {
         }
     }
 
-    // Für alle Slider, falls eLearnJS.showSlide möglich
-    if((ul.parent().is('.slider') && (slide >= 0 && slide < ul.children('li').length))
-       || (ul.parent().is('.slider-nav') && (slide >= 0 && slide*4 < ul.children('li').length))) {
-        eLearnJS.showSlideLi(ul, ul_id, slide, animate, duration);
+    // if back-loop: jump last -> first, first -> last
+    if(slide < 0 && slider.is('.back-loop'))
+        slide += ul.children('li').not('.loop_clone').length;
+    if(slide >= ul.children('li').not('.loop_clone').length && slider.is('.back-loop'))
+        slide -= ul.children('li').not('.loop_clone').length;
 
+
+    // Für alle Slider, falls eLearnJS.showSlide möglich
+    if((slider.is('.slider') && (slide >= 0 && slide < ul.children('li').length))
+       || (slider.is('.slider-nav') && (slide >= 0 && slide*4 < ul.children('li').length))) {
+        eLearnJS.showSlideLi(ul, ul_id, slide, animate, duration);
     }
 
     var actual_slide = ul.children('li').eq(eLearnJS.visibleImage[ul_id]).attr('loopid');
 
     // Bildbeschreibung laden, wenn es sich nicht um einen navigations-slider handelt
-    if(!ul.parent().is(".slider-nav")) {
+    if(!slider.is(".slider-nav")) {
         eLearnJS.showSlideDescription(ul, slide);
     }
 
     // Zusätzlich für Slider mit Preview Nav
     if(updatePreview
-        && ul.parent().filter('.preview-nav').length > 0) {
-        var previeNavLis = ul.parent().parent().nextAll('.preview-con').find('.slider-nav').first().children('ul.img-gallery').children('li');
+        && slider.filter('.preview-nav').length > 0) {
+        var previeNavLis = slider.parent().nextAll('.preview-con').find('.slider-nav').first().children('ul.img-gallery').children('li');
         previeNavLis.removeClass('active');
         previeNavLis.eq(actual_slide).addClass('active');
         eLearnJS.showSlide(previeNavLis.parent(), Math.floor(actual_slide/4), false, animate, duration);
     }
 
-    eLearnJS.showSlideButtons(ul, slide, ul.parent().filter('.slider-nav').length > 0);
+    eLearnJS.showSlideButtons(ul, slide, slider.filter('.slider-nav').length > 0);
 };
 
 /**
@@ -1558,7 +1567,7 @@ eLearnJS.showSlideLi = function(ul, ul_id, slide, animate, duration) {
     ul[0].offsetHeight; // apply css changes
 
     var hasScroll = eLearnJS.hasScrollbar();
-    if(animate && ul.not('fixed-size').length > 0 && ul.parent().is('.slider')) ul.parent().addClass("switching");
+    if(animate && ul.not('.fixed-size').length > 0 && ul.parent().is('.slider')) ul.parent().addClass("switching");
     eLearnJS.visibleImage[ul_id] = slide;
     // Die X-Position an die die Transformation stattfindet
     var x = ul.children('li').outerWidth(true)*slide*-1
@@ -1581,7 +1590,7 @@ eLearnJS.showSlideLi = function(ul, ul_id, slide, animate, duration) {
     var newTimeout = setTimeout(function() {
         var height = $(ul.children('li')[eLearnJS.visibleImage[ul_id]]).height();
         // start height change animation; only for variable height sliders
-        if(ul.not('fixed-size').length > 0 && ul.parent().is('.slider')){
+        if(ul.not('.fixed-size').length > 0 && ul.parent().is('.slider')){
             var animationDuration = 500;
             if(!animate) {
                 // will be eLearnJS.ulTransitionDuration if duration is not set explicitly
@@ -1630,18 +1639,19 @@ eLearnJS.showSlideDescription = function(ul, slide) {
 * @param isNavigation - true wenn Navigations/Preview-Slider, false sonst.
 */
 eLearnJS.showSlideButtons = function(ul, slide, isNavigation) {
-    if(slide > 0 || ul.parent().filter('.loop').length > 0) {
-        ul.parent().nextAll('.slider-back-area').show();
+    var slider = ul.parent();
+    if(slide > 0 || slider.is('.loop') || slider.is('.back-loop')) {
+        slider.nextAll('.slider-back-area').show();
     }
     else {
-        ul.parent().nextAll('.slider-back-area').hide();
+        slider.nextAll('.slider-back-area').hide();
     }
     if((isNavigation && (slide+1)*4 < ul.children('li').length) || (!isNavigation && slide+1 < ul.children('li').length)
-        || ul.parent().filter('.loop').length > 0) {
-        ul.parent().nextAll('.slider-next-area').show();
+        || slider.is('.loop') || slider.is('.back-loop')) {
+        slider.nextAll('.slider-next-area').show();
     }
     else {
-        ul.parent().nextAll('.slider-next-area').hide();
+        slider.nextAll('.slider-next-area').hide();
     }
 };
 
@@ -2334,6 +2344,11 @@ eLearnJS.hoverInfoSetPositions = function() {
 };
 
 eLearnJS.hoverInfoSetPosition = function(div) {
+    if(div.is('.full')) eLearnJS.hoverInfoSetFullPosition(div);
+    else eLearnJS.hoverInfoSetSmallPosition(div);
+};
+
+eLearnJS.hoverInfoSetSmallPosition = function(div) {
     var min_width = 200;
     var perc_from = 400;
 
@@ -2341,18 +2356,18 @@ eLearnJS.hoverInfoSetPosition = function(div) {
     if(div.closest('section').width() > perc_from) {
         width = div.closest('section').width() * 0.5;
     }
-    else if(div.closest('section').width() < min_width){
+    else if(div.closest('section').width() < min_width) {
         width = min_width;
     }
     else {
-        var fact = 1 - ((div.closest('section').width() - min_width) / ((perc_from - min_width)*2));
+        var fact = 1 - ((div.closest('section').width() - min_width) / ((perc_from - min_width) * 2));
         width = div.closest('section').width() * fact;
     }
 
     var left = "auto";
     var right = "auto";
     if(($(window).width() - div.offset().left)
-            > (div.offset().left + div.outerWidth(true))) {
+        > (div.offset().left + div.outerWidth(true))) {
         left = div.offset().left;
         margin = "0 1em 0 0";
     }
@@ -2360,8 +2375,6 @@ eLearnJS.hoverInfoSetPosition = function(div) {
         right = $(window).width() - div.offset().left - div.outerWidth(true);
         margin = "0 0 0 1em";
     }
-
-    var parent = div.closest('section');
 
     var info = div.children('div.hover-info-block');
 
@@ -2371,6 +2384,57 @@ eLearnJS.hoverInfoSetPosition = function(div) {
         "right": right,
         "margin": margin,
         "max-width": width
+    });
+};
+
+eLearnJS.hoverInfoSetFullPosition = function(div) {
+    var dataset = div.get(0).dataset;
+    var parent = div.closest('section');
+
+    var info = div.children('div.hover-info-block');
+
+    // calculate max width
+    var maxWidth = parent.width();
+    if(dataset.fullWidth
+        && parseFloat(dataset.fullWidth) < $(window).width()
+        && dataset.width) {
+        // in percent
+        if(dataset.width.match(/^\d+(\.\d+)?%$/)) {
+            var maxWidthPercent = parseFloat(dataset.width.replace(/\D+$/g, ""));
+            maxWidth = parent.width() * (maxWidthPercent / 100);
+        }
+        // in px
+        else if(dataset.width.match(/^\d+(\.\d+)?(px)?$/)) {
+            maxWidth = parseFloat(dataset.width.replace(/\D+$/g, ""));
+        }
+        else {
+            console.error("Unknown `data-width` syntax in", div);
+            return;
+        }
+    }
+
+    var left = "auto";
+    var right = "auto";
+    var width = Math.min(info.outerWidth(), maxWidth);
+    if(($(window).width() - div.offset().left)
+        > (div.offset().left + div.outerWidth(true))) {
+        if(width > div.offset().left - parent.offset().left + div.outerWidth())
+            left = parent.offset().left;
+        else
+            left = div.offset().left + div.outerWidth() - width;
+    }
+    else {
+        if(width > $(window).width() - parent.offset().left - div.offset().left)
+            right = parent.offset().left;
+        else
+            right = ($(window).width() - div.offset().left) - width;
+    }
+
+    info.css({
+        "top": div.offset().top + div.outerHeight(true),
+        "left": left,
+        "right": right,
+        "max-width": maxWidth,
     });
 };
 

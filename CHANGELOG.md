@@ -1,3 +1,7 @@
+## 1.5.2
+* Updated dependencies
+* Updated elearn.js
+    * image gallery fixes and minor additions
 ## 1.5.1
 * Updated elearn.js to v1.0.7
     * changing overlay positioning in the `elearn.js` html
