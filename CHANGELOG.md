@@ -1,3 +1,6 @@
+## 1.5.1
+* Updated elearn.js to v1.0.7
+    * changing overlay positioning in the `elearn.js` html
 ## 1.5.0
 * General:
     * Option for removing comments in output (`removeComments`)
