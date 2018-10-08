@@ -1,6 +1,7 @@
 ## 1.5.2
 * Updated dependencies
-* Updated elearn.js
+* Updated elearn.js to v1.0.8
+    * hover-infos and gallery function extensions
     * image gallery fixes and minor additions
 ## 1.5.1
 * Updated elearn.js to v1.0.7
