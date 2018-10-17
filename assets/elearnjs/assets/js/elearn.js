@@ -1,5 +1,5 @@
 /*
-* v1.0.8 18/10/08 JavaScript eLearn.js - by Arne Westphal
+* v1.0.9 18/10/17 JavaScript eLearn.js - by Arne Westphal
 * eLearning Buero MIN-Fakultaet - Universitaet Hamburg
 * touch-script base by PADILICIOUS.COM and MACOSXAUTOMATION.COM
 * uses ResizeSensor by Marc J. Schmidt. https://github.com/marcj/css-element-queries/
@@ -8,7 +8,7 @@
 // For more intuitive usage of functions. (e.g. eLearnJS.showNext())
 var eLearnJS = eLearnJS || {};
 
-eLearnJS.VERSION_NR = "1.0.8";
+eLearnJS.VERSION_NR = "1.0.9";
 eLearnJS.VERSION_DATE = "10/2018";
 
 eLearnJS.actions = {
@@ -2212,21 +2212,24 @@ eLearnJS.initiateHideables = function() {
         button.click(function(e) {
             eLearnJS.toggleHideable(this);
         });
-        var text = div.attr('show') ? div.attr('show') : "";
-        text += div.attr('show') && div.attr('name') ? " " : "";
-        text += div.attr('name') ? div.attr('name') : "";
-        button.html(text);
         div.before(button);
 
-        div.hide();
+        // set not visible on default
+        eLearnJS.toggleHideable(button, false);
+
+        if(div.is('.visible')) eLearnJS.toggleHideable(button, true);
     });
 };
 
-eLearnJS.toggleHideable = function(element) {
+eLearnJS.toggleHideable = function(element, bool) {
     var div = $(element).nextAll().first('.hideable');
+    var visibility = bool;
+    if(visibility === undefined) {
+        visibility = !div.is(':visible');
+    }
 
     // hide
-    if(div.is(':visible')) {
+    if(!visibility) {
         div.hide();
         var text = div.attr('show') ? div.attr('show') : "";
         text += div.attr('show') && div.attr('name') ? " " : "";

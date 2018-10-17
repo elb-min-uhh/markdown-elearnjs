@@ -1,3 +1,8 @@
+## 1.5.3
+* Updated dependencies
+* Updated elearn.js to v1.0.9
+    * hover-infos fixes
+    * hideable and text blocks extensions
 ## 1.5.2
 * Updated dependencies
 * Updated elearn.js to v1.0.8
