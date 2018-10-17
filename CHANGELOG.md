@@ -1,3 +1,5 @@
+## 1.5.4
+* Updated elearn.js, hot-fix for `hover-info` elements
 ## 1.5.3
 * Updated dependencies
 * Updated elearn.js to v1.0.9
