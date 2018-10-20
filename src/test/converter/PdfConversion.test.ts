@@ -545,6 +545,46 @@ describe('PDF conversion', () => {
             assert.ok(fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "out.pdf")));
         }).slow(40000).timeout(60000);
 
+
+
+        it('should create the correct file with delay', async function() {
+            if(!puppeteerAvailable) {
+                console.log("Puppeteer is not available on this device. Skipping this test.");
+                this.skip();
+            }
+
+            let inBuf = fs.readFileSync(
+                path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
+                { encoding: 'utf8' });
+            let data = inBuf.toString();
+
+            // create output folder
+            fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+            // set options
+            pdfConverterKeptAlive.setOptions({
+                headerHeight: "0cm",
+            });
+
+            let startTime = new Date();
+
+            // convert the file
+            await pdfConverterKeptAlive.toFile(data,
+                path.join(__dirname, pathToTestAssets, "export", "out.pdf"),
+                path.join(__dirname, pathToTestAssets, `inputFiles`),
+                {
+                    language: "de",
+                    automaticExtensionDetection: true,
+                    renderDelay: 10000,
+                });
+
+            let endTime = new Date();
+
+            assert.ok(endTime.getTime() - startTime.getTime() >= 10000);
+
+            assert.ok(fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "out.pdf")));
+        }).slow(40000).timeout(60000);
+
         it('should not create the file, no path given', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
