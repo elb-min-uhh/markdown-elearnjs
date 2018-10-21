@@ -1,3 +1,6 @@
+## 1.5.5
+* Extended tests
+* Removed unnecessary files from publish package
 ## 1.5.4
 * Updated elearn.js, hot-fix for `hover-info` elements
 ## 1.5.3
