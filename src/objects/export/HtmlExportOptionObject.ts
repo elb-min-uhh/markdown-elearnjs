@@ -1,8 +1,13 @@
 "use strict";
 
-import ConversionObject from "./ConversionObject";
+import { ConversionObject } from "./ConversionObject";
 
-class HtmlExportOptionObject extends ConversionObject {
+/**
+ * An object containing all necessary information for the HTML conversion process.
+ *
+ * Extending the `ConversionObject`
+ */
+export class HtmlExportOptionObject extends ConversionObject {
     /**
      * if set to true the elearn.js assets containing
      * all included extensions will be exported next to the output file.
@@ -36,5 +41,3 @@ class HtmlExportOptionObject extends ConversionObject {
         }
     }
 }
-
-export default HtmlExportOptionObject;

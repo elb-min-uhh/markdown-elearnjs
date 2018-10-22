@@ -1,8 +1,15 @@
 "use strict";
 
-import InclusionObject from "./InclusionObject";
+import { InclusionObject } from "./InclusionObject";
 
-class ConversionObject extends InclusionObject {
+/**
+ * An object containing information about included extensions, selected language
+ * and additional conversion options, like `bodyOnly`,
+ * `automaticExtensionDetection` and `removeComments`.
+ *
+ * Extending the `InclusionObject`
+ */
+export class ConversionObject extends InclusionObject {
     /**
      * bodyOnly will only return the HTML body.
      * Default: false
@@ -46,5 +53,3 @@ class ConversionObject extends InclusionObject {
         }
     }
 }
-
-export default ConversionObject;

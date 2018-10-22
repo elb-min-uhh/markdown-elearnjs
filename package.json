@@ -3,7 +3,7 @@
   "version": "1.5.4",
   "description": "Simple markdown conversion to elearn.js based HTML and PDF.",
   "main": "out/main.js",
-  "typings": "out/main.d.ts",
+  "typings": "out/main",
   "scripts": {
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",

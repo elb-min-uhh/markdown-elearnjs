@@ -5,7 +5,7 @@
  * This makes type imports for Showdown unnecessary for developers using this
  * package.
  */
-interface IShowdownConverter {
+export interface IShowdownConverter {
     /**
      * @param text The input text (markdown)
      * @return The output HTML
@@ -27,5 +27,3 @@ interface IShowdownConverter {
      */
     getOption(optionKey: string): any;
 }
-
-export default IShowdownConverter;

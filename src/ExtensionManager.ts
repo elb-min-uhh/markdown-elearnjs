@@ -2,12 +2,12 @@
 
 import { ncp } from 'ncp';
 import * as path from 'path';
-import HtmlConverter from './converter/HtmlConverter';
-import IConverter from './converter/IConverter';
-import PdfConverter from './converter/PdfConverter';
-import ConversionObject from './objects/export/ConversionObject';
-import ExtensionObject from './objects/ExtensionObject';
-import ConverterSettingsObject from './objects/settings/ConverterSettingsObject';
+import { HtmlConverter } from './converter/HtmlConverter';
+import { IConverter } from './converter/IConverter';
+import { PdfConverter } from './converter/PdfConverter';
+import { ConversionObject } from './objects/export/ConversionObject';
+import { ExtensionObject } from './objects/ExtensionObject';
+import { ConverterSettingsObject } from './objects/settings/ConverterSettingsObject';
 
 const divClassRegExp = /<div[ \t]((?:(?!class[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\2|(?!\2).)*\2[ \t]*)*)class[ \t]*=[ \t]*(["'])((?:\\\3|(?!\3).)*)\3((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
 const videoRegExp = /<video[ \t>]/g;
@@ -19,7 +19,7 @@ const assetsPath = '../assets';
  * Allows to get path to extension necessary files.
  * Allows to get include strings for extension necessary files.
  */
-class ExtensionManager {
+export class ExtensionManager {
 
     // the default converter used for scanning
     private static htmlConverter: HtmlConverter;
@@ -245,5 +245,3 @@ class ExtensionManager {
         }
     }
 }
-
-export default ExtensionManager;

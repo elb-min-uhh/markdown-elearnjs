@@ -1,4 +1,5 @@
-## 1.5.5
+## 1.6.0
+* Updated internal export syntax. Added objects to exports
 * Extended tests
 * Removed unnecessary files from publish package
 ## 1.5.4

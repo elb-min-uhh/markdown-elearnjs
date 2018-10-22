@@ -4,7 +4,7 @@
  * a PromiseCounter.
  * This can be used to wait for multiple promises.
  */
-class PromiseCounter {
+export class PromiseCounter {
 
     // counter and timeout
     public count!: number;
@@ -95,5 +95,3 @@ class PromiseCounter {
         }
     }
 }
-
-export default PromiseCounter;

@@ -1,8 +1,13 @@
 "use strict";
 
-import ConversionObject from "./ConversionObject";
+import { ConversionObject } from "./ConversionObject";
 
-class PdfExportOptionObject extends ConversionObject {
+/**
+ * An object containing all necessary information for the PDF conversion process.
+ *
+ * Extending the `ConversionObject`
+ */
+export class PdfExportOptionObject extends ConversionObject {
     /**
      * delay of rendering the html to pdf in ms
      */
@@ -29,5 +34,3 @@ class PdfExportOptionObject extends ConversionObject {
         }
     }
 }
-
-export default PdfExportOptionObject;

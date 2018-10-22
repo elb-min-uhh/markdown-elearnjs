@@ -2,7 +2,7 @@
 
 import * as Puppeteer from 'puppeteer';
 
-interface IBrowser extends Puppeteer.Browser {
+export interface IBrowser extends Puppeteer.Browser {
     /**
      * process id
      */
@@ -13,5 +13,3 @@ interface IBrowser extends Puppeteer.Browser {
      */
     locks: number;
 }
-
-export default IBrowser;

@@ -1,8 +1,14 @@
 "use strict";
 
-import ExtensionObject from "../ExtensionObject";
+import { ExtensionObject } from "../ExtensionObject";
 
-class InclusionObject extends ExtensionObject {
+/**
+ * An object containing information about the included extensions as well
+ * as the selected language.
+ *
+ * Extending the `ExtensionObject`
+ */
+export class InclusionObject extends ExtensionObject {
     /**
      * Language key.
      * Default: "en"
@@ -29,5 +35,3 @@ class InclusionObject extends ExtensionObject {
         }
     }
 }
-
-export default InclusionObject;

@@ -1,12 +1,12 @@
 "use strict";
 
 import fs from "fs";
-import ConversionObject from "../objects/export/ConversionObject";
-import ConverterSettingsObject from "../objects/settings/ConverterSettingsObject";
-import IConverter from "./IConverter";
-import IShowdownConverter from "./IShowdownConverter";
+import { ConversionObject } from "../objects/export/ConversionObject";
+import { ConverterSettingsObject } from "../objects/settings/ConverterSettingsObject";
+import { IConverter } from "./IConverter";
+import { IShowdownConverter } from "./IShowdownConverter";
 
-abstract class AConverter implements IConverter {
+export abstract class AConverter implements IConverter {
 
     /**
      * The converter used for the main body markdown conversion.
@@ -70,5 +70,3 @@ abstract class AConverter implements IConverter {
     }
 
 }
-
-export default AConverter;

@@ -5,22 +5,22 @@ import * as path from 'path';
 import Puppeteer from 'puppeteer';
 import * as Showdown from "showdown";
 import _ from 'underscore';
-import ExtensionManager from '../ExtensionManager';
-import FileManager from '../FileManager';
-import ConversionObject from '../objects/export/ConversionObject';
-import InclusionObject from '../objects/export/InclusionObject';
-import PdfExportOptionObject from '../objects/export/PdfExportOptionObject';
-import ExtensionObject from '../objects/ExtensionObject';
-import PdfSettingsObject from '../objects/settings/PdfSettingsObject';
-import AConverter from './AConverter';
-import IBrowser from './IBrowser';
-import IConverter from './IConverter';
-import IShowdownConverter from './IShowdownConverter';
+import { ExtensionManager } from '../ExtensionManager';
+import { FileManager } from '../FileManager';
+import { ConversionObject } from '../objects/export/ConversionObject';
+import { InclusionObject } from '../objects/export/InclusionObject';
+import { PdfExportOptionObject } from '../objects/export/PdfExportOptionObject';
+import { ExtensionObject } from '../objects/ExtensionObject';
+import { PdfSettingsObject } from '../objects/settings/PdfSettingsObject';
+import { AConverter } from './AConverter';
+import { IBrowser } from './IBrowser';
+import { IConverter } from './IConverter';
+import { IShowdownConverter } from './IShowdownConverter';
 import * as elearnExtension from './ShowdownElearnJS';
 
 const assetsPath = '../../assets';
 
-class PdfConverter extends AConverter implements IConverter {
+export class PdfConverter extends AConverter implements IConverter {
 
     protected converter: IShowdownConverter;
     private browser?: IBrowser;
@@ -547,5 +547,3 @@ class PdfConverter extends AConverter implements IConverter {
         return mm;
     }
 }
-
-export default PdfConverter;

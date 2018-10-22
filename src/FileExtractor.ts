@@ -3,9 +3,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import FileExtractorObject from './FileExtractorObject';
-import FileMoveObject from './FileMoveObject';
-import PromiseCounter from './util/PromiseCounter';
+import { FileExtractorObject } from './FileExtractorObject';
+import { FileMoveObject } from './FileMoveObject';
+import { PromiseCounter } from './util/PromiseCounter';
 
 // Capturing groups: 1, 2 for attributes before src, 3: wrapping char ["'], 4: src value
 let imageSrcRegExp = /<(img)[ \t]((?:(?!src[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\3|(?!\3).)*\3[ \t]*)*)src[ \t]*=[ \t]*(["'])((?:\\\4|(?!\4).)*)\4((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;
@@ -107,7 +107,7 @@ function copyFile(source: string, target: string, ignoreNotExistent?: boolean) {
     return promise;
 }
 
-class FileExtractor {
+export class FileExtractor {
     public static extractAll(files: FileMoveObject[], inputRoot: string, outputRoot: string, timeout?: number) {
         let promises: Promise<void>[] = [];
 
@@ -186,5 +186,3 @@ class FileExtractor {
         return new FileExtractorObject(html, files);
     }
 }
-
-export default FileExtractor;

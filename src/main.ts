@@ -1,13 +1,17 @@
-"use strict";
+/**
+ * Export everything necessary
+ */
 
-import HtmlConverter from './converter/HtmlConverter';
-import PdfConverter from './converter/PdfConverter';
-import ExtensionManager from './ExtensionManager';
-import FileExtractor from './FileExtractor';
-import FileExtractorObject from './FileExtractorObject';
+export * from './converter/HtmlConverter';
+export * from './converter/PdfConverter';
+export * from './ExtensionManager';
+export * from './FileExtractor';
+export * from './FileExtractorObject';
 
-export { HtmlConverter };
-export { PdfConverter };
-export { FileExtractor };
-export { FileExtractorObject };
-export { ExtensionManager };
+export * from './objects/export/ConversionObject';
+export * from './objects/export/HtmlExportOptionObject';
+export * from './objects/export/InclusionObject';
+export * from './objects/export/PdfExportOptionObject';
+export * from './objects/ExtensionObject';
+export * from './objects/settings/ConverterSettingsObject';
+export * from './objects/settings/PdfSettingsObject';

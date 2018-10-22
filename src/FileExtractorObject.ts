@@ -1,13 +1,13 @@
 "use strict";
 
-import FileMoveObject from "./FileMoveObject";
+import { FileMoveObject } from "./FileMoveObject";
 
 /**
  * Used to return information about file extraction process.
  * Contains changed HTML (replaced relative links)
  * and found files.
  */
-class FileExtractorObject {
+export class FileExtractorObject {
     public html: string;
     public files: FileMoveObject[];
 
@@ -24,5 +24,3 @@ class FileExtractorObject {
         this.files = files;
     }
 }
-
-export default FileExtractorObject;

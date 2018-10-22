@@ -1,6 +1,9 @@
 "use strict";
 
-class ExtensionObject {
+/**
+ * An object containing infos about included extensions.
+ */
+export class ExtensionObject {
     // general index signature
     [key: string]: any;
 
@@ -54,5 +57,3 @@ class ExtensionObject {
         }
     }
 }
-
-export default ExtensionObject;

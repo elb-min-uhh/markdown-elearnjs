@@ -1,9 +1,13 @@
-"use strinct";
+"use strict";
 
 import Puppeteer from 'puppeteer';
-import ConverterSettingsObject from "./ConverterSettingsObject";
+import { ConverterSettingsObject } from "./ConverterSettingsObject";
 
-class PdfSettingsObject extends ConverterSettingsObject {
+/**
+ * An object extending the general `ConverterSettingsObject` by specific PDF
+ * settings.
+ */
+export class PdfSettingsObject extends ConverterSettingsObject {
     /**
      * will add page breaks before every section
      */
@@ -83,5 +87,3 @@ class PdfSettingsObject extends ConverterSettingsObject {
         }
     }
 }
-
-export default PdfSettingsObject;

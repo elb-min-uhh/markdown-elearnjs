@@ -1,9 +1,9 @@
 "use strict";
 
-import ConversionObject from "../objects/export/ConversionObject";
-import ConverterSettingsObject from "../objects/settings/ConverterSettingsObject";
+import { ConversionObject } from "../objects/export/ConversionObject";
+import { ConverterSettingsObject } from "../objects/settings/ConverterSettingsObject";
 
-interface IConverter {
+export interface IConverter {
 
     /**
      * Converts given markdown to a HTML string.
@@ -50,5 +50,3 @@ interface IConverter {
      */
     setOptions(options: ConverterSettingsObject): void;
 }
-
-export default IConverter;

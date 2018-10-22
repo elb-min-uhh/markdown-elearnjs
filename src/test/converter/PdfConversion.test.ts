@@ -6,7 +6,7 @@ import path from 'path';
 import Puppeteer from 'puppeteer';
 import rimraf from 'rimraf';
 import { PdfConverter } from '../../main';
-import PromiseCounter from '../../util/PromiseCounter';
+import { PromiseCounter } from '../../util/PromiseCounter';
 import AssertExtensions from '../helpers/AssertExtensions';
 import PostProcessing from '../helpers/PostProcessing';
 

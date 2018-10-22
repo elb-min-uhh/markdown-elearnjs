@@ -3,22 +3,22 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Showdown from "showdown";
-import ExtensionManager from '../ExtensionManager';
-import FileExtractor from '../FileExtractor';
-import FileManager from '../FileManager';
-import FileMoveObject from '../FileMoveObject';
-import ConversionObject from '../objects/export/ConversionObject';
-import HtmlExportOptionObject from '../objects/export/HtmlExportOptionObject';
-import InclusionObject from '../objects/export/InclusionObject';
-import ExtensionObject from '../objects/ExtensionObject';
-import ConverterSettingsObject from '../objects/settings/ConverterSettingsObject';
-import PromiseCounter from '../util/PromiseCounter';
-import AConverter from './AConverter';
-import IConverter from './IConverter';
-import IShowdownConverter from './IShowdownConverter';
+import { ExtensionManager } from '../ExtensionManager';
+import { FileExtractor } from '../FileExtractor';
+import { FileManager } from '../FileManager';
+import { FileMoveObject } from '../FileMoveObject';
+import { ConversionObject } from '../objects/export/ConversionObject';
+import { HtmlExportOptionObject } from '../objects/export/HtmlExportOptionObject';
+import { InclusionObject } from '../objects/export/InclusionObject';
+import { ExtensionObject } from '../objects/ExtensionObject';
+import { ConverterSettingsObject } from '../objects/settings/ConverterSettingsObject';
+import { PromiseCounter } from '../util/PromiseCounter';
+import { AConverter } from './AConverter';
+import { IConverter } from './IConverter';
+import { IShowdownConverter } from './IShowdownConverter';
 import * as elearnExtension from './ShowdownElearnJS';
 
-class HtmlConverter extends AConverter implements IConverter {
+export class HtmlConverter extends AConverter implements IConverter {
 
     protected converter: IShowdownConverter;
     private imprintConverter: IShowdownConverter;
@@ -206,5 +206,3 @@ class HtmlConverter extends AConverter implements IConverter {
             });
     }
 }
-
-export default HtmlConverter;

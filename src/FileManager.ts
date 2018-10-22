@@ -4,7 +4,7 @@ import * as fs from 'fs';
 
 const assetsPath = '../assets';
 
-class FileManager {
+export class FileManager {
     public static async getHtmlTemplate() {
         return await FileManager.readFile(`${__dirname}/${assetsPath}/elearnjs/template.html`);
     }
@@ -26,5 +26,3 @@ class FileManager {
         return ret;
     }
 }
-
-export default FileManager;

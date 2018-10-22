@@ -1,6 +1,10 @@
 "use strict";
 
-class ConverterSettingsObject {
+/**
+ * An object containg general converter settings. These apply for the
+ * HtmlConverter and the PdfConverter but might be extended by specific objects.
+ */
+export class ConverterSettingsObject {
     // general index signature
     [key: string]: any;
 
@@ -53,5 +57,3 @@ class ConverterSettingsObject {
         }
     }
 }
-
-export default ConverterSettingsObject;

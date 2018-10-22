@@ -1,6 +1,6 @@
 "use strict";
 
-class FileMoveObject {
+export class FileMoveObject {
     public inputPath: string;
     public relativeOutputPath: string;
 
@@ -9,5 +9,3 @@ class FileMoveObject {
         this.relativeOutputPath = relativeOutputPath;
     }
 }
-
-export default FileMoveObject;

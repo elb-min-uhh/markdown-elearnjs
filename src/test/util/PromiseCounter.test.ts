@@ -1,7 +1,7 @@
 "use strict";
 
 import assert from 'assert';
-import PromiseCounter from '../../util/PromiseCounter';
+import { PromiseCounter } from '../../util/PromiseCounter';
 
 function createPromises(count: number, resolving: boolean, timeoutMin: number, timeoutMax: number) {
     let timeoutBase = timeoutMin ? timeoutMin : 0;

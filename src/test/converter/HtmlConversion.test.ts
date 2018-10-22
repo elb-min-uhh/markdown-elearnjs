@@ -4,9 +4,8 @@ import assert from 'assert';
 import * as fs from "fs";
 import path from 'path';
 import rimraf from 'rimraf';
-import FileExtractor from '../../FileExtractor';
-import { HtmlConverter } from '../../main';
-import PromiseCounter from '../../util/PromiseCounter';
+import { FileExtractor, HtmlConverter } from '../../main';
+import { PromiseCounter } from '../../util/PromiseCounter';
 import AssertExtensions from '../helpers/AssertExtensions';
 
 const pathToTestAssets = '../../../testAssets/';
