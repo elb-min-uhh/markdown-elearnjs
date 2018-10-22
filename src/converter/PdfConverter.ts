@@ -180,9 +180,9 @@ export class PdfConverter extends AConverter implements IConverter {
      */
     public async toBuffer(markdown: string, rootPath: string, options?: PdfExportOptionObject) {
         const self = this;
-        let opts = self.getPdfOutputOptions();
+        let opts = new PdfExportOptionObject(options);
 
-        let html = await self.toHtml(markdown, <ConversionObject>options);
+        let html = await self.toHtml(markdown, <ConversionObject>opts);
 
         let browser = await self.getBrowserInstance();
         // add lock
@@ -199,13 +199,13 @@ export class PdfConverter extends AConverter implements IConverter {
             await page.goto('file:///' + tmpFile.replace('\\', '/'));
 
             // render delay
-            if(options && options.renderDelay) {
+            if(opts && opts.renderDelay) {
                 await new Promise((res, rej) => {
-                    setTimeout(res, options.renderDelay);
+                    setTimeout(res, opts.renderDelay);
                 });
             }
 
-            buffer = await page.pdf(opts);
+            buffer = await page.pdf(self.getPdfOutputOptions());
             // close the page only if the browser is not closed anyway
             // to prevent race conditions: page.close() / browser.close() might
             // concur even though await is given

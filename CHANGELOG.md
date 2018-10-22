@@ -1,3 +1,5 @@
+## 1.6.1
+* Minor internal change in the PdfConverter usage of export options
 ## 1.6.0
 * Updated internal export syntax. Added objects to exports
 * Extended tests
