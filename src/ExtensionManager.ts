@@ -6,7 +6,7 @@ import { HtmlConverter } from './converter/HtmlConverter';
 import { IConverter } from './converter/IConverter';
 import { PdfConverter } from './converter/PdfConverter';
 import { ConversionObject } from './objects/export/ConversionObject';
-import { ExtensionObject } from './objects/ExtensionObject';
+import { ExtensionObject } from './objects/export/ExtensionObject';
 import { ConverterSettingsObject } from './objects/settings/ConverterSettingsObject';
 
 const divClassRegExp = /<div[ \t]((?:(?!class[ \t]*=[ \t]*["'])\S+[ \t]*=[ \t]*(["'])(?:\\\2|(?!\2).)*\2[ \t]*)*)class[ \t]*=[ \t]*(["'])((?:\\\3|(?!\3).)*)\3((?:(?!\/?>).|[^\/>])*)(\/?)>/gi;

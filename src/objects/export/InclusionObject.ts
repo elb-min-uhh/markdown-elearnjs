@@ -1,6 +1,6 @@
 "use strict";
 
-import { ExtensionObject } from "../ExtensionObject";
+import { ExtensionObject } from "./ExtensionObject";
 
 /**
  * An object containing information about the included extensions as well

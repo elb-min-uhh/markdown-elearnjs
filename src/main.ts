@@ -13,6 +13,6 @@ export * from './objects/export/ConversionObject';
 export * from './objects/export/HtmlExportOptionObject';
 export * from './objects/export/InclusionObject';
 export * from './objects/export/PdfExportOptionObject';
-export * from './objects/ExtensionObject';
+export * from './objects/export/ExtensionObject';
 export * from './objects/settings/ConverterSettingsObject';
 export * from './objects/settings/PdfSettingsObject';
