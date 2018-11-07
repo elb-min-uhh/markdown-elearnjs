@@ -3,6 +3,10 @@
 import { ConversionObject } from "../objects/export/ConversionObject";
 import { ConverterSettingsObject } from "../objects/settings/ConverterSettingsObject";
 
+/**
+ * The general Converter interface. This might be extended in the implementing
+ * elements.
+ */
 export interface IConverter {
 
     /**

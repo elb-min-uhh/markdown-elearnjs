@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * An object containg general converter settings. These apply for the
+ * An object containing general converter settings. These apply for the
  * HtmlConverter and the PdfConverter but might be extended by specific objects.
  */
 export class ConverterSettingsObject {

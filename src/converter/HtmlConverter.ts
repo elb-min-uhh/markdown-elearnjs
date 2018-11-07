@@ -16,12 +16,16 @@ import { PromiseCounter } from '../util/PromiseCounter';
 import { AConverter } from './AConverter';
 import { IConverter } from './IConverter';
 import { IShowdownConverter } from './IShowdownConverter';
-import * as elearnExtension from './ShowdownElearnJS';
+import { ShowdownExtensionManager } from './ShowdownExtensionManager';
 
+/**
+ * Converts Markdown to elearnjs HTML
+ */
 export class HtmlConverter extends AConverter implements IConverter {
 
     protected converter: IShowdownConverter;
     private imprintConverter: IShowdownConverter;
+    private showdownExtensions: ShowdownExtensionManager;
 
     /**
      * Creates an HtmlConverter with specific options.
@@ -30,22 +34,23 @@ export class HtmlConverter extends AConverter implements IConverter {
     constructor(options?: ConverterSettingsObject) {
         super();
 
+        this.showdownExtensions = new ShowdownExtensionManager();
+        let showdownImprintExtensions = new ShowdownExtensionManager();
+
         this.converter = new Showdown.Converter({
             simplifiedAutoLink: true,
             excludeTrailingPunctuationFromURLs: true,
             strikethrough: true,
             tables: true,
-            extensions: elearnExtension.elearnHtmlBody(),
+            extensions: this.showdownExtensions.getHtmlBodyExtensions(),
         });
         this.imprintConverter = new Showdown.Converter({
             simplifiedAutoLink: true,
             excludeTrailingPunctuationFromURLs: true,
             strikethrough: true,
             tables: true,
-            extensions: elearnExtension.elearnImprint(),
+            extensions: showdownImprintExtensions.getImprintExtensions(),
         });
-
-        elearnExtension.elearnImprint();
 
         // set export defaults
         let defaults = new ConverterSettingsObject();
@@ -95,7 +100,7 @@ export class HtmlConverter extends AConverter implements IConverter {
         }
 
         // create meta and imprint
-        let meta = elearnExtension.parseMetaData(markdown);
+        let meta = this.showdownExtensions.parseMetaData(markdown);
         let imprint = "";
         // create imprint only if explicitly inserted in markdown
         if(markdown.match(/(?:(?:^|\n)(```+|~~~+)imprint\s*?\n([\s\S]*?)\n\1|(?:^|\n)(<!--+)imprint\s*?\n([\s\S]*?)\n-->)/g)) {

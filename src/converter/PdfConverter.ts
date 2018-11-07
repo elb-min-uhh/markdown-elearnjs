@@ -16,29 +16,35 @@ import { AConverter } from './AConverter';
 import { IBrowser } from './IBrowser';
 import { IConverter } from './IConverter';
 import { IShowdownConverter } from './IShowdownConverter';
-import * as elearnExtension from './ShowdownElearnJS';
+import { ShowdownExtensionManager } from './ShowdownExtensionManager';
 
 const assetsPath = '../../assets';
 
+/**
+ * Converts Markdown to elearnjs PDF
+ */
 export class PdfConverter extends AConverter implements IConverter {
 
     protected converter: IShowdownConverter;
     private browser?: IBrowser;
     private browserPromise?: Promise<IBrowser>;
+    private showdownExtensions: ShowdownExtensionManager;
 
     /**
-     * Creates an HtmlConverter with specific options.
+     * Creates a PdfConverter with specific options.
      * @param {PdfSettingsObject} options: optional options
      */
     constructor(options?: PdfSettingsObject) {
         super();
+
+        this.showdownExtensions = new ShowdownExtensionManager();
 
         this.converter = new Showdown.Converter({
             simplifiedAutoLink: true,
             excludeTrailingPunctuationFromURLs: true,
             strikethrough: true,
             tables: true,
-            extensions: elearnExtension.elearnPdfBody(),
+            extensions: this.showdownExtensions.getPdfBodyExtensions(),
         });
 
         // set export defaults
@@ -109,7 +115,7 @@ export class PdfConverter extends AConverter implements IConverter {
         }
 
         // create meta and imprint
-        let meta = elearnExtension.parseMetaData(markdown);
+        let meta = this.showdownExtensions.parseMetaData(markdown);
 
         let data = await FileManager.getPdfTemplate();
         // scan for extensions if necessary

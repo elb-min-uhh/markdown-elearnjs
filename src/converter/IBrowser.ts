@@ -2,6 +2,10 @@
 
 import * as Puppeteer from 'puppeteer';
 
+/**
+ * Wraps the Puppteer.Browser in an IBrowser containing specific additional
+ * attributes.
+ */
 export interface IBrowser extends Puppeteer.Browser {
     /**
      * process id

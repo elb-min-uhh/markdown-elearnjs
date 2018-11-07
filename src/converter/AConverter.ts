@@ -6,6 +6,9 @@ import { ConverterSettingsObject } from "../objects/settings/ConverterSettingsOb
 import { IConverter } from "./IConverter";
 import { IShowdownConverter } from "./IShowdownConverter";
 
+/**
+ * Contains basic implementations used in the actual converters.
+ */
 export abstract class AConverter implements IConverter {
 
     /**
