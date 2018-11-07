@@ -1,3 +1,6 @@
+## 1.6.2
+* Update dependencies
+* Update elearn.js to v1.0.10
 ## 1.6.1
 * Minor internal change in the PdfConverter usage of export options
 * Added bundled typings file to publish package as `out/index.d.ts`
