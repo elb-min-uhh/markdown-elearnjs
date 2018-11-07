@@ -7,6 +7,7 @@ export * from './converter/PdfConverter';
 export * from './ExtensionManager';
 export * from './FileExtractor';
 export * from './FileExtractorObject';
+export * from './FileMoveObject';
 
 export * from './objects/export/ConversionObject';
 export * from './objects/export/HtmlExportOptionObject';
