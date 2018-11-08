@@ -1,3 +1,10 @@
+## 1.7.0
+* Internal:
+    * Added more comments
+    * Internal refactoring
+    * ExtensionObject was moved and might lead to unresolved imports
+    * ShowdownElearnJS was completely refactored and moved into
+    ShowdownExtensionManager
 ## 1.6.2
 * Update dependencies
 * Update elearn.js to v1.0.10
@@ -26,7 +33,7 @@
 ## 1.5.0
 * General:
     * Option for removing comments in output (`removeComments`)
-    * Syntax for always hidden comments (`<!--hide ...-->)
+    * Syntax for always hidden comments (`<!--hide ...-->`)
 ## 1.4.9
 * PDF Conversion:
     * removed PDF specific `elearn.js`
