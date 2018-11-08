@@ -7,7 +7,7 @@
   "scripts": {
     "compile": "tsc -p ./ && node scripts/postcompile.js",
     "watch": "tsc -watch -p ./",
-    "test": "npm run compile && nyc mocha --recursive --colors --require ts-node/register -u tdd src/test/**/*.test.ts",
+    "test": "npm run compile && nyc mocha --recursive --colors --require ts-node/register -u tdd **/*.test.ts",
     "testXUnit": "npm run compile && nyc mocha --require ts-node/register --retries 1 -u tdd -R mocha-multi --reporter-options spec=-,xunit=test-report.xml **/*.test.ts",
     "prepublishOnly": "node scripts/prepublish.js && npm run compile"
   },
