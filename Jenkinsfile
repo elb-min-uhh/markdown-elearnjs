@@ -4,12 +4,23 @@ node {
 
     try{
         // preparation
-        stage('Build') {
+        stage('Setup') {
             try {
                 checkout scm
                 sh "npm install"
                 // remove bundled chromium to use `chromium-browser` in CI
                 sh "rm -r node_modules/puppeteer/.local-chromium/"
+                if(currentBuild.result != "SUCCESS") throw new Exception();
+            }
+            catch(err) {
+                currentBuild.result = "FAILED"
+                throw err // to force stop
+            }
+        }
+
+        // build js
+        stage('Build') {
+            try {
                 sh "npm run compile"
                 if(currentBuild.result != "SUCCESS") throw new Exception();
             }
@@ -19,6 +30,7 @@ node {
             }
         }
 
+        // run tests
         stage('Test') {
             try {
                 // assert build in 'Build' succeeded
@@ -31,6 +43,7 @@ node {
             }
         }
 
+        // create and publish docs and test results
         stage('Publish') {
             sh "npm run createDocs" // create documentation
             publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'docs/', reportFiles: 'index.html', reportName: 'Documentation', reportTitles: 'Documentation']);
