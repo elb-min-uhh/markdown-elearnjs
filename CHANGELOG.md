@@ -1,3 +1,7 @@
+## 1.7.1
+* Internal:
+    * More refactoring, commenting
+    * Automatically created documentation (check the Wiki)
 ## 1.7.0
 * Internal:
     * Added more comments
