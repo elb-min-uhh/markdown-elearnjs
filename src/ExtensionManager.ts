@@ -69,7 +69,7 @@ export class ExtensionManager {
      *
      * @param html string: the html code to be scanned
      *
-     * @return ExtensionObject: including which extensions where found
+     * @return ExtensionObject: including which extensions were found
      * and explicitly which were not found (true/false)
      */
     public static scanHtmlForAll(html: string) {
@@ -112,7 +112,7 @@ export class ExtensionManager {
         return ExtensionManager.scanHtmlForAll(html);
     }
 
-    // Asset Strings for a HTML Export
+    // Asset Strings for an HTML Export
 
     public static getHTMLAssetStrings(includeQuiz?: boolean, includeElearnVideo?: boolean, includeClickImage?: boolean, includeTimeSlider?: boolean) {
         return `${includeQuiz ? ExtensionManager.getQuizHTMLAssetString() : ""}

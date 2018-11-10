@@ -34,29 +34,29 @@ describe('PDF Converter Setup', () => {
 
     it('creates a PdfConverter with default settings', () => {
 
-        let conv = new PdfConverter();
+        let converter = new PdfConverter();
 
         // assert defaults are set
-        assert.equal(conv.getOption("newSectionOnHeading"), true);
-        assert.equal(conv.getOption("headingDepth"), 3);
-        assert.equal(conv.getOption("useSubSections"), true);
-        assert.equal(conv.getOption("subSectionLevel"), 3);
-        assert.equal(conv.getOption("subsubSectionLevel"), 4);
+        assert.equal(converter.getOption("newSectionOnHeading"), true);
+        assert.equal(converter.getOption("headingDepth"), 3);
+        assert.equal(converter.getOption("useSubSections"), true);
+        assert.equal(converter.getOption("subSectionLevel"), 3);
+        assert.equal(converter.getOption("subsubSectionLevel"), 4);
 
-        assert.equal(conv.getOption("newPageOnSection"), true);
-        assert.equal(conv.getOption("contentZoom"), 1);
-        assert.equal(conv.getOption("customHeader"), undefined);
-        assert.equal(conv.getOption("customFooter"), undefined);
-        assert.equal(conv.getOption("headerHeight"), "0");
-        assert.equal(conv.getOption("footerHeight"), "17mm");
-        assert.equal(conv.getOption("customStyleFile"), undefined);
-        assert.equal(conv.getOption("chromePath"), undefined);
-        assert.equal(conv.getOption("puppeteerOptions"), undefined);
-        assert.equal(conv.getOption("keepChromeAlive"), false);
+        assert.equal(converter.getOption("newPageOnSection"), true);
+        assert.equal(converter.getOption("contentZoom"), 1);
+        assert.equal(converter.getOption("customHeader"), undefined);
+        assert.equal(converter.getOption("customFooter"), undefined);
+        assert.equal(converter.getOption("headerHeight"), "0");
+        assert.equal(converter.getOption("footerHeight"), "17mm");
+        assert.equal(converter.getOption("customStyleFile"), undefined);
+        assert.equal(converter.getOption("chromePath"), undefined);
+        assert.equal(converter.getOption("puppeteerOptions"), undefined);
+        assert.equal(converter.getOption("keepChromeAlive"), false);
     });
 
-    it('should create an PdfConverter with correct settings', () => {
-        let conv = new PdfConverter({
+    it('creates an PdfConverter with correct settings', () => {
+        let converter = new PdfConverter({
             headingDepth: 2,
             newSectionOnHeading: false,
             useSubSections: false,
@@ -75,22 +75,22 @@ describe('PDF Converter Setup', () => {
             // keep default keepChromeAlive
         });
 
-        assert.equal(conv.getOption("headingDepth"), 2);
-        assert.equal(conv.getOption("newSectionOnHeading"), false);
-        assert.equal(conv.getOption("useSubSections"), false);
-        assert.equal(conv.getOption("subSectionLevel"), 4);
-        assert.equal(conv.getOption("subsubSectionLevel"), 5);
+        assert.equal(converter.getOption("headingDepth"), 2);
+        assert.equal(converter.getOption("newSectionOnHeading"), false);
+        assert.equal(converter.getOption("useSubSections"), false);
+        assert.equal(converter.getOption("subSectionLevel"), 4);
+        assert.equal(converter.getOption("subsubSectionLevel"), 5);
 
-        assert.equal(conv.getOption("contentZoom"), 2);
-        assert.equal(conv.getOption("customFooter"), "testfooter");
-        assert.equal(conv.getOption("customHeader"), "testheader");
-        assert.equal(conv.getOption("footerHeight"), "17mm");
-        assert.equal(conv.getOption("headerHeight"), "20mm");
-        assert.equal(conv.getOption("customStyleFile"), "somefile");
-        assert.equal(conv.getOption("newPageOnSection"), false);
-        assert.equal(conv.getOption("chromePath"), undefined);
-        assert.equal(conv.getOption("puppeteerOptions"), undefined);
-        assert.equal(conv.getOption("keepChromeAlive"), false);
+        assert.equal(converter.getOption("contentZoom"), 2);
+        assert.equal(converter.getOption("customFooter"), "testfooter");
+        assert.equal(converter.getOption("customHeader"), "testheader");
+        assert.equal(converter.getOption("footerHeight"), "17mm");
+        assert.equal(converter.getOption("headerHeight"), "20mm");
+        assert.equal(converter.getOption("customStyleFile"), "somefile");
+        assert.equal(converter.getOption("newPageOnSection"), false);
+        assert.equal(converter.getOption("chromePath"), undefined);
+        assert.equal(converter.getOption("puppeteerOptions"), undefined);
+        assert.equal(converter.getOption("keepChromeAlive"), false);
     });
 
     it('should update settings in PdfConverter', () => {
@@ -210,7 +210,7 @@ describe('PDF conversion', () => {
     describe('With small example codes', () => {
 
         // basic body only test
-        it('should create a valid pdf body', async () => {
+        it('creates a valid pdf body', async () => {
             let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
             let text = await html;
             text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
@@ -218,7 +218,7 @@ describe('PDF conversion', () => {
         });
 
         // basic body only test with toPdfHtml
-        it('should create a valid pdf body with toPdfHtml', async () => {
+        it('creates a valid pdf body with toPdfHtml', async () => {
             let html = pdfConverterKeptAlive.toPdfHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
             let text = await html;
             text = PostProcessing.removeAbsolutePaths(text, path.join(__dirname, pathToTestAssets, `resultFiles`));
@@ -226,7 +226,7 @@ describe('PDF conversion', () => {
         });
 
         // basic full document test
-        it('should create a valid pdf document without autodetection', async () => {
+        it('creates a valid pdf document without auto detection', async () => {
             let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 language: "de",
             });
@@ -236,7 +236,7 @@ describe('PDF conversion', () => {
         });
 
         // basic full document test
-        it('should create a valid pdf document', async () => {
+        it('creates a valid pdf document', async () => {
             let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 automaticExtensionDetection: true,
                 language: "de",
@@ -252,7 +252,7 @@ describe('PDF conversion', () => {
 
 
         // basic full document test with english language selection
-        it('should create a valid pdf document with english language', async () => {
+        it('creates a valid pdf document with english language', async () => {
             let html = pdfConverterKeptAlive.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 automaticExtensionDetection: true,
                 language: "en",
@@ -513,7 +513,7 @@ describe('PDF conversion', () => {
             assert.ok(!newPdfConverter.hasBrowserInstance());
         }).slow(40000).timeout(60000);
 
-        it('should create the correct file', async function() {
+        it('creates the correct file', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();
@@ -547,7 +547,7 @@ describe('PDF conversion', () => {
 
 
 
-        it('should create the correct file with delay', async function() {
+        it('creates the correct file with delay', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();
@@ -638,7 +638,7 @@ describe('PDF conversion', () => {
                 }));
         }).slow(40000).timeout(60000);
 
-        it('should create the file, overwrite existing file', async function() {
+        it('creates the file, overwrite existing file', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();
@@ -666,7 +666,7 @@ describe('PDF conversion', () => {
                 }, true));
         }).slow(40000).timeout(60000);
 
-        it('should create a buffer', async function() {
+        it('creates a buffer', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();
@@ -695,7 +695,7 @@ describe('PDF conversion', () => {
                 });
         }).slow(40000).timeout(60000);
 
-        it('should create a buffer with incorrect footerHeight', async function() {
+        it('creates a buffer with incorrect footerHeight', async function() {
             if(!puppeteerAvailable) {
                 console.log("Puppeteer is not available on this device. Skipping this test.");
                 this.skip();

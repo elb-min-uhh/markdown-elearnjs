@@ -60,7 +60,7 @@ describe('Extension Manager', () => {
     });
 
     // basic body only test
-    it('should export selected assets correctly', async () => {
+    it('exports selected assets correctly', async () => {
 
         // create output folder
         fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
@@ -108,7 +108,7 @@ describe('Extension Manager', () => {
         }));
     });
 
-    it('should detect all extensions in markdown', (done) => {
+    it('detects all extensions in markdown', (done) => {
         let inBuf = fs.readFileSync(
             path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
             { encoding: 'utf8' });
@@ -125,7 +125,7 @@ describe('Extension Manager', () => {
         });
     });
 
-    it('should detect all extensions in markdown with given HtmlConverter', (done) => {
+    it('detects all extensions in markdown with given HtmlConverter', (done) => {
         let inBuf = fs.readFileSync(
             path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
             { encoding: 'utf8' });
@@ -144,7 +144,7 @@ describe('Extension Manager', () => {
         });
     });
 
-    it('should detect all extensions in markdown with given PdfConverter', (done) => {
+    it('detects all extensions in markdown with given PdfConverter', (done) => {
         let inBuf = fs.readFileSync(
             path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
             { encoding: 'utf8' });

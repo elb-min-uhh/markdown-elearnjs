@@ -124,7 +124,7 @@ export class PdfConverter extends AConverter implements IConverter {
     }
 
     /**
-     * Converts given markdown to a HTML string for a HTML to PDF conversion.
+     * Converts given markdown to an HTML string for an HTML to PDF conversion.
      * Certain options will specify the output.
      *
      * @deprecated use `.toHtml` instead

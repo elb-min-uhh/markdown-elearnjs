@@ -23,7 +23,7 @@ function createPromises(count: number, resolving: boolean, timeoutMin: number, t
 
 describe("PromiseCounter", () => {
 
-    it('should resolve correctly', (done) => {
+    it('resolves correctly', (done) => {
         let promises = createPromises(20, true, 0, 2000);
 
         let counter = new PromiseCounter(promises);
@@ -34,7 +34,7 @@ describe("PromiseCounter", () => {
         });
     }).slow(8000).timeout(10000);
 
-    it('should reject', (done) => {
+    it('rejects with not resolving promises', (done) => {
         let promises = createPromises(20, false, 0, 2000);
 
         let counter = new PromiseCounter(promises, 10000);
@@ -45,7 +45,7 @@ describe("PromiseCounter", () => {
         });
     }).slow(8000).timeout(10000);
 
-    it('should reject with one timed out', (done) => {
+    it('rejects with one timed out', (done) => {
         let timeout = 1250;
         let promises = createPromises(20, true, 0, 1000);
 
@@ -67,7 +67,7 @@ describe("PromiseCounter", () => {
         });
     }).slow(8000).timeout(10000);
 
-    it('should reject with all timed out', (done) => {
+    it('rejects with all timed out', (done) => {
         let timeout = 500;
         let promises = createPromises(20, true, 1000, 5000);
 
@@ -85,7 +85,7 @@ describe("PromiseCounter", () => {
         });
     }).slow(8000).timeout(10000);
 
-    it('should throw an error with no promise array given', () => {
+    it('throws an error with no promise array given', () => {
         assert.throws(() => {
             let nothing = new PromiseCounter(undefined!);
             nothing.then(() => {
@@ -96,7 +96,7 @@ describe("PromiseCounter", () => {
         });
     });
 
-    it('should not resolve because of missing listener', (done) => {
+    it('does not resolve because of missing listener', (done) => {
         let timeout = 750;
         let promises = createPromises(20, true, 10, 100);
 
@@ -109,7 +109,7 @@ describe("PromiseCounter", () => {
         setTimeout(done, 1000);
     }).slow(2000);
 
-    it('should not reject because of missing listener', (done) => {
+    it('does not reject because of missing listener', (done) => {
         let timeout = 750;
         let promises = createPromises(20, false, 10, 100);
 
@@ -122,7 +122,7 @@ describe("PromiseCounter", () => {
         setTimeout(done, 1000);
     }).slow(2000);
 
-    it('should resolve before a listener is added', (done) => {
+    it('resolves before a listener is added', (done) => {
         let timeout = 400;
         let promises = createPromises(1, true, 100, 100);
 

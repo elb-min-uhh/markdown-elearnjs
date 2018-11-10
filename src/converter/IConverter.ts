@@ -10,7 +10,7 @@ import { ConverterSettingsObject } from "../objects/settings/ConverterSettingsOb
 export interface IConverter {
 
     /**
-     * Converts given markdown to a HTML string.
+     * Converts given markdown to an HTML string.
      * Certain options will specify the output.
      *
      * @param markdown: string - the markdown code

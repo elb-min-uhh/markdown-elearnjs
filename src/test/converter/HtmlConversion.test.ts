@@ -49,7 +49,7 @@ const exampleImprint2 =
 
 describe('HTML Converter Setup', () => {
 
-    it('creates a HtmlConverter with default settings', () => {
+    it('creates an HtmlConverter with default settings', () => {
 
         let conv = new HtmlConverter();
 
@@ -61,7 +61,7 @@ describe('HTML Converter Setup', () => {
         assert.equal(conv.getOption("subsubSectionLevel"), 4);
     });
 
-    it('should create an HtmlConverter with correct settings', () => {
+    it('creates an HtmlConverter with correct settings', () => {
         let conv = new HtmlConverter({
             headingDepth: 2,
             newSectionOnHeading: false,
@@ -77,7 +77,7 @@ describe('HTML Converter Setup', () => {
         assert.equal(conv.getOption("subsubSectionLevel"), 5);
     });
 
-    it('should update settings in HtmlConverter', () => {
+    it('updates settings in HtmlConverter', () => {
         let conv = new HtmlConverter();
 
         assert.notEqual(conv.getOption("headingDepth"), 2);
@@ -153,42 +153,42 @@ describe('HTML conversion', () => {
 
     describe('With small example codes', () => {
         // basic body only test
-        it('should create a valid html body', async () => {
+        it('creates a valid html body', async () => {
             let html = htmlConverter.toHtml(exampleMarkdown, { bodyOnly: true });
             let text = await html;
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlBody.html`));
         });
 
         // basic body only test
-        it('should create a valid html body with meta and imprint left out', async () => {
+        it('creates a valid html body with meta and imprint left out', async () => {
             let html = htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, { bodyOnly: true });
             let text = await html;
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlBody.html`));
         });
 
         // basic full document test
-        it('should create a valid html document', async () => {
+        it('creates a valid html document', async () => {
             let html = htmlConverter.toHtml(exampleMarkdown);
             let text = await html;
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlFull.html`));
         });
 
         // basic full document test
-        it('should create a valid html document with meta and imprint', async () => {
+        it('creates a valid html document with meta and imprint', async () => {
             let html = htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown);
             let text = await html;
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlFullImprintMeta.html`));
         });
 
         // basic full document test
-        it('should create a valid html document with meta and imprint (different syntax)', async () => {
+        it('creates a valid html document with meta and imprint (different syntax)', async () => {
             let html = htmlConverter.toHtml(exampleMeta2 + "\n" + exampleImprint2 + "\n" + exampleMarkdown);
             let text = await html;
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testToHtmlFullImprintMeta.html`));
         });
 
         // basic full document with export ready links
-        it('should create a valid html doc with updated file links', async () => {
+        it('creates a valid html doc with updated file links', async () => {
             let text = await htmlConverter.toHtml(exampleMeta + "\n" + exampleImprint + "\n" + exampleMarkdown, {
                 automaticExtensionDetection: true,
                 includeQuiz: false,
@@ -204,14 +204,14 @@ describe('HTML conversion', () => {
 
     describe('with the template', () => {
 
-        it('should create the correct document without extensions', async () => {
+        it('creates the correct document without extensions', async () => {
             let data = fs.readFileSync(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8');
             let text = await htmlConverter.toHtml(data, { language: "de" });
             text = FileExtractor.replaceAllLinks(text).html;
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExample.html`));
         });
 
-        it('should create the correct document with comment removal', async () => {
+        it('creates the correct document with comment removal', async () => {
             let data = fs.readFileSync(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8');
             let text = await htmlConverter.toHtml(data, {
                 language: "de",
@@ -221,7 +221,7 @@ describe('HTML conversion', () => {
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleNoComments.html`));
         });
 
-        it('should create the correct document with extensions', async () => {
+        it('creates the correct document with extensions', async () => {
             let data = fs.readFileSync(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8');
             let text = await htmlConverter.toHtml(data, {
                 language: "de",
@@ -234,7 +234,7 @@ describe('HTML conversion', () => {
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleExtensions.html`));
         });
 
-        it('should create the correct document with extension detection', async () => {
+        it('creates the correct document with extension detection', async () => {
             let data = fs.readFileSync(path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`), 'utf8');
             let text = await htmlConverter.toHtml(data, {
                 language: "de",
@@ -244,7 +244,7 @@ describe('HTML conversion', () => {
             AssertExtensions.assertTextFileEqual(text, path.join(__dirname, pathToTestAssets, `resultFiles/testTemplateExampleExtensions.html`));
         });
 
-        it('should create the correct file with extension export', async () => {
+        it('creates the correct file with extension export', async () => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -289,7 +289,7 @@ describe('HTML conversion', () => {
                 path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
         }).slow(500);
 
-        it('should create the correct file with linked file export', async () => {
+        it('creates the correct file with linked file export', async () => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -322,7 +322,7 @@ describe('HTML conversion', () => {
             assert.ok(!fs.existsSync(path.join(__dirname, pathToTestAssets, "export", "assets", "js")));
         }).slow(250);
 
-        it('should not create the file, no path given', async () => {
+        it('does not create the file, no path given', async () => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -342,7 +342,7 @@ describe('HTML conversion', () => {
                 }));
         }).slow(20000).timeout(30000);
 
-        it('should not create the file, file exists already', async () => {
+        it('does not create the file, file exists already', async () => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });
@@ -365,7 +365,7 @@ describe('HTML conversion', () => {
                 }));
         }).slow(20000).timeout(30000);
 
-        it('should create the file, overwrite existing file', async () => {
+        it('creates the file, overwrite existing file', async () => {
             let inBuf = fs.readFileSync(
                 path.join(__dirname, pathToTestAssets, `inputFiles/testTemplateExample.md`),
                 { encoding: 'utf8' });

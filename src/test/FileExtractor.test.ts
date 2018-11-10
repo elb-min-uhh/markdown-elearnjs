@@ -106,7 +106,7 @@ describe("FileExtractor", () => {
 
     describe("Negative Tests", () => {
 
-        it("should extract files containg corrupt links", (done) => {
+        it("extracts files containing corrupt links", (done) => {
 
             fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
 
