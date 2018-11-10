@@ -6,6 +6,7 @@
   "typings": "out/index",
   "scripts": {
     "compile": "tsc -p ./ && node scripts/postcompile.js",
+    "createDocs": "./node_modules/.bin/typedoc --options scripts/typedoc.js",
     "watch": "tsc -watch -p ./",
     "test": "nyc mocha --recursive --colors --require ts-node/register -u tdd **/*.test.ts",
     "testXUnit": "nyc mocha --require ts-node/register --retries 1 -u tdd -R mocha-multi --reporter-options spec=-,xunit=test-report.xml **/*.test.ts",
@@ -42,6 +43,7 @@
     "mocha-multi": "^1.0.1",
     "rimraf": "^2.6.2",
     "ts-node": "^7.0.1",
+    "typedoc": "^0.13.0",
     "typescript": "^3.1.6"
   },
   "nyc": {

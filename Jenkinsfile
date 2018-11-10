@@ -31,7 +31,9 @@ node {
             }
         }
 
-        stage('Publish Tests') {
+        stage('Publish') {
+            sh "npm run createDocs" // create documentation
+            publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'docs/', reportFiles: 'index.html', reportName: 'Documentation', reportTitles: 'Documentation']);
             sh "touch test-report.xml" // update timestamp
             junit allowEmptyResults: true, testResults: 'test-report.xml'
             publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: 'Code Coverage']);
