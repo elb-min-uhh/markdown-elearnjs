@@ -1,11 +1,13 @@
-
-.vscode
 out
 docs
 test-report.xml
 
-.DS_Store
+# VSCode
+.vscode
+!.vscode/launch.json
+!.vscode/tasks.json
 
+.DS_Store
 
 # Logs
 *.log

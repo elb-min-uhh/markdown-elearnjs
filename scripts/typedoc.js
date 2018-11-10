@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-    out: __dirname + '/../docs/',
+    out: __dirname + '/../docs/api/',
 
     readme: 'none',
     includes: __dirname + '/../src/',

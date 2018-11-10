@@ -9,7 +9,7 @@ const path = require('path');
 
 
 // remove all absolute paths from the docs
-let docs = path.join(__dirname, "..", "docs");
+let docs = path.join(__dirname, "..", "docs/api");
 console.log("Removing `__dirname` from package.json in node_modules");
 directoryCleanEverything(docs, "\\.html", path.join(__dirname, "..").replace(/\\/g, "/"));
 

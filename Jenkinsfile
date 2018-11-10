@@ -45,11 +45,17 @@ node {
 
         // create and publish docs and test results
         stage('Publish') {
-            sh "npm run createDocs" // create documentation
-            publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'docs/', reportFiles: 'index.html', reportName: 'Documentation', reportTitles: 'Documentation']);
-            sh "touch test-report.xml" // update timestamp
-            junit allowEmptyResults: true, testResults: 'test-report.xml'
-            publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: 'Code Coverage']);
+            try {
+                sh "npm run createDocumentation" // create documentation
+                publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'docs/api/', reportFiles: 'index.html', reportName: 'Documentation', reportTitles: 'Documentation']);
+                sh "touch test-report.xml" // update timestamp
+                junit allowEmptyResults: true, testResults: 'test-report.xml'
+                publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: 'Code Coverage']);
+            }
+            catch(err) {
+                currentBuild.result = "UNSTABLE"
+                throw err // to force stop
+            }
         }
     }
     // when jump is FAILED or UNSTABLE
