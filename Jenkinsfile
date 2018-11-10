@@ -50,7 +50,7 @@ node {
                 publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'docs/api/', reportFiles: 'index.html', reportName: 'Documentation', reportTitles: 'Documentation']);
                 sh "touch test-report.xml" // update timestamp
                 junit allowEmptyResults: true, testResults: 'test-report.xml'
-                publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: 'Code Coverage']);
+                publishHTML([alwaysLinkToLastBuild: true, keepAll: false, reportDir: 'coverage/lcov-report/', reportFiles: 'index.html', reportName: 'CodeCoverage', reportTitles: 'Code Coverage']);
             }
             catch(err) {
                 currentBuild.result = "UNSTABLE"
