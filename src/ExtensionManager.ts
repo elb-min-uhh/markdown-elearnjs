@@ -89,7 +89,7 @@ export class ExtensionManager {
      *  the converter to use for markdown to HTML conversion. If not given,
      *  a default HtmlConverter will be used.
      *
-     * @return Promise<ExtensionObject>: including which extensions where found
+     * @return Promise<ExtensionObject>: including which extensions were found
      * and explicitly which were not found (true/false)
      */
     public static async scanMarkdownForAll(markdown: string, markdownConverter?: IConverter) {
