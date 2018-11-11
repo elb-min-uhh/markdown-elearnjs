@@ -32,6 +32,9 @@ export class ShowdownExtensionManager {
     private descriptions: { [key: number]: string } = {};
     private descriptionIndex = 0;
 
+    /**
+     * Add the section syntax for new sections before headings.
+     */
     private addSectionOnHeading: FilterExtension = {
         type: 'lang',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -78,6 +81,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Replace the section syntax with actual HTML.
+     */
     private readonly replaceSectionSyntax: FilterExtension = {
         type: 'lang',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -100,6 +106,10 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Replace the section syntax with actual HTML. Might add a page break
+     * additionally if activated.
+     */
     private readonly pdfSectionSyntax: FilterExtension = {
         type: 'lang',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -122,6 +132,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Insert stored descriptions back into the code.
+     */
     private readonly insertSectionDescription: FilterExtension = {
         type: 'output',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -135,6 +148,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Remove the meta block from the code.
+     */
     private readonly removeMetaBlock: FilterExtension = {
         type: 'lang',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -148,6 +164,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Parse the imprints Markdown.
+     */
     private readonly parseImprint: FilterExtension = {
         type: 'lang',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -172,6 +191,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Remove the imprint block from the code.
+     */
     private readonly removeImprintBlock: FilterExtension = {
         type: 'lang',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -182,6 +204,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Remove the `no-section` comment.
+     */
     private readonly cleanNoSectionComment: ListenerExtension = {
         type: 'listener',
         listeners: {
@@ -192,6 +217,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Remove the `hide-in-overview` comment.
+     */
     private readonly cleanHideInOverviewComment: ListenerExtension = {
         type: 'listener',
         listeners: {
@@ -202,6 +230,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Remove the `desc` comment.
+     */
     private readonly cleanSectionDescriptionComment: ListenerExtension = {
         type: 'listener',
         listeners: {
@@ -212,6 +243,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Remove empty paragraphs from the output.
+     */
     private readonly cleanEmptyParagraphs: FilterExtension = {
         type: 'output',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -229,6 +263,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Remove the markdown="X" HTML attribute.
+     */
     private readonly cleanMarkdownAttribute: FilterExtension = {
         type: 'output',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -242,6 +279,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Remove hidden comments.
+     */
     private readonly cleanHiddenComments: FilterExtension = {
         type: 'lang',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -249,6 +289,9 @@ export class ShowdownExtensionManager {
         },
     };
 
+    /**
+     * Remove all HTML comments.
+     */
     private readonly cleanHtmlComments: FilterExtension = {
         type: 'output',
         filter: (text: string, converter: Showdown.Converter) => {
@@ -289,6 +332,12 @@ export class ShowdownExtensionManager {
         });
     }
 
+    /**
+     * Create a meta element based on the parameters.
+     * @param tag the HTML tag.
+     * @param value the value to set it to.
+     * @param valueSurrounding the value surrounding (to be able to unescape)
+     */
     private static createMeta(tag: string, value: string, valueSurrounding: string) {
         // unescape
         if(valueSurrounding) {
@@ -307,6 +356,9 @@ export class ShowdownExtensionManager {
         }
     }
 
+    /**
+     * Get all extensions used for the HTML body conversion.
+     */
     public getHtmlBodyExtensions() {
         // do nothing
         const self = this;
@@ -326,6 +378,9 @@ export class ShowdownExtensionManager {
         ];
     }
 
+    /**
+     * Get all extensions used for the PDF body conversion.
+     */
     public getPdfBodyExtensions() {
         // do nothing
         const self = this;
@@ -345,6 +400,9 @@ export class ShowdownExtensionManager {
         ];
     }
 
+    /**
+     * Get all extensions used for the imprint conversion.
+     */
     public getImprintExtensions() {
         // do nothing
         const self = this;
@@ -355,6 +413,10 @@ export class ShowdownExtensionManager {
         ];
     }
 
+    /**
+     * Parse the meta data, to create all meta elements.
+     * @param text the meta content.
+     */
     public parseMetaData(text: string) {
         let meta = "";
         text = text.replace(/\r/g, "");
@@ -374,6 +436,14 @@ export class ShowdownExtensionManager {
         return meta;
     }
 
+    /**
+     * Parse the code for section syntax.
+     * @param converter the converter used to convert descriptions.
+     * @param wholeMatch the whole section syntax (with additional comments if set)
+     * @param wrap the wrapping char
+     * @param heading the actual heading content
+     * @param addition additional text, e.g. comments
+     */
     private parseSection(converter: Showdown.Converter, wholeMatch: string, wrap: string, heading: string, addition: string) {
         let size = wrap.length;
         heading = ShowdownExtensionManager.unescapeSectionName(heading);
