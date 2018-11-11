@@ -11,30 +11,7 @@ class AssertExtensions {
         text = text.replace(/\r/g, "").replace(/[ \t]*\n/g, "\n").replace(/[ \t\r\n]*$/g, "").trim();
         data = data.replace(/\r/g, "").replace(/[ \t]*\n/g, "\n").replace(/[ \t\r\n]*$/g, "").trim();
 
-        let difference = "";
-
-        // char compare to find difference
-        for(let i = 0; i < text.length; i++) {
-            if(text.charAt(i) !== data.charAt(i)) {
-                difference = `Differs at ${i} with
-Generated:
-----------
-${text.substr(i - 10, 150)}
-----------
-
-From File:
-----------
-${data.substr(i - 10, 150)}
-----------\n`;
-                break;
-            }
-        }
-
-        let correct = text.localeCompare(data) === 0;
-
-        if(!correct) {
-            throw new Error(difference);
-        }
+        assert.equal(text, data);
     }
 
     public static assertTextFilesEqual(file1: fs.PathLike, file2: fs.PathLike) {

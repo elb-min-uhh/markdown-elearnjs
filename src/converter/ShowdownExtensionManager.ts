@@ -28,9 +28,13 @@ export class ShowdownExtensionManager {
     private static readonly secDescriptionRegExp = /[ \t]*<!--desc[ \t]+(.*?)[ \t]*-->/g;
     private static readonly secDescriptionReplacementRegExp = /desc="elearnjs-section-description-(\d+)"/g;
     private static readonly hiddenCommentRegExp = /[ \t]*<!--hide\s+?[\s\S]*?--+>/g;
+    private static readonly markdownDisabledRegExp = /[ \t]*<!--markdown-disable-->\s*\r?\n?([\s\S]*?\s*)\r?\n?(?:<!--markdown-enable-->|$)/g;
+    private static readonly markdownDisabledReplacementRegExp = /<!--elearnjs-markdown-disabled-(\d+)-->/g;
 
     private descriptions: { [key: number]: string } = {};
     private descriptionIndex = 0;
+    private disabledContents: { [key: number]: string } = {};
+    private disabledContentsIndex = 0;
 
     /**
      * Add the section syntax for new sections before headings.
@@ -102,6 +106,38 @@ export class ShowdownExtensionManager {
                 text += "\n</section>\n";
             }
 
+            return text;
+        },
+    };
+
+    /**
+     * Replace disabled markdown comments to be excluded.
+     */
+    private readonly replaceDisabledSyntax: FilterExtension = {
+        type: 'lang',
+        filter: (text: string, converter: Showdown.Converter) => {
+            text = text.replace(ShowdownExtensionManager.markdownDisabledRegExp, (wholeMatch, content) => {
+                let ret = `<!--elearnjs-markdown-disabled-${this.disabledContentsIndex}-->`;
+                this.disabledContents[this.disabledContentsIndex] = content;
+                this.disabledContentsIndex++;
+                return ret;
+            });
+            return text;
+        },
+    };
+
+    /**
+     * Insert stored disabled contents back into the code.
+     */
+    private readonly insertDisabledContents: FilterExtension = {
+        type: 'output',
+        filter: (text: string, converter: Showdown.Converter) => {
+            text = text.replace(ShowdownExtensionManager.markdownDisabledReplacementRegExp,
+                (wholeMatch, index) => {
+                    let content = this.disabledContents && this.disabledContents[index] ? this.disabledContents[index] : '';
+                    delete this.disabledContents[index];
+                    return content;
+                });
             return text;
         },
     };
@@ -374,6 +410,8 @@ export class ShowdownExtensionManager {
             self.removeImprintBlock,
             self.cleanEmptyParagraphs,
             self.cleanMarkdownAttribute,
+            self.replaceDisabledSyntax,
+            self.insertDisabledContents,
             self.cleanHtmlComments,
         ];
     }
@@ -396,6 +434,8 @@ export class ShowdownExtensionManager {
             self.removeImprintBlock,
             self.cleanEmptyParagraphs,
             self.cleanMarkdownAttribute,
+            self.replaceDisabledSyntax,
+            self.insertDisabledContents,
             self.cleanHtmlComments,
         ];
     }
@@ -409,6 +449,8 @@ export class ShowdownExtensionManager {
         return [
             self.parseImprint,
             self.cleanHiddenComments,
+            self.replaceDisabledSyntax,
+            self.insertDisabledContents,
             self.cleanHtmlComments,
         ];
     }
