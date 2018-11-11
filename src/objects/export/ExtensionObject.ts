@@ -1,11 +1,16 @@
-"use strict";
+import { AInheritingObject } from "../AInheritingObject";
 
 /**
  * An object containing infos about included extensions.
  */
-export class ExtensionObject {
-    // general index signature
-    [key: string]: any;
+export class ExtensionObject extends AInheritingObject {
+
+    protected static readonly CLASS_KEYS = [
+        "includeQuiz",
+        "includeElearnVideo",
+        "includeClickImage",
+        "includeTimeSlider",
+    ];
 
     /**
      * includeQuiz will include the import of the quiz.js in the head.
@@ -46,14 +51,7 @@ export class ExtensionObject {
      * @param {object} options: Manual values for this objects fields. All optional.
      */
     constructor(options?: ExtensionObject) {
-        const keys = ["includeQuiz", "includeElearnVideo", "includeClickImage", "includeTimeSlider"];
-
-        if(options) {
-            Object.keys(options).forEach((key) => {
-                if(keys.indexOf(key) >= 0) {
-                    this[key] = options[key];
-                }
-            });
-        }
+        super(options);
+        AInheritingObject.inheritValues(this, ExtensionObject.CLASS_KEYS, options);
     }
 }

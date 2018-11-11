@@ -1,6 +1,7 @@
 "use strict";
 
 import Puppeteer from 'puppeteer';
+import { AInheritingObject } from "../AInheritingObject";
 import { ConverterSettingsObject } from "./ConverterSettingsObject";
 
 /**
@@ -8,6 +9,20 @@ import { ConverterSettingsObject } from "./ConverterSettingsObject";
  * settings.
  */
 export class PdfSettingsObject extends ConverterSettingsObject {
+
+    protected static readonly CLASS_KEYS = [
+        "newPageOnSection",
+        "contentZoom",
+        "customHeader",
+        "customFooter",
+        "headerHeight",
+        "footerHeight",
+        "customStyleFile",
+        "chromePath",
+        "puppeteerOptions",
+        "keepChromeAlive",
+    ];
+
     /**
      * will add page breaks before every section
      */
@@ -63,27 +78,7 @@ export class PdfSettingsObject extends ConverterSettingsObject {
      *      Manual values for this objects fields. All optional.
      */
     constructor(options?: PdfSettingsObject) {
-
         super(options);
-
-        const keys = ["newPageOnSection",
-            "contentZoom",
-            "customHeader",
-            "customFooter",
-            "headerHeight",
-            "footerHeight",
-            "customStyleFile",
-            "chromePath",
-            "puppeteerOptions",
-            "keepChromeAlive",
-        ];
-
-        if(options) {
-            Object.keys(options).forEach((key) => {
-                if(keys.indexOf(key) >= 0) {
-                    this[key] = options[key];
-                }
-            });
-        }
+        AInheritingObject.inheritValues(this, PdfSettingsObject.CLASS_KEYS, options);
     }
 }

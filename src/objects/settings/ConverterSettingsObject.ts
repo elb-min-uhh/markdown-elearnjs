@@ -1,12 +1,18 @@
-"use strict";
+import { AInheritingObject } from "../AInheritingObject";
 
 /**
  * An object containing general converter settings. These apply for the
  * HtmlConverter and the PdfConverter but might be extended by specific objects.
  */
-export class ConverterSettingsObject {
-    // general index signature
-    [key: string]: any;
+export class ConverterSettingsObject extends AInheritingObject {
+
+    protected static readonly CLASS_KEYS = [
+        "newSectionOnHeading",
+        "headingDepth",
+        "useSubSections",
+        "subSectionLevel",
+        "subsubSectionLevel",
+    ];
 
     /**
      * Whether sections are automatically created at headings.
@@ -41,19 +47,7 @@ export class ConverterSettingsObject {
      * @param {object} options: Manual values for this objects fields. All optional.
      */
     constructor(options?: ConverterSettingsObject) {
-
-        const keys = ["newSectionOnHeading",
-            "headingDepth",
-            "useSubSections",
-            "subSectionLevel",
-            "subsubSectionLevel"];
-
-        if(options) {
-            Object.keys(options).forEach((key) => {
-                if(keys.indexOf(key) >= 0) {
-                    this[key] = options[key];
-                }
-            });
-        }
+        super(options);
+        AInheritingObject.inheritValues(this, ConverterSettingsObject.CLASS_KEYS, options);
     }
 }

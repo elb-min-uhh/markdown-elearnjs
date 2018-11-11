@@ -1,5 +1,6 @@
 "use strict";
 
+import { AInheritingObject } from "../AInheritingObject";
 import { ExtensionObject } from "./ExtensionObject";
 
 /**
@@ -9,6 +10,11 @@ import { ExtensionObject } from "./ExtensionObject";
  * Extending the `ExtensionObject`
  */
 export class InclusionObject extends ExtensionObject {
+
+    protected static readonly CLASS_KEYS = [
+        "language",
+    ];
+
     /**
      * Language key.
      * Default: "en"
@@ -23,15 +29,6 @@ export class InclusionObject extends ExtensionObject {
      */
     constructor(options?: InclusionObject) {
         super(options);
-
-        const keys = ["language"];
-
-        if(options) {
-            Object.keys(options).forEach((key) => {
-                if(keys.indexOf(key) >= 0) {
-                    this[key] = options[key];
-                }
-            });
-        }
+        AInheritingObject.inheritValues(this, InclusionObject.CLASS_KEYS, options);
     }
 }

@@ -1,5 +1,6 @@
 "use strict";
 
+import { AInheritingObject } from "../AInheritingObject";
 import { InclusionObject } from "./InclusionObject";
 
 /**
@@ -10,6 +11,13 @@ import { InclusionObject } from "./InclusionObject";
  * Extending the `InclusionObject`
  */
 export class ConversionObject extends InclusionObject {
+
+    protected static readonly CLASS_KEYS = [
+        "bodyOnly",
+        "automaticExtensionDetection",
+        "removeComments",
+    ];
+
     /**
      * bodyOnly will only return the HTML body.
      * Default: false
@@ -37,19 +45,6 @@ export class ConversionObject extends InclusionObject {
      */
     constructor(options?: ConversionObject) {
         super(options);
-
-        const keys = [
-            "bodyOnly",
-            "automaticExtensionDetection",
-            "removeComments",
-        ];
-
-        if(options) {
-            Object.keys(options).forEach((key) => {
-                if(keys.indexOf(key) >= 0) {
-                    this[key] = options[key];
-                }
-            });
-        }
+        AInheritingObject.inheritValues(this, ConversionObject.CLASS_KEYS, options);
     }
 }

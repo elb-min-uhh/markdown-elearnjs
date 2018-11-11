@@ -1,5 +1,6 @@
 "use strict";
 
+import { AInheritingObject } from "../AInheritingObject";
 import { ConversionObject } from "./ConversionObject";
 
 /**
@@ -8,6 +9,12 @@ import { ConversionObject } from "./ConversionObject";
  * Extending the `ConversionObject`
  */
 export class HtmlExportOptionObject extends ConversionObject {
+
+    protected static readonly CLASS_KEYS = [
+        "exportAssets",
+        "exportLinkedFiles",
+    ];
+
     /**
      * if set to true the elearn.js assets containing
      * all included extensions will be exported next to the output file.
@@ -27,17 +34,7 @@ export class HtmlExportOptionObject extends ConversionObject {
      * @param {object} options: Manual values for this objects fields. All optional.
      */
     constructor(options?: HtmlExportOptionObject) {
-
         super(options);
-
-        const keys = ["exportAssets", "exportLinkedFiles"];
-
-        if(options) {
-            Object.keys(options).forEach((key) => {
-                if(keys.indexOf(key) >= 0) {
-                    this[key] = options[key];
-                }
-            });
-        }
+        AInheritingObject.inheritValues(this, HtmlExportOptionObject.CLASS_KEYS, options);
     }
 }

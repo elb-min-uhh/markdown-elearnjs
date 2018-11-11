@@ -1,5 +1,6 @@
 "use strict";
 
+import { AInheritingObject } from "../AInheritingObject";
 import { ConversionObject } from "./ConversionObject";
 
 /**
@@ -8,6 +9,11 @@ import { ConversionObject } from "./ConversionObject";
  * Extending the `ConversionObject`
  */
 export class PdfExportOptionObject extends ConversionObject {
+
+    protected static readonly CLASS_KEYS = [
+        "renderDelay",
+    ];
+
     /**
      * delay of rendering the html to pdf in ms
      */
@@ -20,17 +26,7 @@ export class PdfExportOptionObject extends ConversionObject {
      * @param {object} options: Manual values for this objects fields. All optional.
      */
     constructor(options?: PdfExportOptionObject) {
-
         super(options);
-
-        const keys = ["renderDelay"];
-
-        if(options) {
-            Object.keys(options).forEach((key) => {
-                if(keys.indexOf(key) >= 0) {
-                    this[key] = options[key];
-                }
-            });
-        }
+        AInheritingObject.inheritValues(this, PdfExportOptionObject.CLASS_KEYS, options);
     }
 }
