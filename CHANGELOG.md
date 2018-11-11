@@ -1,5 +1,6 @@
 ## 1.7.1
 * Internal:
+    * Rewrite objects
     * More refactoring, commenting
     * Automatically created documentation (check the Wiki)
 ## 1.7.0
