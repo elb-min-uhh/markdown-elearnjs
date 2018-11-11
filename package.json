@@ -10,7 +10,7 @@
     "watch": "tsc -watch -p ./",
     "test": "nyc mocha --recursive --colors --require ts-node/register -u tdd **/*.test.ts",
     "testXUnit": "nyc mocha --require ts-node/register --retries 1 -u tdd -R mocha-multi --reporter-options spec=-,xunit=test-report.xml **/*.test.ts",
-    "prepublishOnly": "node scripts/prepublish.js && npm run compile"
+    "prepare": "node scripts/prepublish.js && npm run compile"
   },
   "keywords": [
     "Markdown",
