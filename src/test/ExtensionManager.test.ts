@@ -96,6 +96,70 @@ describe('Extension Manager', () => {
             path.join(__dirname, pathToAssets, "assets", "lang", "elearnjs-en.js"));
     });
 
+    // basic body only test
+    it('exports all assets correctly', async () => {
+
+        // create output folder
+        fs.mkdirSync(path.join(__dirname, pathToTestAssets, "export"));
+
+        // export assets
+        await ExtensionManager.exportAssets(
+            path.join(__dirname, pathToTestAssets, "export"), {
+                includeQuiz: true,
+                includeElearnVideo: true,
+                includeClickImage: true,
+                includeTimeSlider: true,
+            });
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearn.js"),
+            path.join(__dirname, pathToAssets, "assets", "js", "elearn.js"));
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "quiz.js"),
+            path.join(__dirname, pathToAssets, "extensions", "quiz", "assets", "js", "quiz.js"));
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "css", "quiz.css"),
+            path.join(__dirname, pathToAssets, "extensions", "quiz", "assets", "css", "quiz.css"));
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "elearnvideo.js"),
+            path.join(__dirname, pathToAssets, "extensions", "elearnvideo", "assets", "js", "elearnvideo.js"));
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "css", "elearnvideo.css"),
+            path.join(__dirname, pathToAssets, "extensions", "elearnvideo", "assets", "css", "elearnvideo.css"));
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Video.ttf"),
+            path.join(__dirname, pathToAssets, "extensions", "elearnvideo", "assets", "font", "eLearn-Video.ttf"));
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Video.woff"),
+            path.join(__dirname, pathToAssets, "extensions", "elearnvideo", "assets", "font", "eLearn-Video.woff"));
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "clickimage.js"),
+            path.join(__dirname, pathToAssets, "extensions", "clickimage", "assets", "js", "clickimage.js"));
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "css", "clickimage.css"),
+            path.join(__dirname, pathToAssets, "extensions", "clickimage", "assets", "css", "clickimage.css"));
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "js", "timeslider.js"),
+            path.join(__dirname, pathToAssets, "extensions", "timeslider", "assets", "js", "timeslider.js"));
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "css", "timeslider.css"),
+            path.join(__dirname, pathToAssets, "extensions", "timeslider", "assets", "css", "timeslider.css"));
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "font", "eLearn-Icons.woff"),
+            path.join(__dirname, pathToAssets, "assets", "font", "eLearn-Icons.woff"));
+
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "lang", "elearnjs-en.js"),
+            path.join(__dirname, pathToAssets, "assets", "lang", "elearnjs-en.js"));
+        AssertExtensions.assertFilesEqual(
+            path.join(__dirname, pathToTestAssets, "export", "assets", "lang", "elearnjs-de.js"),
+            path.join(__dirname, pathToAssets, "assets", "lang", "elearnjs-de.js"));
+    });
+
     it('detects no extensions in basic html', () => {
         let html = `<h1>This is basic HTML without any extension</h1>`;
 
