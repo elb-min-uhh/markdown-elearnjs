@@ -1,6 +1,10 @@
+## 1.7.3
+* Update elearn.js to v1.0.11
+
 ## 1.7.2
 * Add a conversion deactivation syntax for blocks
     * `<!--markdown-disable-->...<!--markdown-enable-->`
+
 ## 1.7.1
 * Internal:
     * Rewrite objects

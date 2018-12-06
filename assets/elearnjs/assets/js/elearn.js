@@ -1,5 +1,5 @@
 /*
-* v1.0.10 18/11/07 JavaScript eLearn.js - by Arne Westphal
+* v1.0.11 2018/12/06 JavaScript eLearn.js - by Arne Westphal
 * dl.min MIN-Fakultaet - Universitaet Hamburg
 * touch-script base by PADILICIOUS.COM and MACOSXAUTOMATION.COM
 * uses ResizeSensor by Marc J. Schmidt. https://github.com/marcj/css-element-queries/
@@ -8,8 +8,8 @@
 // For more intuitive usage of functions. (e.g. eLearnJS.showNext())
 var eLearnJS = eLearnJS || {};
 
-eLearnJS.VERSION_NR = "1.0.10";
-eLearnJS.VERSION_DATE = "11/2018";
+eLearnJS.VERSION_NR = "1.0.11";
+eLearnJS.VERSION_DATE = "12/2018";
 
 eLearnJS.actions = {
     CONTENT_RESIZE : "ContentResize",
@@ -65,7 +65,7 @@ window.onpopstate = function(e){
 };
 
 // --------------------------------------------------------------------------------------
-// Initialisierungsfunktion
+// Document ready
 // --------------------------------------------------------------------------------------
 
 $(document).ready(function() {
@@ -107,6 +107,72 @@ $(document).ready(function() {
     // selected one. This will initialize all texts, which would be empty otherwise.
     if(!eLearnJS.setLangQueue.length) eLearnJS.setLanguage(eLearnJS.selectedLocale);
     eLearnJS.updateNavBarWidth();
+});
+
+
+// --------------------------------------------------------------------------------------
+// Window RESIZING
+// --------------------------------------------------------------------------------------
+var resizeTimer;
+
+/**
+* Berechnet alle notwendigen Größen neu.
+*/
+$(window).resize(function() {
+    eLearnJS.windowOnResize();
+});
+
+$(window).on('scrollbarVisible', function() {
+    eLearnJS.windowOnResize();
+});
+$(window).on('scrollbarHidden', function() {
+    eLearnJS.windowOnResize();
+});
+
+// --------------------------------------------------------------------------------------
+// KeyPress Part (Arrow Left/Right)
+// --------------------------------------------------------------------------------------
+/**
+* Fügt Pfeiltastennavigation durch Sections hinzu.
+*/
+$(document).keydown(function(e) {
+    if(!eLearnJS.allShown && eLearnJS.keyNavigationEnabled) {
+        if(e.keyCode == 37
+            && !$(document.activeElement).is('input')
+            && !$(document.activeElement).is('textarea')
+            && $(document.activeElement).attr("contentEditable") != "true") {
+            eLearnJS.showPrev();
+        }
+        else if(e.keyCode == 39
+            && !$(document.activeElement).is('input')
+            && !$(document.activeElement).is('textarea')
+            && $(document.activeElement).attr("contentEditable") != "true") {
+            eLearnJS.showNext();
+        }
+    }
+});
+
+/**
+* Bei einem Klick neben die Elemente Kapitelübersicht, Side-Menu, Lightbox (für
+* info) werden diese wieder geschlossen.
+*/
+$(document).on("click", function(e) {
+    if(!$(e.target).is(".section-overview *")
+        && !$(e.target).is("#btnExp")
+        && !$(e.target).is("#btnExp *")
+        && eLearnJS.overviewShown) {
+        eLearnJS.showSectionOverview();
+    }
+    if(!$(e.target).is("#sideMenu")
+        && !$(e.target).is("#sideMenu *")
+        && !$(e.target).is("#btnMenu")
+        && eLearnJS.isSideMenuVisible()) {
+        eLearnJS.toggleSideMenu();
+    }
+    if(!$(e.target).is(".lb-wrap *")
+        && !$(e.target).is("#sideMenu *")) {
+        $('.lb-wrap').hide();
+    }
 });
 
 /**
@@ -237,6 +303,85 @@ eLearnJS.initiateSideMenu = function() {
     });
     $('#sideMenu').css('right', "-"+($('#sideMenu').width()+10)+"px");
 };
+
+/**
+* Called on window resize
+* @event: Fires "ejswindowresize" + " ejswindowresizelate"
+*   event on the window when done successfully.
+*/
+eLearnJS.windowOnResize = function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+        if(eLearnJS.isSideMenuVisible()) {
+            $('#sideMenu').css('right', "0");
+        }
+        else {
+            $('#sideMenu').css('right', "-" + ($('#sideMenu').width() + 10) + "px");
+        }
+
+        eLearnJS.fireEvent(window, eLearnJS.createEvent("ejswindowresize", {}));
+        eLearnJS.fireEvent(window, eLearnJS.createEvent("ejswindowresizelate", {}));
+    }, 250);
+    eLearnJS.updateNavBarWidth();
+    eLearnJS.hoverInfoSetPositions();
+};
+
+/**
+* Passt die Navigationsleiste an die Breite des window an
+*/
+eLearnJS.updateNavBarWidth = function() {
+    var headerSpace = 5; // standard wert
+    $('#nav-bar').children(':visible').not('#btnExp').each(function(i, e) { // eslint-disable-line no-unused-vars
+        if($(this).attr("id") != undefined)
+            headerSpace += $(this).outerWidth(true);
+    });
+    $('#btnExp').css("width", "calc(100% - " + (headerSpace) + "px)");
+};
+
+
+/**
+* In der URL können Parameter angegeben werden, um das direkte Anzeigen einer
+* Section zu ermöglichen.
+*
+* mit ?p=2 könnte man z.B. die 3. (0, 1, 2, ...) section öffnen
+* mit ?s=Inhaltsverzeichnis würde man die <section name="Inhaltsverzeichnis">
+* öffnen.
+*/
+eLearnJS.checkParameters = function() {
+    if(eLearnJS.QueryString.s != undefined) {
+        var sectionName = decodeURI(eLearnJS.QueryString.s);
+        eLearnJS.showSection(sectionName);
+    }
+    else if(eLearnJS.QueryString.p != undefined) {
+        var idx = parseInt(eLearnJS.QueryString.p);
+        eLearnJS.showSection(idx);
+    }
+};
+
+
+/**
+* Aktiviert oder Deaktiviert Tastaturnavigation
+*/
+eLearnJS.setKeyNavigationEnabled = function(b) {
+    eLearnJS.keyNavigationEnabled = b;
+};
+
+eLearnJS.isKeyNavigationEnabled = function() {
+    return eLearnJS.keyNavigationEnabled;
+};
+
+/**
+* Stops all videos on the page. Usually called when another section is displayed.
+*/
+eLearnJS.stopVideos = function() {
+    // stop all HTML5 videos
+    $('video').each(function() { this.pause(); });
+    $('audio').each(function() { this.pause(); });
+};
+
+// --------------------------------------------------------------------------------------
+// Localization
+// --------------------------------------------------------------------------------------
 
 /**
  * Loads a language asynchronous.
@@ -495,38 +640,6 @@ eLearnJS.localizeElement = function(el, force) {
     }
 };
 
-/**
-* Passt die Navigationsleiste an die Breite des window an
-*/
-eLearnJS.updateNavBarWidth = function() {
-    var headerSpace = 5; // standard wert
-    $('#nav-bar').children(':visible').not('#btnExp').each(function(i, e) { // eslint-disable-line no-unused-vars
-        if($(this).attr("id") != undefined)
-            headerSpace += $(this).outerWidth(true);
-    });
-    $('#btnExp').css("width", "calc(100% - " + (headerSpace) + "px)");
-};
-
-
-/**
-* In der URL können Parameter angegeben werden, um das direkte Anzeigen einer
-* Section zu ermöglichen.
-*
-* mit ?p=2 könnte man z.B. die 3. (0, 1, 2, ...) section öffnen
-* mit ?s=Inhaltsverzeichnis würde man die <section name="Inhaltsverzeichnis">
-* öffnen.
-*/
-eLearnJS.checkParameters = function() {
-    if(eLearnJS.QueryString.s != undefined) {
-        var sectionName = decodeURI(eLearnJS.QueryString.s);
-        eLearnJS.showSection(sectionName);
-    }
-    else if(eLearnJS.QueryString.p != undefined) {
-        var idx = parseInt(eLearnJS.QueryString.p);
-        eLearnJS.showSection(idx);
-    }
-};
-
 // ----------------------------------------------------------------------------
 // ------------------------- BACK BUTTON --------------------------------------
 // ----------------------------------------------------------------------------
@@ -721,6 +834,14 @@ eLearnJS.showSection = function(i) {
 };
 
 /**
+ * Return the name of the section given by its index `visSection`.
+ * @param visSection the index of the section to get the name of
+ */
+eLearnJS.getSectionName = function(visSection) {
+    return $('section').eq(visSection).attr("name");
+};
+
+/**
 * Registriert eine Funktion, die ausgeführt wird, nachdem eine neue Section
 * angezeigt wurde.
 *
@@ -795,12 +916,13 @@ eLearnJS.registerAfterSliderResize = function(key, fnc) {
 */
 eLearnJS.pushHistoryState = function() {
     if(!eLearnJS.allShown) {
+        var sectionName = eLearnJS.getSectionName(eLearnJS.visSection);
         try {
             if(window.history.state == undefined
                 || (window.history.state.p != undefined
                     && window.history.state.p != null
-                    && window.history.state.p != eLearnJS.visSection)) {
-                window.history.pushState({p: eLearnJS.visSection}, "State", "?p="+eLearnJS.visSection);
+                && window.history.state.p != sectionName)) {
+                window.history.pushState({ p: eLearnJS.visSection }, "State", "?s=" + encodeURI(sectionName));
             }
         } catch (e) {
 
@@ -1171,29 +1293,6 @@ eLearnJS.showSectionOverview = function() {
         eLearnJS.setDirectionButtonsEnabled(false);
     }
 };
-
-/**
-* Bei einem Klick neben die Elemente Kapitelübersicht, Side-Menu, Lightbox (für
-* info) werden diese wieder geschlossen.
-*/
-$(document).on("click", function(e){
-    if(!$(e.target).is(".section-overview *")
-        && !$(e.target).is("#btnExp")
-        && !$(e.target).is("#btnExp *")
-        && eLearnJS.overviewShown) {
-        eLearnJS.showSectionOverview();
-    }
-    if(!$(e.target).is("#sideMenu")
-        && !$(e.target).is("#sideMenu *")
-        && !$(e.target).is("#btnMenu")
-        && eLearnJS.isSideMenuVisible()) {
-        eLearnJS.toggleSideMenu();
-    }
-    if(!$(e.target).is(".lb-wrap *")
-        && !$(e.target).is("#sideMenu *")) {
-        $('.lb-wrap').hide();
-    }
-});
 
 
 // --------------------------------------------------------------------------------------
@@ -1877,6 +1976,9 @@ eLearnJS.resizeNavigationSliders = function() {
             height: liHeight + "px",
             transform: "translate3d(" + x + "px, 0px, 0px)"
         });
+        ul[0].offsetHeight; // apply css changes
+
+        var liInnerWidth = ul.children('li').innerWidth();
         // Set Image Size
         // Zur korrekten größen Berechnung muss das zurückgesetzt werden.
         ul.children('li').find('img').css({"width":"", "height":""});
@@ -1885,17 +1987,19 @@ eLearnJS.resizeNavigationSliders = function() {
             eLearnJS.getImageSize(img, function(width, height){
                 if(liHeight > 0) {
                     var ratio = width/height;
-                    if(ratio > 4/3) {
+                    // wide images
+                    if(ratio >= liInnerWidth/liHeight) {
                         var newWidth = (liHeight * ratio);
-                        var leftPx = liWidth/2 - newWidth/2;
+                        var leftPx = (liInnerWidth - newWidth)*.5;
                         img.css("height", "100%");
-                        img.css("width", 75*ratio + "%");
+                        img.css("width", newWidth + "px");
                         img.css("left", leftPx + "px");
                         img.css("top", "");
                     }
-                    else if(ratio < 4/3) {
+                    // small images
+                    else {
                         img.css("width", "100%");
-                        var topPx = liHeight/2 - (liWidth * (1/ratio))/2;
+                        var topPx = (liHeight - (liInnerWidth / ratio))*.5;
                         img.css("height", "");
                         img.css("left", "");
                         img.css("top", topPx + "px");
@@ -2421,8 +2525,6 @@ eLearnJS.hoverInfoSetFullPosition = function(div) {
         }
     }
 
-    console.log(maxWidth, parent.width());
-
     var left = "auto";
     var right = "auto";
     var width = Math.min(info.outerWidth(), maxWidth);
@@ -2471,95 +2573,8 @@ eLearnJS.hoverInfoTrigger = function(div) {
 };
 
 // --------------------------------------------------------------------------------------
-// Stop Videos
+// Helpers
 // --------------------------------------------------------------------------------------
-
-/**
-* Stops all videos on the page. Usually called when another section is displayed.
-*/
-eLearnJS.stopVideos = function() {
-    // stop all HTML5 videos
-    $('video').each(function() {this.pause();});
-    $('audio').each(function() {this.pause();});
-};
-
-// --------------------------------------------------------------------------------------
-// Window RESIZING
-// --------------------------------------------------------------------------------------
-var resizeTimer;
-
-/**
-* Berechnet alle notwendigen Größen neu.
-*/
-$(window).resize(function() {
-    eLearnJS.windowOnResize();
-});
-
-$(window).on('scrollbarVisible', function() {
-    eLearnJS.windowOnResize();
-});
-$(window).on('scrollbarHidden', function() {
-    eLearnJS.windowOnResize();
-});
-
-/**
-* Called on window resize
-* @event: Fires "ejswindowresize" + " ejswindowresizelate"
-*   event on the window when done successfully.
-*/
-eLearnJS.windowOnResize = function() {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function(){
-        if(eLearnJS.isSideMenuVisible()) {
-            $('#sideMenu').css('right', "0");
-        }
-        else {
-            $('#sideMenu').css('right', "-"+($('#sideMenu').width()+10)+"px");
-        }
-
-        eLearnJS.fireEvent(window, eLearnJS.createEvent("ejswindowresize", {}));
-        eLearnJS.fireEvent(window, eLearnJS.createEvent("ejswindowresizelate", {}));
-    }, 250);
-    eLearnJS.updateNavBarWidth();
-    eLearnJS.hoverInfoSetPositions();
-};
-
-// --------------------------------------------------------------------------------------
-// KeyPress Part (Arrow Left/Right)
-// --------------------------------------------------------------------------------------
-/**
-* Fügt Pfeiltastennavigation durch Sections hinzu.
-*/
-$(document).keydown(function(e){
-    if(!eLearnJS.allShown && eLearnJS.keyNavigationEnabled) {
-        if(e.keyCode == 37
-            && !$(document.activeElement).is('input')
-            && !$(document.activeElement).is('textarea')
-            && $(document.activeElement).attr("contentEditable") != "true") {
-            eLearnJS.showPrev();
-        }
-        else if(e.keyCode == 39
-            && !$(document.activeElement).is('input')
-            && !$(document.activeElement).is('textarea')
-            && $(document.activeElement).attr("contentEditable") != "true") {
-            eLearnJS.showNext();
-        }
-    }
-});
-
-
-/**
-* Aktiviert oder Deaktiviert Tastaturnavigation
-*/
-eLearnJS.setKeyNavigationEnabled = function(b) {
-    eLearnJS.keyNavigationEnabled = b;
-};
-
-eLearnJS.isKeyNavigationEnabled = function() {
-    return eLearnJS.keyNavigationEnabled;
-};
-
-
 
 /**
 * Überprüft ob eine URL existiert.
