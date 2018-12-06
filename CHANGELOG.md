@@ -1,4 +1,5 @@
 ## 1.7.3
+* Update dependencies
 * Update elearn.js to v1.0.11
 
 ## 1.7.2
