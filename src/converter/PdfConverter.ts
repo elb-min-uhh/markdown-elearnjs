@@ -505,15 +505,15 @@ export class PdfConverter extends AConverter implements IConverter {
      * @param footerHeight the footer height string with units "px", "in", "cm" or "mm"
      */
     private calculateMargins(margin: {
-        top?: string;
-        right?: string | undefined;
-        bottom?: string;
-        left?: string | undefined;
+        top?: string | number;
+        right?: string | number;
+        bottom?: string | number;
+        left?: string | number;
     }, headerHeight?: string, footerHeight?: string) {
         if(headerHeight) {
             try {
                 let headerMM = this.convertUnitsToMMFloat(headerHeight);
-                let topMM = this.convertUnitsToMMFloat(margin.top || "0mm");
+                let topMM = this.convertUnitsToMMFloat(margin.top ? margin.top.toString() : "0mm");
                 if(headerMM !== undefined && topMM !== undefined)
                     margin.top = (headerMM + topMM) + "mm";
             } catch(err) {
@@ -523,7 +523,7 @@ export class PdfConverter extends AConverter implements IConverter {
         if(footerHeight) {
             try {
                 let footerMM = this.convertUnitsToMMFloat(footerHeight);
-                let bottomMM = this.convertUnitsToMMFloat(margin.bottom || "0mm");
+                let bottomMM = this.convertUnitsToMMFloat(margin.bottom ? margin.bottom.toString() : "0mm");
                 if(footerMM !== undefined && bottomMM !== undefined)
                     margin.bottom = (footerMM + bottomMM) + "mm";
             } catch(err) {
