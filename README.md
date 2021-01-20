@@ -1,9 +1,6 @@
 # markdown-elearnjs
 
-[![Build Status](https://westarne.de/jenkins/buildStatus/icon?job=markdown-elearnjs/master)](https://westarne.de/jenkins/job/markdown-elearnjs/job/master/)
-[![npm](https://westarne.de/jenkins-test-badge/npm/)](https://www.npmjs.com/package/markdown-elearnjs)
-[![Test Status](https://westarne.de/jenkins-test-badge/tests/master/)](https://westarne.de/jenkins/job/markdown-elearnjs/job/master/lastCompletedBuild/testReport/)
-[![Test Coverage](https://westarne.de/jenkins-test-badge/coverage/master/)](https://westarne.de/jenkins/job/markdown-elearnjs/job/master/CodeCoverage/)
+`markdown-elearnjs` is no longer in active development, and is currently unmaintained.
 
 `markdown-elearnjs` is a node.js package for simple markdown conversion
 to [elearn.js](https://github.com/elb-min-uhh/elearn.js) based HTML and PDF.
