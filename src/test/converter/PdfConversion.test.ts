@@ -3,8 +3,7 @@
 import assert from 'assert';
 import * as fs from "fs";
 import path from 'path';
-import Puppeteer from 'puppeteer';
-import rimraf from 'rimraf';
+import * as Puppeteer from 'puppeteer';
 import { PdfConverter } from '../../main';
 import { PromiseCounter } from '../../util/PromiseCounter';
 import AssertExtensions from '../helpers/AssertExtensions';
@@ -195,12 +194,7 @@ describe('PDF conversion', () => {
         let foldersToRemove = ["export"];
 
         foldersToRemove.forEach((folder) => {
-            let promise = new Promise((res, rej) => {
-                rimraf(path.join(__dirname, pathToTestAssets, folder), (err) => {
-                    if(err) rej(err);
-                    else res();
-                });
-            });
+            let promise = fs.promises.rm(path.join(__dirname, pathToTestAssets, folder), { recursive: true, force: true });
             promises.push(promise);
         });
 

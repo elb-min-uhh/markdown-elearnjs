@@ -2,9 +2,8 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import Puppeteer from 'puppeteer';
+import * as Puppeteer from 'puppeteer';
 import * as Showdown from "showdown";
-import _ from 'underscore';
 import { ExtensionManager } from '../ExtensionManager';
 import { FileManager } from '../FileManager';
 import { ConversionObject } from '../objects/export/ConversionObject';
@@ -76,7 +75,7 @@ export class PdfConverter extends AConverter implements IConverter {
     public setOption(opt: string, val: any) {
         // reset browser, if browser specific options change
         if((opt === "chromePath" && this.getOption("chromePath") !== val)
-            || (opt === "puppeteerOptions" && !_.isEqual(this.getOption("puppeteerOptions"), val))
+            || (opt === "puppeteerOptions" && JSON.stringify(this.getOption("puppeteerOptions")) !== JSON.stringify(val))
             || (opt === "keepChromeAlive" && val === false)) {
             this.closeGlobalBrowser().then();
         }
@@ -197,7 +196,7 @@ export class PdfConverter extends AConverter implements IConverter {
         const page = await browser.newPage();
         const tmpFile = path.join(rootPath, `.tmpPdfExport_${new Date().getTime()}_${Math.floor(Math.random() * 10000)}.html`);
 
-        fs.writeFileSync(tmpFile, html, "UTF8");
+        fs.writeFileSync(tmpFile, html, { encoding: "utf-8" });
 
         let buffer;
         try {
@@ -267,7 +266,8 @@ export class PdfConverter extends AConverter implements IConverter {
         }
         const browser: IBrowser = <IBrowser>await Puppeteer.launch(options);
 
-        browser.pid = (await browser.process()).pid;
+        const browserProcess = await browser.process();
+        browser.pid = (browserProcess && browserProcess.pid) ? browserProcess.pid : -1;
         browser.locks = 0;
         console.log("markdown-elearnjs: Initialized new chromium browser. Process ID", browser.pid);
 

@@ -14,7 +14,7 @@ export class PromiseCounter {
     public done: boolean = false;
     public error?: any;
 
-    private timeout?: NodeJS.Timer;
+    private timeout?: NodeJS.Timeout;
 
     // listener
     private listenerAdded: boolean = false;
