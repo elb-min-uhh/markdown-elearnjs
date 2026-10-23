@@ -3,7 +3,6 @@
 import assert from 'assert';
 import * as fs from "fs";
 import path from 'path';
-import rimraf from 'rimraf';
 import { ExtensionManager, ExtensionObject, HtmlConverter, PdfConverter } from '../main';
 import { PromiseCounter } from '../util/PromiseCounter';
 import AssertExtensions from './helpers/AssertExtensions';
@@ -20,12 +19,7 @@ describe('Extension Manager', () => {
         let foldersToRemove = ["export"];
 
         foldersToRemove.forEach((folder) => {
-            let promise = new Promise((res, rej) => {
-                rimraf(path.join(__dirname, pathToTestAssets, folder), (err) => {
-                    if(err) rej(err);
-                    else res();
-                });
-            });
+            let promise = fs.promises.rm(path.join(__dirname, pathToTestAssets, folder), { recursive: true, force: true });
             promises.push(promise);
         });
 

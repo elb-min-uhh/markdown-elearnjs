@@ -1,6 +1,6 @@
 "use strict";
 
-import { ncp } from 'ncp';
+import * as fs from 'fs';
 import * as path from 'path';
 import { HtmlConverter } from './converter/HtmlConverter';
 import { IConverter } from './converter/IConverter';
@@ -236,12 +236,7 @@ export class ExtensionManager {
     private static async writeFolders(folders: string[], outPath: string) {
         // get first folder + remove from array
         for(let inPath of folders) {
-            await new Promise((res, rej) => {
-                ncp(inPath!, outPath, (err: any) => {
-                    if(err) rej(err);
-                    else res();
-                });
-            });
+            await fs.promises.cp(inPath!, outPath, { recursive: true });
         }
     }
 }

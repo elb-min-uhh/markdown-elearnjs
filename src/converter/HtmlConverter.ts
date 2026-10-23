@@ -155,7 +155,7 @@ export class HtmlConverter extends AConverter implements IConverter {
         let promises: Promise<any>[] = [];
 
         // write actual html file
-        let writePromise = new Promise((resolve, reject) => {
+        let writePromise = new Promise<void>((resolve, reject) => {
             fs.writeFile(file, html, (err) => {
                 if(err) reject(err);
                 else resolve();

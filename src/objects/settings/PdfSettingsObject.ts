@@ -1,6 +1,6 @@
 "use strict";
 
-import Puppeteer from 'puppeteer';
+import * as Puppeteer from 'puppeteer';
 import { AInheritingObject } from "../AInheritingObject";
 import { ConverterSettingsObject } from "./ConverterSettingsObject";
 

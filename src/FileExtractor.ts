@@ -228,7 +228,7 @@ export class FileExtractor {
             wr.on("error", (err: any) => {
                 reject(err);
             });
-            wr.on("close", (ex: any) => {
+            wr.on("close", () => {
                 resolve();
             });
             rd.pipe(wr);
